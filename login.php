@@ -10,17 +10,18 @@ $passwd = $_POST['passwd'];
 
 //username&passwd login
 if ($username && $passwd) {
-    if(!login($username, $passwd)){
+	$result = login($username, $passwd);
+    if($result == DB_ITEM_NOT_FOUND){
 		$msg = "user {$username}: login failed!";
-		$log->general($msg);
+		//$log->general($msg);
 
 		$login_resp['login_code'] = LOGIN_ERROR; //register error
 		header('Content-Type: application/json');
 		echo json_encode($login_resp);
 	}
-	else{
+	else if($result == DB_ITEM_FOUND){
 		$msg = "user {$username}: login successful!";
-		$log->general($msg);
+		//$log->general($msg);
 
 		// login successful,produce a cookie for the user
 		// write the cookie into database
@@ -42,7 +43,7 @@ if (isset($_COOKIE['user_cookie']))
 	if(!cookie_login($cookie))
 	{
 		$msg = "cookie {$cookie}: cookie login error!";
-		$log->general($msg);
+		//$log->general($msg);
 
 		$login_resp['login_code'] = COOKIE_LOGIN_ERROR; //register error
 		header('Content-Type: application/json');
@@ -51,7 +52,7 @@ if (isset($_COOKIE['user_cookie']))
 	else
 	{
 		$msg = "cookie {$cookie}: cookie login successful!";
-		$log->general($msg);
+		//$log->general($msg);
 
 		$login_resp['login_code'] = COOKIE_LOGIN_SUCCESS; //register error
 		header('Content-Type: application/json');

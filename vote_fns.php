@@ -25,7 +25,7 @@ define('PASSWD_LENGTH_ERROR', 6);
 define('REG_UNKNOWN_ERROR', 7);
 
 //macro for login
-//define('LOGIN_NOT_REGIST', 0);
+define('LOGIN_ERROR', 0);
 define('LOGIN_SUCCESS', 1);
 define('COOKIE_LOGIN_SUCCESS', 1);
 define('COOKIE_SAVE_SUCCESS', 2);
