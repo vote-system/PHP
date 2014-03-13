@@ -27,6 +27,8 @@ define('REG_UNKNOWN_ERROR', 7);
 //macro for login
 define('LOGIN_ERROR', 0);
 define('LOGIN_SUCCESS', 1);
+
+define('COOKIE_LOGIN_ERROR', 0);
 define('COOKIE_LOGIN_SUCCESS', 1);
 define('COOKIE_SAVE_SUCCESS', 2);
 define('COOKIE_NOT_SAVED', 3);

@@ -80,7 +80,7 @@ function login($username, $password) {
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function login,db connect error!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
 
@@ -90,16 +90,16 @@ function login($username, $password) {
                          and passwd = sha1('".$password."')");
   if (!$result) {
     $msg = "Function login,db query failed!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_QUERY_ERROR;
   }
 
   if ($result->num_rows>0) {
-     return true;
+     return DB_ITEM_FOUND;
   } else {
      $msg = "Function login,  username={$username} and passwd={$passwd} not found in database";
-	 $auth_log->general($msg);
-	 return LOGIN_NOT_REGIST;
+	 //$auth_log->general($msg);
+	 return DB_ITEM_NOT_FOUND;
   }
   
 }
@@ -110,42 +110,44 @@ function cookie_login($cookie){
 // else return false
 
   // connect to db
+  echo "Function cookie_login\n";
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function login,db connect error!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
 	
   $result = $conn->query("select * from user where cookie='".$cookie."'");
   if (!$result) {
     $msg = "Function cookie_login,db query failed";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_QUERY_ERROR;
   }
 
   if ($result->num_rows>0) {
 	// cookie already write into database, return true to indicate cookie login success!
 	$msg = "Function cookie_login,cookie={$cookie} login success!";
-	$auth_log->general($msg);
-	return true;  
+	//$auth_log->general($msg);
+	return DB_ITEM_FOUND;  
   }
   else{
 	// cookie not found into database, return cookie login failed
 	$msg = "Function cookie_login,cookie={$cookie} login filed, please use username and passwd login!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return COOKIE_NOT_SAVED;  
   }
 }
 
-function cookie_insert($cookie,$username){
+function cookie_insert($username){
 // first check if the cookie have already write to the database
 // if not, insert it, else return alaready insert
-
+  //echo "FUNCTION cookie_insert!\n";
+  $cookie = sha1($username);
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function cookie_insert,db connect error!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
 
@@ -155,7 +157,7 @@ function cookie_insert($cookie,$username){
 						 and username='".$username."'");
   if (!$result) {
     $msg = "Function cookie_insert,db query failed!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_QUERY_ERROR;
   }
 
@@ -169,7 +171,7 @@ function cookie_insert($cookie,$username){
 							where username = '".$username."'");
 	if (!$result) {
 		$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
-		$auth_log->general($msg);
+		//$auth_log->general($msg);
 		return DB_INSERT_ERROR;
 	 }
 	 else{

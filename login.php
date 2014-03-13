@@ -25,7 +25,8 @@ if ($username && $passwd) {
 
 		// login successful,produce a cookie for the user
 		// write the cookie into database
-		$res = cookie_insert($cookie,$username);
+		$res = cookie_insert($username);
+		//echo "res={$res}\n";
 		if($res == COOKIE_SAVE_SUCCESS){
 			//only if cookie insert success in db then send cookie to customer
 			setcookie("user_cookie", sha1($username));
@@ -39,17 +40,12 @@ if ($username && $passwd) {
 //cookie login
 if (isset($_COOKIE['user_cookie']))
 {
+	echo "cookie set!\n";
 	$cookie=$_COOKIE['user_cookie'];
-	if(!cookie_login($cookie))
-	{
-		$msg = "cookie {$cookie}: cookie login error!";
-		//$log->general($msg);
 
-		$login_resp['login_code'] = COOKIE_LOGIN_ERROR; //register error
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
-	}
-	else
+	$result = cookie_login($cookie);
+	echo "result={$result}\n";
+	if ($result == DB_ITEM_FOUND)
 	{
 		$msg = "cookie {$cookie}: cookie login successful!";
 		//$log->general($msg);
@@ -58,5 +54,24 @@ if (isset($_COOKIE['user_cookie']))
 		header('Content-Type: application/json');
 		echo json_encode($login_resp);
 	}
+	else if($result == COOKIE_NOT_SAVED)
+	{
+		$msg = "cookie {$cookie}: cookie not saved in db, please use username and password to login!";
+		//$log->general($msg);
+
+		$login_resp['login_code'] = COOKIE_NOT_SAVED; //register error
+		header('Content-Type: application/json');
+		echo json_encode($login_resp);
+	}
+	else
+	{
+		$msg = "cookie {$cookie}: cookie login error!";
+		//$log->general($msg);
+
+		$login_resp['login_code'] = COOKIE_LOGIN_ERROR; //register error
+		header('Content-Type: application/json');
+		echo json_encode($login_resp);
+	}
+
 }
 ?>
