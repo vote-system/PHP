@@ -106,11 +106,7 @@ function login($username, $password) {
 
 function cookie_login($cookie){
 // check cookie with db
-// if yes, return true
-// else return false
-
   // connect to db
-  echo "Function cookie_login\n";
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function login,db connect error!";

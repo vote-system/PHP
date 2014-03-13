@@ -40,11 +40,9 @@ if ($username && $passwd) {
 //cookie login
 if (isset($_COOKIE['user_cookie']))
 {
-	echo "cookie set!\n";
 	$cookie=$_COOKIE['user_cookie'];
 
 	$result = cookie_login($cookie);
-	echo "result={$result}\n";
 	if ($result == DB_ITEM_FOUND)
 	{
 		$msg = "cookie {$cookie}: cookie login successful!";
