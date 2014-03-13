@@ -14,6 +14,7 @@ define('DB_INSERT_ERROR', 3);
 define('DB_DELETE_ERROR', 4);
 define('DB_ITEM_FOUND', 5);
 define('DB_ITEM_NOT_FOUND', 6);
+define('DB_ERROR', 7);
 
 //macro for regist
 define('REGISTER_SUCCESS', 1);
@@ -37,6 +38,11 @@ define('COOKIE_NOT_SAVED', 3);
 define('NAME_BEEN_USED', 1);
 define('NAME_NOT_USED', 0);
 define('NAME_CHECK_ERROR', -1);
+
+//macro for changing passwd
+define('CHANGE_PASSWD_SUCCESS', 0);
+define('OLD_PASSWD_NOT_EXISTED', 1);
+define('CONFIRM_NOT_CORRECT', 2);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

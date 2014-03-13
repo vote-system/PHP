@@ -12,20 +12,20 @@ function register($username, $email, $password) {
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function register,db connect error!";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
   // check if username is unique
   $result = $conn->query("select * from user where username='".$username."'");
   if (!$result) {
     $msg = "Function register,db query failed";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_QUERY_ERROR;
   }
 
   if ($result->num_rows>0) {
 	$msg = "Function register,username={$username} already in used";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_ITEM_FOUND;  
   }
   // if ok, put in db
@@ -35,7 +35,7 @@ function register($username, $email, $password) {
                            ('".$username."', sha1('".$password."'), '".$email."','')");
   if (!$result) {
     $msg = "Function register,db insert username={$username} error";
-	$auth_log->general($msg);
+	//$auth_log->general($msg);
 	return DB_INSERT_ERROR;
   }
   return true;
@@ -175,21 +175,18 @@ function cookie_insert($username){
 	 }		
   }
 }
-
+/*
 function check_valid_user() {
 // see if somebody is logged in and notify them if not
   if (isset($_SESSION['valid_user']))  {
       echo "Logged in as ".$_SESSION['valid_user'].".<br />";
   } else {
      // they are not logged in
-     do_html_heading('Problem:');
-     echo 'You are not logged in.<br />';
-     do_html_url('login.php', 'Login');
-     do_html_footer();
+     //echo 'You are not logged in.<br />';
      exit;
   }
 }
-
+*/
 function change_password($username, $old_password, $new_password) {
 // change password for username/old_password to new_password
 // return true or false
@@ -197,16 +194,29 @@ function change_password($username, $old_password, $new_password) {
   // if the old password is right
   // change their password to new_password and return true
   // else throw an exception
-  login($username, $old_password);
-  $conn = db_connect();
-  $result = $conn->query("update user
-                          set passwd = sha1('".$new_password."')
-                          where username = '".$username."'");
-  if (!$result) {
-    throw new Exception('Password could not be changed.');
-  } else {
-    return true;  // changed successfully
-  }
+  $result = login($username, $old_password);
+	if($result == DB_ITEM_NOT_FOUND){
+		return LOGIN_ERROR;
+	}
+	else if($result == DB_ITEM_FOUND)
+	{
+		$conn = db_connect();
+		$res = $conn->query("update user
+							  set passwd = sha1('".$new_password."')
+							  where username = '".$username."'");
+		if (!$res) {
+			return DB_ERROR;
+		} else {
+			return CHANGE_PASSWD_SUCCESS;  // changed successfully
+		}
+	}
+	else
+	{
+		return DB_ERROR;
+	}
+
+
+  
 }
 
 function get_random_word($min_length, $max_length) {
