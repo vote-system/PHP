@@ -11,10 +11,11 @@ define('DB_CONNECT_ERROR', 0);
 define('DB_CONNECT_SUCCESS', 1);
 define('DB_QUERY_ERROR', 2);
 define('DB_INSERT_ERROR', 3);
-define('DB_DELETE_ERROR', 4);
-define('DB_ITEM_FOUND', 5);
-define('DB_ITEM_NOT_FOUND', 6);
-define('DB_ERROR', 7);
+define('DB_UPDATE_ERROR', 4);
+define('DB_DELETE_ERROR', 5);
+define('DB_ITEM_FOUND', 6);
+define('DB_ITEM_NOT_FOUND', 7);
+define('DB_ERROR', 8);
 
 //macro for regist
 define('REGISTER_SUCCESS', 1);
@@ -43,6 +44,11 @@ define('NAME_CHECK_ERROR', -1);
 define('CHANGE_PASSWD_SUCCESS', 0);
 define('OLD_PASSWD_NOT_EXISTED', 1);
 define('CONFIRM_NOT_CORRECT', 2);
+
+//macro for update_usr_info
+define('USER_NAME_NOT_FILL', 0);
+define('INFO_UPDATE_SUCCESS', 1);
+
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

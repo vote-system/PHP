@@ -16,7 +16,7 @@ if ($username && $passwd) {
 		$msg = "user {$username}: login failed!";
 		//$log->general($msg);
 
-		$login_resp['login_code'] = LOGIN_ERROR; //login error
+		$login_resp['login_code'] = DB_ITEM_NOT_FOUND; //user name and passwd not correct!
 
 		header('Content-Type: application/json');
 		echo json_encode($login_resp);
@@ -35,6 +35,13 @@ if ($username && $passwd) {
 			setcookie("user_cookie", sha1($username));
 		}
 		$login_resp['login_code'] = LOGIN_SUCCESS; //login success
+		header('Content-Type: application/json');
+		echo json_encode($login_resp);
+	}
+	else
+	{
+		$login_resp['login_code'] = LOGIN_ERROR; //login error,server error
+
 		header('Content-Type: application/json');
 		echo json_encode($login_resp);
 	}

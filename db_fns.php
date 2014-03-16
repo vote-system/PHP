@@ -11,5 +11,4 @@ function db_connect() {
      return $result;
    }
 }
-
 ?>
