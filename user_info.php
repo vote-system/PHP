@@ -63,13 +63,20 @@ $conn = db_connect();
 	 }	
   }
 
+if($gender)
+{
+	/*
+	$item_name='gender';
+	update_item($item_name,$gender);	
+	return;
+	*/
 
-$res = $conn->query("update user_detail
-							set "$item_name" = '".$item_value."'
+	$res = $conn->query("update user_detail
+							set gender = '".$gender."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
-		$msg = "Function update_usr_info,db insert line failed";
+		$msg = "Function update_usr_info,db update failed";
 		//$auth_log->general($msg);
 		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
 		header('Content-Type: application/json');
@@ -80,49 +87,116 @@ $res = $conn->query("update user_detail
 		header('Content-Type: application/json');
 		echo json_encode($usrinfo_resp);
 	 }
-
-/*
-if($gender)
-{
-	$item_name='gender';
-	update_item($item_name,$gender);	
-	return;
 }
 
 if($signature)
 {
-	$item_name='signature';
-	update_item($item_name,$signature);	
-	return;
+	//$item_name='signature';
+	//update_item($item_name,$signature);	
+	//return;
+
+	$res = $conn->query("update user_detail
+							set signature = '".$signature."'
+							where username = '".$username."'");
+	if (!$res) {
+		echo "db_update error\n";
+		$msg = "Function update_usr_info,db update failed";
+		//$auth_log->general($msg);
+		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
+	 else{
+		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
 }
 
 if($screen_name)
 {
-	$item_name='screen_name';
-	update_item($item_name,$screen_name);	
-	return;
+	//$item_name='screen_name';
+	//update_item($item_name,$screen_name);	
+	//return;
+
+	$res = $conn->query("update user_detail
+							set screen_name = '".$screen_name."'
+							where username = '".$username."'");
+	if (!$res) {
+		echo "db_update error\n";
+		$msg = "Function update_usr_info,db update failed";
+		//$auth_log->general($msg);
+		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
+	 else{
+		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
 }
 
 if($screen_name_pinyin)
 {
-	$item_name='screen_name_pinyin';
-	update_item($item_name,$screen_name_pinyin);	
-	return;
-}
+	//$item_name='screen_name_pinyin';
+	//update_item($item_name,$screen_name_pinyin);	
+	//return;
 
+	$res = $conn->query("update user_detail
+							set screen_name_pinyin = '".$screen_name_pinyin."'
+							where username = '".$username."'");
+	if (!$res) {
+		echo "db_update error\n";
+		$msg = "Function update_usr_info,db update failed";
+		//$auth_log->general($msg);
+		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
+	 else{
+		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
+}
+/*
 if($head_imag_url)
 {
-	$item_name='head_imag_url';
-	update_item($item_name,$head_imag_url);	
-	return;
+	//$item_name='head_imag_url';
+	//update_item($item_name,$head_imag_url);	
+	//return;
+
+	$res = $conn->query("update user_detail
+							set gender = '".$gender."'
+							where username = '".$username."'");
+	if (!$res) {
+		echo "db_update error\n";
+		$msg = "Function update_usr_info,db update failed";
+		//$auth_log->general($msg);
+		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
+	 else{
+		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
+		header('Content-Type: application/json');
+		echo json_encode($usrinfo_resp);
+	 }
 }
 
 function update_item($item_name,$item_value)
 {
 	echo "function update_item\n";
+	//$update="update user_detail
+	//		set '$item_name' = '$item_value'
+	//		where username = '$username'";
+	//$res = $conn->query($update);
+	
 	$res = $conn->query("update user_detail
-							set "$item_name" = '".$item_value."'
+							set '"$item_name"' = '".$item_value."'
 							where username = '".$username."'");
+	
 	if (!$res) {
 		echo "db_update error\n";
 		$msg = "Function update_usr_info,db insert line failed";
