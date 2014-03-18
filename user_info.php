@@ -49,8 +49,19 @@ $conn = db_connect();
 	 	//echo "line existed\n";
   }
   else{
-	// create the line for the username
-	//echo "line not existed,created\n";
+	//create the record for the user in database
+    //mkdir under the /vote/upload for each user to upload the iamge
+
+	$upload_dir = "/vote/upload/$username";
+	$oldumask = umask(0);
+	$res = mkdir($upload_dir, 0777);
+	if(!$res)
+	{
+		$msg = "mkdir error for $upload_dir\n";
+		//error_log($msg,3,"/alidate/log");
+	}
+	umask($oldumask);
+
 	$res = $conn->query("insert into user_detail values
                            ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
 	
@@ -74,7 +85,7 @@ if($gender)
 	*/
 
 	$res = $conn->query("update user_detail
-							set gender = '".$gender."' and info_timestamp = '".timestamp."'
+							set gender = '".$gender."',info_timestamp = '".$timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		//echo "db_update error\n";
@@ -98,7 +109,7 @@ if($signature)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set signature = '".$signature."' and info_timestamp = '".timestamp."'
+							set signature = '".$signature."',info_timestamp = '".$timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
@@ -122,7 +133,7 @@ if($screen_name)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set screen_name = '".$screen_name."' and info_timestamp = '".timestamp."'
+							set screen_name = '".$screen_name."',info_timestamp = '".$timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
@@ -146,7 +157,7 @@ if($screen_name_pinyin)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set screen_name_pinyin = '".$screen_name_pinyin."' and info_timestamp = '".timestamp."'
+							set screen_name_pinyin = '".$screen_name_pinyin."',info_timestamp = '".$timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";

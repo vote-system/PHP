@@ -5,16 +5,7 @@ $date = new DateTime();
 $timestamp = $date->getTimestamp();
  
 $username=$_POST['username'];
-$upload_dir="/alidata"."$username";
-
-if(upload_dir existed)
-{
-	//do nothing
-}
-else
-{
-	mkdir();
-}
+$upload_dir = "/vote/upload/$username";
 
 if($head_imag_url)
 {
