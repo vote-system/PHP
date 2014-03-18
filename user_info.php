@@ -6,9 +6,11 @@ $gender=$_POST['gender'];
 $signature=$_POST['signature'];
 $screen_name=$_POST['screen_name'];
 $screen_name_pinyin=$_POST['screen_name_pinyin'];
-$head_imag_url=$_POST['head_imag_url'];
+//$head_imag_url=$_POST['head_imag_url'];
 
-echo "username={$username}\n";
+$date = new DateTime();
+$timestamp = $date->getTimestamp();
+ 
 if(!$username) //must fill the username with other parameter
 {	
 	$usrinfo_resp['usrinfo_code'] = USER_NAME_NOT_FILL; //user name and passwd not correct!
@@ -22,7 +24,7 @@ $conn = db_connect();
 	$msg = "update_usr_info ,db connect error!";
 	//$auth_log->general($msg);
 	
-	echo "db_connect error\n";
+	//echo "db_connect error\n";
 	$usrinfo_resp['usrinfo_code'] = DB_CONNECT_ERROR; 
 	header('Content-Type: application/json');
 	echo json_encode($usrinfo_resp);
@@ -34,7 +36,7 @@ $conn = db_connect();
                          where username='".$username."'");
   if (!$result) {
     $msg = "update_usr_info,db query failed!";
-	echo "db_query error\n";
+	//echo "db_query error\n";
 	//$auth_log->general($msg);
 	$usrinfo_resp['usrinfo_code'] = DB_QUERY_ERROR; 
 	header('Content-Type: application/json');
@@ -44,16 +46,16 @@ $conn = db_connect();
 
   if ($result->num_rows>0) {
      //do nothing, the line for the user existed.
-	 	echo "line existed\n";
+	 	//echo "line existed\n";
   }
   else{
 	// create the line for the username
-	echo "line not existed,created\n";
+	//echo "line not existed,created\n";
 	$res = $conn->query("insert into user_detail values
-                           ('".$username."','','','','','')");
+                           ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
 	
 	if (!$res) {
-		echo "db_insert error\n";
+		//echo "db_insert error\n";
 		$msg = "Function update_usr_info,db insert line failed";
 		//$auth_log->general($msg);
 		$usrinfo_resp['usrinfo_code'] = DB_INSERT_ERROR; 
@@ -72,10 +74,10 @@ if($gender)
 	*/
 
 	$res = $conn->query("update user_detail
-							set gender = '".$gender."'
+							set gender = '".$gender."' and info_timestamp = '".timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
-		echo "db_update error\n";
+		//echo "db_update error\n";
 		$msg = "Function update_usr_info,db update failed";
 		//$auth_log->general($msg);
 		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
@@ -96,7 +98,7 @@ if($signature)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set signature = '".$signature."'
+							set signature = '".$signature."' and info_timestamp = '".timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
@@ -120,7 +122,7 @@ if($screen_name)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set screen_name = '".$screen_name."'
+							set screen_name = '".$screen_name."' and info_timestamp = '".timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
@@ -144,7 +146,7 @@ if($screen_name_pinyin)
 	//return;
 
 	$res = $conn->query("update user_detail
-							set screen_name_pinyin = '".$screen_name_pinyin."'
+							set screen_name_pinyin = '".$screen_name_pinyin."' and info_timestamp = '".timestamp."'
 							where username = '".$username."'");
 	if (!$res) {
 		echo "db_update error\n";
@@ -160,31 +162,9 @@ if($screen_name_pinyin)
 		echo json_encode($usrinfo_resp);
 	 }
 }
+
+
 /*
-if($head_imag_url)
-{
-	//$item_name='head_imag_url';
-	//update_item($item_name,$head_imag_url);	
-	//return;
-
-	$res = $conn->query("update user_detail
-							set gender = '".$gender."'
-							where username = '".$username."'");
-	if (!$res) {
-		echo "db_update error\n";
-		$msg = "Function update_usr_info,db update failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		header('Content-Type: application/json');
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		header('Content-Type: application/json');
-		echo json_encode($usrinfo_resp);
-	 }
-}
-
 function update_item($item_name,$item_value)
 {
 	echo "function update_item\n";
