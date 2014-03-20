@@ -32,7 +32,7 @@ function register($username, $email, $password) {
   //$result = $conn->query("insert into user values
   //                         ('".$username."', sha1('".$password."'), '".$email."')");
   $result = $conn->query("insert into user values
-                           ('".$username."', sha1('".$password."'), '".$email."','')");
+                           ('".$username."', sha1('".$password."'), '".$email."',NULL)");
   if (!$result) {
     $msg = "Function register,db insert username={$username} error";
 	//$auth_log->general($msg);
@@ -62,11 +62,11 @@ function username_unique($username) {
   if ($result->num_rows>0) {
 	$msg = "Function username_unique,username={$username} already in used";
 	//$auth_log->general($msg);
-	echo "found username in db";
+	//echo "found username in db";
 	return DB_ITEM_FOUND;  
   }
   else{
-	echo "username not been used";
+	//echo "username not been used";
 	return DB_ITEM_NOT_FOUND;
   }
 }

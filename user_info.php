@@ -10,6 +10,7 @@ $screen_name_pinyin=$_POST['screen_name_pinyin'];
 
 $date = new DateTime();
 $timestamp = $date->getTimestamp();
+//echo $timestamp;
  
 if(!$username) //must fill the username with other parameter
 {	
@@ -58,12 +59,13 @@ $conn = db_connect();
 	if(!$res)
 	{
 		$msg = "mkdir error for $upload_dir\n";
+		echo "mkdir error for $upload_dir\n";
 		//error_log($msg,3,"/alidate/log");
 	}
 	umask($oldumask);
 
 	$res = $conn->query("insert into user_detail values
-                           ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
+                           ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
 	
 	if (!$res) {
 		//echo "db_insert error\n";

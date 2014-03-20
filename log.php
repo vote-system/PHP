@@ -32,9 +32,3 @@ class vote_log {
 } 
 
 ?> 
-
-
-
-
-
-
