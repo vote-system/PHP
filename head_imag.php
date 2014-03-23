@@ -7,6 +7,20 @@ $timestamp = $date->getTimestamp();
 $username=$_POST['username'];
 $upload_dir = "/vote/upload/$username";
 
+if(!is_dir($upload_dir))
+{
+	$oldumask = umask(0);
+	$res = mkdir($upload_dir, 0777);
+	if(!$res)
+	{
+		$msg = "mkdir error for $upload_dir\n";
+		echo "mkdir error for $upload_dir\n";
+		//error_log($msg,3,"/alidate/log");
+	}
+	umask($oldumask);
+
+}
+
 if($head_imag_url)
 {
 	//$item_name='head_imag_url';
