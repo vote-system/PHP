@@ -49,6 +49,18 @@ define('CONFIRM_NOT_CORRECT', 2);
 define('USER_NAME_NOT_FILL', 0);
 define('INFO_UPDATE_SUCCESS', 1);
 
+define("FILE_NAME_NULL", 1);
+define("FILE_SIZE_NULL", 2);
+define("FILE_SIZE_OVER", 3);
+define("UPLOAD_CORRUPT", 4);
+define("MV_FILE_FAIL", 5);
+define("RESIZE_IMAGE_FAIL", 6);
+define("UPDATE_IMAGE_SUCC", 7);
+define("UPDATE_IMAGE_FAIL", 8);
+
+
+
+
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
