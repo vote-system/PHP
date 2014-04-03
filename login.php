@@ -8,6 +8,13 @@ require_once('vote_fns.php');
 $username = $_POST['username'];
 $passwd = $_POST['passwd'];
 
+$reg_resp['username'] = $username; 
+$reg_resp['passwd'] = $passwd; 
+
+//echo $reg_resp["name_used"];
+header('Content-Type: application/json');
+echo json_encode($reg_resp);
+
 //username&passwd login
 if ($username && $passwd) {
 	$result = login($username, $passwd);
