@@ -28,7 +28,6 @@ if($usrunique == 1)
 		header('Content-Type: application/json');
 		echo json_encode($reg_resp);
 		return;
-		
 	}
 	else if($uniq_res == DB_ITEM_NOT_FOUND)
 	{

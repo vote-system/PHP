@@ -19,7 +19,8 @@ return DB_QUERY_ERROR;
 
 $user_info = $result->fetch_assoc();
 if(!$user_info)
-header('Content-Type: application/json');
-echo json_encode($user_info);
-
+{
+	header('Content-Type: application/json');
+	echo json_encode($user_info);
+}
 ?>
