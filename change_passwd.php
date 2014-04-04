@@ -6,10 +6,11 @@ $old_passwd = $_POST['old_passwd'];
 $new_passwd = $_POST['new_passwd'];
 $confirm_passwd = $_POST['confirm_passwd'];
 
+header('Content-Type: application/json');
+
 if($new_passwd != $confirm_passwd)
 {
 	$login_resp['login_code'] = CONFIRM_NOT_CORRECT; //login error
-	header('Content-Type: application/json');
 	echo json_encode($login_resp);
 	return;
 }	
@@ -17,7 +18,6 @@ if($new_passwd != $confirm_passwd)
 if ((strlen($new_passwd) > 16) || (strlen($new_passwd) < 6)) 
 {
 	$login_resp['login_code'] = PASSWD_LENGTH_ERROR; //login error
-	header('Content-Type: application/json');
 	echo json_encode($login_resp);
 	return;
 }
@@ -27,7 +27,6 @@ if($result == CHANGE_PASSWD_SUCCESS)
 {
 	//change passwd success!
 	$login_resp['login_code'] = CHANGE_PASSWD_SUCCESS; 
-	header('Content-Type: application/json');
 	echo json_encode($login_resp);
 	return;
 }
@@ -35,14 +34,12 @@ else if($result == LOGIN_ERROR)
 {
 	//old passwd not correct,input again
 	$login_resp['login_code'] = LOGIN_ERROR; 
-	header('Content-Type: application/json');
 	echo json_encode($login_resp);
 	return;
 }
 else if($result == DB_ERROR)
 {
 	$login_resp['login_code'] = DB_ERROR; 
-	header('Content-Type: application/json');
 	echo json_encode($login_resp);
 	return;
 }
