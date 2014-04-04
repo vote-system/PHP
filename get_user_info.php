@@ -3,7 +3,18 @@ require_once("vote_fns.php");
 $usrname = $_POST['usrname'];
 $fetch_name = $_POST['fetch_name'];
 
-user_detail_key=array(0=>'usrname',1=>'gender',2=>'signature',3=>'screen_name',4=>'screen_name_pinyin',5=>'original_head_iamge_url',6=>'medium_head_iamge_url',7=>'thumbnails_head_iamge_url',8=>'info_timestamp',9=>'image_timestamp');
+$user_detail_key=array(
+			0 => "usrname",
+			1 => "gender",
+			2 => "signature",
+			3 => "screen_name",
+			4 => "screen_name_pinyin",
+			5 => "original_head_iamge_url",
+			6 => "medium_head_iamge_url",
+			7 => "thumbnails_head_iamge_url",
+			8 => "info_timestamp",
+			9 => "image_timestamp",
+			);
 
 
 header('Content-Type: application/json');
@@ -23,19 +34,11 @@ return DB_QUERY_ERROR;
 }
 
 //$user_info = $result->fetch_assoc();
-if(!$user_info)
+$usrinfo_array = array();
+for ($count=0; $row = $result->fetch_assoc(); $count++) 
 {
-	$usrinfo_array = array();
-	for ($count=0; $row = $result->fetch_assoc(); $count++) 
-	{
-		$key=user_detail_key[$count];
-		$usrinfo_array[$key] = $row;
-	}
-	echo json_encode($usrinfo_array);
+	$key=$user_detail_key[$count];
+	$usrinfo_array[$key] = $row;
 }
-else
-{
-	$usrinfo_array['usrinfo_code'] = DB_ITEM_NOT_FOUND;
-	echo json_encode($usrinfo_array);
-}
+echo json_encode($usrinfo_array);
 ?>
