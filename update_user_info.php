@@ -175,6 +175,8 @@ if($screen_name_pinyin)
 		echo json_encode($usrinfo_resp);
 	 }
 }
+
+
 /*
 function update_item($item_name,$item_value)
 {

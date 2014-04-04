@@ -31,16 +31,17 @@ if ($usrname && $passwd)
 
 		//check whether the usrname item have been created in table user_detail
 		//if not, create it
-
+		
 
 		// login successful,produce a cookie for the user
 		// write the cookie into database
 
 		$res = cookie_insert($usrname);
 		//echo "res={$res}\n";
-		if($res == COOKIE_SAVE_SUCCESS){
+		if($res == COOKIE_SAVE_SUCCESS || $res == DB_SIMILAR_ITEM_FOUND){
 			//only if cookie insert success in db then send cookie to customer
-			setcookie("user_cookie", sha1($usrname));
+			setcookie("user_cookie", sha1($usrname),time()+3600,"/vote","115.28.228.41");
+			//setcookie("user_cookie", sha1($usrname),"115.28.228.41");
 		}
 		$login_resp['login_code'] = LOGIN_SUCCESS; //login success
 	}

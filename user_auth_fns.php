@@ -51,7 +51,7 @@ function register($usrname, $email, $password) {
 	else
 	{
 		$res = $conn->query("insert into user_detail values
-                    ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
+                    ('".$usrname."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
 		if(!$res)
 			return DB_INSERT_ERROR;
 	}
@@ -115,7 +115,7 @@ function login($usrname, $password,$device_token) {
   if ($result->num_rows>0) {
 	 //insert the device token
 	 $result = $conn->query("update user
-							set device_token = ".$device_token."')
+							set device_token = '".$device_token."'
 							where usrname = '".$usrname."'");
 	 if (!$result) {
 		$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
