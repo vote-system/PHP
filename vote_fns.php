@@ -36,14 +36,14 @@ define('COOKIE_SAVE_SUCCESS', 2);
 define('COOKIE_NOT_SAVED', 3);
 
 //macro to check whether name have been used
-define('NAME_NOT_USED', 0);
 define('NAME_BEEN_USED', 1);
-define('NAME_CHECK_ERROR', 2);
+define('NAME_NOT_USED', 0);
+define('NAME_CHECK_ERROR', -1);
 
 //macro for changing passwd
-define('CHANGE_PASSWD_SUCCESS', 1);
-define('OLD_PASSWD_NOT_EXISTED', 2);
-define('CONFIRM_NOT_CORRECT', 3);
+define('CHANGE_PASSWD_SUCCESS', 0);
+define('OLD_PASSWD_NOT_EXISTED', 1);
+define('CONFIRM_NOT_CORRECT', 2);
 
 //macro for update_usr_info
 define('USER_NAME_NOT_FILL', 0);

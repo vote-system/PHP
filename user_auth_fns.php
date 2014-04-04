@@ -4,7 +4,7 @@ require_once('vote_fns.php');
 
 //$auth_log = new vote_log();
 
-function register($username, $email, $password) {
+function register($usrname, $email, $password) {
 // register new person with db
 // return true or error message
 
@@ -15,8 +15,8 @@ function register($username, $email, $password) {
 	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
-  // check if username is unique
-  $result = $conn->query("select * from user where username='".$username."'");
+  // check if usrname is unique
+  $result = $conn->query("select * from user where usrname='".$usrname."'");
   if (!$result) {
     $msg = "Function register,db query failed";
 	//$auth_log->general($msg);
@@ -24,25 +24,43 @@ function register($username, $email, $password) {
   }
 
   if ($result->num_rows>0) {
-	$msg = "Function register,username={$username} already in used";
+	$msg = "Function register,usrname={$usrname} already in used";
 	//$auth_log->general($msg);
 	return DB_ITEM_FOUND;  
   }
   // if ok, put in db
-  //$result = $conn->query("insert into user values
-  //                         ('".$username."', sha1('".$password."'), '".$email."')");
+  
   $result = $conn->query("insert into user values
-                           ('".$username."', sha1('".$password."'), '".$email."',NULL)");
+                           ('".$usrname."', sha1('".$password."'), '".$email."',NULL, NULL)");
   if (!$result) {
-    $msg = "Function register,db insert username={$username} error";
+    $msg = "Function register,db insert usrname={$usrname} error";
 	//$auth_log->general($msg);
 	return DB_INSERT_ERROR;
   }
-  return true;
+  else
+  {
+	//check if the user_detail db has the same item, if not ,create for it
+    $result = $conn->query("select * from user_detail where usrname='".$usrname."'");
+	if(!$result)
+	{
+		return DB_QUERY_ERROR;
+	}
+	if ($result->num_rows>0) {
+		//do nothing
+    }
+	else
+	{
+		$res = $conn->query("insert into user_detail values
+                    ('".$username."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
+		if(!$res)
+			return DB_INSERT_ERROR;
+	}
+	return true;
+  }
 }
 
-function username_unique($username) {
-  // check if the username to register have already been used
+function username_unique($usrname) {
+  // check if the usrname to register have already been used
   //echo "Function username_unique";
  
   $conn = db_connect();
@@ -51,8 +69,8 @@ function username_unique($username) {
 	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
-  // check if username is unique
-  $result = $conn->query("select * from user where username='".$username."'");
+  // check if usrname is unique
+  $result = $conn->query("select * from user where usrname='".$usrname."'");
   if (!$result) {
     $msg = "Function username_unique,db query failed";
 	//$auth_log->general($msg);
@@ -60,19 +78,19 @@ function username_unique($username) {
   }
   
   if ($result->num_rows>0) {
-	$msg = "Function username_unique,username={$username} already in used";
+	$msg = "Function username_unique,usrname={$usrname} already in used";
 	//$auth_log->general($msg);
-	//echo "found username in db";
+	//echo "found usrname in db";
 	return DB_ITEM_FOUND;  
   }
   else{
-	//echo "username not been used";
+	//echo "usrname not been used";
 	return DB_ITEM_NOT_FOUND;
   }
 }
 
-function login($username, $password) {
-// check username and password with db
+function login($usrname, $password,$device_token) {
+// check usrname and password with db
 // if yes, return true
 // else throw exception
 
@@ -84,9 +102,9 @@ function login($username, $password) {
 	return DB_CONNECT_ERROR;
   }
 
-  // check if username is unique
+  // check if usrname is unique
   $result = $conn->query("select * from user
-                         where username='".$username."'
+                         where usrname='".$usrname."'
                          and passwd = sha1('".$password."')");
   if (!$result) {
     $msg = "Function login,db query failed!";
@@ -95,13 +113,22 @@ function login($username, $password) {
   }
 
   if ($result->num_rows>0) {
+	 //insert the device token
+	 $result = $conn->query("update user
+							set device_token = ".$device_token."')
+							where usrname = '".$usrname."'");
+	 if (!$result) {
+		$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
+		//$auth_log->general($msg);
+		return DB_INSERT_ERROR;
+	 }
+
      return DB_ITEM_FOUND;
   } else {
-     $msg = "Function login,  username={$username} and passwd={$passwd} not found in database";
+     $msg = "Function login,  usrname={$usrname} and passwd={$passwd} not found in database";
 	 //$auth_log->general($msg);
 	 return DB_ITEM_NOT_FOUND;
   }
-  
 }
 
 function cookie_login($cookie){
@@ -129,17 +156,17 @@ function cookie_login($cookie){
   }
   else{
 	// cookie not found into database, return cookie login failed
-	$msg = "Function cookie_login,cookie={$cookie} login filed, please use username and passwd login!";
+	$msg = "Function cookie_login,cookie={$cookie} login filed, please use usrname and passwd login!";
 	//$auth_log->general($msg);
 	return COOKIE_NOT_SAVED;  
   }
 }
 
-function cookie_insert($username){
+function cookie_insert($usrname){
 // first check if the cookie have already write to the database
 // if not, insert it, else return alaready insert
   //echo "FUNCTION cookie_insert!\n";
-  $cookie = sha1($username);
+  $cookie = sha1($usrname);
   $conn = db_connect();
   if(!$conn){
 	$msg = "Function cookie_insert,db connect error!";
@@ -147,10 +174,10 @@ function cookie_insert($username){
 	return DB_CONNECT_ERROR;
   }
 
-  // check if username is unique
+  // check if usrname is unique
   $result = $conn->query("select * from user
                          where cookie='".$cookie."' 
-						 and username='".$username."'");
+						 and usrname='".$usrname."'");
   if (!$result) {
     $msg = "Function cookie_insert,db query failed!";
 	//$auth_log->general($msg);
@@ -163,8 +190,8 @@ function cookie_insert($username){
   else{
 	// cookie not found in database,inset it
 	$result = $conn->query("update user
-							set cookie = sha1('".$username."')
-							where username = '".$username."'");
+							set cookie = sha1('".$usrname."')
+							where usrname = '".$usrname."'");
 	if (!$result) {
 		$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
 		//$auth_log->general($msg);
@@ -174,6 +201,46 @@ function cookie_insert($username){
 		return COOKIE_SAVE_SUCCESS;
 	 }		
   }
+}
+
+//when first time login in success,create the item in user_detail table
+function create_item($usrname)
+{
+  $conn = db_connect();
+  if(!$conn){
+	$msg = "Function create_item,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+  // check if usrname is unique
+  $result = $conn->query("select * from user_detail where usrname='".$usrname."'");
+  if (!$result) {
+    $msg = "Function create_item,db query failed";
+	//$auth_log->general($msg);
+	return DB_QUERY_ERROR;
+  }
+
+  if ($result->num_rows>0) {
+	//item alredy creted, do nothing
+	$msg = "Function create_item,usrname={$usrname} already in used";
+	//$auth_log->general($msg);
+	return DB_ITEM_FOUND;  
+  }
+  else{
+
+	$result = $conn->query("insert into user values
+                           ('".$usrname."', sha1('".$password."'), '".$email."',NULL, NULL)");
+  }
+  // if ok, put in db
+  
+  
+  if (!$result) {
+    $msg = "Function register,db insert usrname={$usrname} error";
+	//$auth_log->general($msg);
+	return DB_INSERT_ERROR;
+  }
+  return true;
+	
 }
 /*
 function check_valid_user() {
@@ -187,14 +254,14 @@ function check_valid_user() {
   }
 }
 */
-function change_password($username, $old_password, $new_password) {
-// change password for username/old_password to new_password
+function change_password($usrname, $old_password, $new_password) {
+// change password for usrname/old_password to new_password
 // return true or false
 
   // if the old password is right
   // change their password to new_password and return true
   // else throw an exception
-  $result = login($username, $old_password);
+  $result = login($usrname, $old_password);
 	if($result == DB_ITEM_NOT_FOUND){
 		return LOGIN_ERROR;
 	}
@@ -203,7 +270,7 @@ function change_password($username, $old_password, $new_password) {
 		$conn = db_connect();
 		$res = $conn->query("update user
 							  set passwd = sha1('".$new_password."')
-							  where username = '".$username."'");
+							  where usrname = '".$usrname."'");
 		if (!$res) {
 			return DB_ERROR;
 		} else {
@@ -214,9 +281,6 @@ function change_password($username, $old_password, $new_password) {
 	{
 		return DB_ERROR;
 	}
-
-
-  
 }
 
 function get_random_word($min_length, $max_length) {
@@ -249,8 +313,8 @@ function get_random_word($min_length, $max_length) {
   return $word;
 }
 
-function reset_password($username) {
-// set password for username to a random value
+function reset_password($usrname) {
+// set password for usrname to a random value
 // return the new password or false on failure
   // get a random dictionary word b/w 6 and 13 chars in length
   $new_password = get_random_word(6, 13);
@@ -268,7 +332,7 @@ function reset_password($username) {
   $conn = db_connect();
   $result = $conn->query("update user
                           set passwd = sha1('".$new_password."')
-                          where username = '".$username."'");
+                          where usrname = '".$usrname."'");
   if (!$result) {
     throw new Exception('Could not change password.');  // not changed
   } else {
@@ -276,17 +340,17 @@ function reset_password($username) {
   }
 }
 
-function notify_password($username, $password) {
+function notify_password($usrname, $password) {
 // notify the user that their password has been changed
 
     $conn = db_connect();
     $result = $conn->query("select email from user
-                            where username='".$username."'");
+                            where usrname='".$usrname."'");
     if (!$result) {
       throw new Exception('Could not find email address.');
     } else if ($result->num_rows == 0) {
       throw new Exception('Could not find email address.');
-      // username not in db
+      // usrname not in db
     } else {
       $row = $result->fetch_object();
       $email = $row->email;

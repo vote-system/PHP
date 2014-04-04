@@ -5,53 +5,58 @@ require_once('vote_fns.php');
 //session_start();
 
 //create short variable names
-$username = $_POST['username'];
+$usrname = $_POST['usrname'];
 $passwd = $_POST['passwd'];
+$device_token = $_POST['device_token'];
 
-$reg_resp['username'] = $username; 
-$reg_resp['passwd'] = $passwd; 
-
-//echo $reg_resp["name_used"];
+//return the json type data to the client
 header('Content-Type: application/json');
-echo json_encode($reg_resp);
 
-//username&passwd login
-if ($username && $passwd) {
-	$result = login($username, $passwd);
+//$reg_resp['usrname'] = $usrname; 
+//$reg_resp['passwd'] = $passwd; 
+//echo $reg_resp["name_used"];
+//header('Content-Type: application/json');
+//echo json_encode($reg_resp);
 
-    if( $result == DB_ITEM_NOT_FOUND){
-		$msg = "user {$username}: login failed!";
+//header('Content-Type: application/json');
+//usrname&passwd login
+if ($usrname && $passwd) 
+{
+	$result = login($usrname, $passwd,$device_token);
+
+	if($result == DB_ITEM_FOUND)
+	{
+		$msg = "user {$usrname}: login successful!";
 		//$log->general($msg);
 
-		$login_resp['login_code'] = DB_ITEM_NOT_FOUND; //user name and passwd not correct!
+		//check whether the usrname item have been created in table user_detail
+		//if not, create it
 
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
-	}
-	else if($result == DB_ITEM_FOUND){
-		$msg = "user {$username}: login successful!";
-		//$log->general($msg);
 
 		// login successful,produce a cookie for the user
 		// write the cookie into database
 
-		$res = cookie_insert($username);
+		$res = cookie_insert($usrname);
 		//echo "res={$res}\n";
 		if($res == COOKIE_SAVE_SUCCESS){
 			//only if cookie insert success in db then send cookie to customer
-			setcookie("user_cookie", sha1($username));
+			setcookie("user_cookie", sha1($usrname));
 		}
 		$login_resp['login_code'] = LOGIN_SUCCESS; //login success
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
+	}
+	else if( $result == DB_ITEM_NOT_FOUND)
+	{
+		$msg = "user {$usrname}: login failed!";
+		//$log->general($msg);
+
+		$login_resp['login_code'] = DB_ITEM_NOT_FOUND; //user name and passwd not correct!
 	}
 	else
 	{
 		$login_resp['login_code'] = LOGIN_ERROR; //login error,server error
-
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
 	}
+	echo json_encode($login_resp);
+
 }
 
 //cookie login
@@ -66,17 +71,13 @@ if (isset($_COOKIE['user_cookie']))
 		//$log->general($msg);
 
 		$login_resp['login_code'] = COOKIE_LOGIN_SUCCESS; //register error
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
 	}
 	else if($result == COOKIE_NOT_SAVED)
 	{
-		$msg = "cookie {$cookie}: cookie not saved in db, please use username and password to login!";
+		$msg = "cookie {$cookie}: cookie not saved in db, please use usrname and password to login!";
 		//$log->general($msg);
 
 		$login_resp['login_code'] = COOKIE_NOT_SAVED; //register error
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
 	}
 	else
 	{
@@ -84,8 +85,8 @@ if (isset($_COOKIE['user_cookie']))
 		//$log->general($msg);
 
 		$login_resp['login_code'] = COOKIE_LOGIN_ERROR; //register error
-		header('Content-Type: application/json');
-		echo json_encode($login_resp);
 	}
+	echo json_encode($login_resp);
+
 }
 ?>

@@ -10,10 +10,10 @@ $usrname=$_POST['usrname'];
 $passwd=$_POST['passwd'];
 $usrunique=$_POST['usr_unique'];
 
-$reg_resp['debug'] = "usrunique=" . $usrunique; 
+//$reg_resp['debug'] = "usrunique=" . $usrunique; 
 //echo $reg_resp["name_used"];
-header('Content-Type: application/json');
-echo json_encode($reg_resp);
+//header('Content-Type: application/json');
+//echo json_encode($reg_resp);
 
 //reg_resp = array("name_used"=> 0, "reg_code"=>0,);
 //first check if the message is to check whether the usrname is unique
@@ -28,6 +28,7 @@ if($usrunique == 1)
 		header('Content-Type: application/json');
 		echo json_encode($reg_resp);
 		return;
+		
 	}
 	else if($uniq_res == DB_ITEM_NOT_FOUND)
 	{
@@ -82,9 +83,9 @@ else
 	  echo json_encode($reg_resp);
 	}
 	//register success,
-	//$_SESSION['valid_user'] = $username;
+	//$_SESSION['valid_user'] = $usrname;
 	//response to the customer
-	//$reg_resp['sessionid'] =  sha1($username);		
+	//$reg_resp['sessionid'] =  sha1($usrname);		
 	$msg = "user {$usrname}: regist success!";
 	//$reg_log->general($msg);
 
