@@ -49,9 +49,10 @@ function register($usrname, $email, $password) {
 		//do nothing
     }
 	else
-	{
-		$res = $conn->query("insert into user_detail values
-                    ('".$usrname."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
+	{	
+		$query = "insert into user_detail values
+                    ('".$usrname."',NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1)";
+		$res = $conn->query($query);
 		if(!$res)
 			return DB_INSERT_ERROR;
 	}
