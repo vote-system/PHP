@@ -10,6 +10,8 @@ $usrname=$_POST['usrname'];
 $passwd=$_POST['passwd'];
 $usrunique=$_POST['usr_unique'];
 
+header('Content-Type: application/json');
+
 //$reg_resp['debug'] = "usrunique=" . $usrunique; 
 //echo $reg_resp["name_used"];
 //header('Content-Type: application/json');
@@ -25,7 +27,6 @@ if($usrunique == 1)
 	{				
 		$reg_resp['name_used'] = NAME_BEEN_USED; 
 		//echo $reg_resp["name_used"];
-		header('Content-Type: application/json');
 		echo json_encode($reg_resp);
 		return;
 		
@@ -34,14 +35,12 @@ if($usrunique == 1)
 	{
 		$reg_resp['name_used'] = NAME_NOT_USED; 
 		//echo $reg_resp['name_used'];
-		header('Content-Type: application/json');
 		echo json_encode($reg_resp);
 		return;
 	}
 	else
 	{
 		$reg_resp['name_used'] = NAME_CHECK_ERROR;
-		header('Content-Type: application/json');
 		echo json_encode($reg_resp);
 		return;
 	}
@@ -54,7 +53,6 @@ else
 	  //$reg_log->user($msg,$usrname);
 
 	  $reg_resp['reg_code'] = EMAIL_INVALID_ERROR; //register success
-	  header('Content-Type: application/json');
 	  echo json_encode($reg_resp);
 	  return;
 	}
@@ -67,7 +65,6 @@ else
 	  //$reg_log->user($msg,$usrname);
 
 	  $reg_resp['reg_code'] = PASSWD_LENGTH_ERROR; //register success
-	  header('Content-Type: application/json');
 	  echo json_encode($reg_resp);
 	  return;
 	}
@@ -79,7 +76,6 @@ else
 	  $msg = "user {$usrname}: regist error";
 	  //$reg_log->general($msg);
 	  $reg_resp['reg_code'] = REGISTER_ERROR; //regist error,check server's log
-	  header('Content-Type: application/json');
 	  echo json_encode($reg_resp);
 	}
 	//register success,
@@ -90,7 +86,6 @@ else
 	//$reg_log->general($msg);
 
 	$reg_resp['reg_code'] = REGISTER_SUCCESS; //register success
-	header('Content-Type: application/json');
 	echo json_encode($reg_resp);		
 }
 

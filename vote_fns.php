@@ -58,9 +58,15 @@ define("RESIZE_IMAGE_FAIL", 6);
 define("UPDATE_IMAGE_SUCC", 7);
 define("UPDATE_IMAGE_FAIL", 8);
 
-
-
-
+//macro for friend
+define("ADD_FRIEND_REQUEST",1);
+define("DELETE_FRIEND_REQUEST",2);
+define("ADD_FRIEND_RESPONSE",3);
+define("DELETE_FRIEND_RESPONSE",4);
+define("AGREE_ADD_FRIEND",5);
+define("REFUSE_ADD_FRIEND",6);
+define("ADD_FRIEND_SUCCESS",7);
+define("DELETE_FRIEND_SUCCESS",8);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

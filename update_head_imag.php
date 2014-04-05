@@ -20,6 +20,8 @@ define('PSD',5);
 define('BMP',6);
 define('TIFF',7);
 
+header('Content-Type: application/json');
+
 $username=$_POST['username'];
 
 $upload_dir = "/vote/upload/$username/";
@@ -44,7 +46,6 @@ if ( (!($_FILES['userfile']['name'])) &&
     //echo "<p>Problem: ".$_FILES['userfile']['name'].
     //   " is null \n";	
     $upload_file_resp['up_code'] = FILE_NAME_NULL; 
-	header('Content-Type: application/json');
 	echo json_encode($upload_file_resp);
     exit;
 }
@@ -52,7 +53,6 @@ if ($_FILES['userfile']['size']==0) {
   //echo "<p>Problem: ".$_FILES['userfile']['name'].
   //     " is zero length";
   $upload_file_resp['up_code'] = FILE_SIZE_NULL; 
-  header('Content-Type: application/json');
   echo json_encode($upload_file_resp);
   exit; 
 }
@@ -61,7 +61,6 @@ if ($_FILES['userfile']['size']>$max_size) {
   //echo "<p>Problem: ".$_FILES['userfile']['name']." is over "
   //      .$max_size." bytes";
   $upload_file_resp['up_code'] = FILE_SIZE_OVER; 
-  header('Content-Type: application/json');
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -72,7 +71,6 @@ if(!getimagesize($_FILES['userfile']['tmp_name'])) {
   //echo "<p>Problem: ".$_FILES['userfile']['name'].
   //	   " is corrupt, or not a gif, jpeg or png.</p>";
   $upload_file_resp['up_code'] = UPLOAD_CORRUPT; 
-  header('Content-Type: application/json');
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -82,7 +80,6 @@ if (!is_uploaded_file($_FILES['userfile']['tmp_name'])) {
   //echo "<p>Something funny happening with "
   //	   .$_FILES['userfile']['name'].", not uploading.";
   $upload_file_resp['up_code'] = UPLOAD_CORRUPT; 
-  header('Content-Type: application/json');
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -108,7 +105,6 @@ if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 {
 	//echo 'Problem: Could not move file to destination directory';
 	$upload_file_resp['up_code'] = MV_FILE_FAIL; 
-    header('Content-Type: application/json');
     echo json_encode($upload_file_resp);
 	exit;
 }
@@ -118,7 +114,6 @@ else
 	if($ret != UPDATE_IMAGE_SUCC )
 	{
 		$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
-		header('Content-Type: application/json');
 		echo json_encode($upload_file_resp);
 		exit;
 	}
@@ -142,7 +137,6 @@ else
 			if(!ret)
 			{
 				$upload_file_resp['up_code'] = RESIZE_IMAGE_FAIL; 
-				header('Content-Type: application/json');
 				echo json_encode($upload_file_resp);
 			}
 			else
@@ -152,7 +146,6 @@ else
 				if($ret != UPDATE_IMAGE_SUCC )
 				{
 					$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
-					header('Content-Type: application/json');
 					echo json_encode($upload_file_resp);
 					exit;
 				}
@@ -160,7 +153,6 @@ else
 		}
 	}
 	$upload_file_resp['up_code'] = UPDATE_IMAGE_SUCC; 
-	header('Content-Type: application/json');
 	echo json_encode($upload_file_resp);
 }
 
