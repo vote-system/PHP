@@ -4,7 +4,7 @@
 //2.resize the 100*100 image to 50*50(named medium-*) and 20*20(named tiny-*)
 //3.if resize success, write the image URL and update time to the database
 require_once('vote_fns.php');
-$max_size = 100000;
+$max_size = 500000;
 
 define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
@@ -19,8 +19,8 @@ define('PSD',5);
 define('BMP',6);
 define('TIFF',7);
 
-$usrname="zhaobo111";
-//$usrname=$_POST['usrname'];
+//$usrname="zhaobo111";
+$usrname=$_POST['usrname'];
 
 $upload_dir = "/vote/upload/$usrname/";
 
@@ -38,8 +38,6 @@ if(!is_dir($upload_dir))
 	}
 	umask($oldumask);
 }
-//echo "$_FILES['usrfile']['name']";
-//echo $_FILES['userfile']['name'];
 
 if ( (!($_FILES['userfile']['name'])) &&
 	 ($_FILES['userfile']['name'] =='none')) {
@@ -126,18 +124,18 @@ else
 	}
 	
 	list($width, $height) = getimagesize($upload_file);
-	if(($width==$height) && ($width == 100))
+	if(($width==$height) && ($width == 200))
 	{
 		for($i=2;$i<4;$i++)
 		{
 			if($i == MEDIUM_IMAG)
 			{
-				$newsize = 50;
+				$newsize = 100;
 				$new_name = "medium-" . basename($upload_file); 
 			}
 			if($i == TINY_IMAG)
 			{
-				$newsize = 20;
+				$newsize = 40;
 				$new_name = "thumbnails-" . basename($upload_file); 
 			}
 			$ret = resize_image($upload_file,$newsize,$upload_dir,$new_name);
@@ -160,8 +158,12 @@ else
 				}
 			}
 		}
+		$upload_file_resp['up_code'] = UPDATE_IMAGE_SUCC; 
 	}
-	$upload_file_resp['up_code'] = UPDATE_IMAGE_SUCC; 
+	else
+	{
+		$upload_file_resp['up_code'] = FILE_DIMISION_NOT_SUPPORT; 
+	}
 	
 	echo json_encode($upload_file_resp);
 }

@@ -7,7 +7,7 @@ function add_friend_request($from,$to)
 	$token = search_token_from_db($to);
 
 	//2.push the request to the peer
-	push_message_to_peer($to,$token,$from,ADD_FRIEND_REQUEST);
+	push_message_to_peer($from,$to,$token,ADD_FRIEND_REQUEST);
 }
 
 function add_friend_response($from,$to,$response)
@@ -16,7 +16,7 @@ function add_friend_response($from,$to,$response)
 	$token = search_token_from_db($to);
 
 	//2.push the response to the peer
-	push_message_to_peer($to,$token,$from,$response);
+	push_message_to_peer($from,$to,$token,$response);
 
 	//3.decide whether to write to database
 	if($response == AGREE_ADD_FRIEND)

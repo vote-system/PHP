@@ -11,4 +11,20 @@ function db_connect() {
      return $result;
    }
 }
+
+function insert_item($table,$line)
+{
+	
+}
+
+function update_item($table,$item,$value)
+{
+
+}
+
+function delte_item($table,$item,$value)
+{
+
+}
+
 ?>
