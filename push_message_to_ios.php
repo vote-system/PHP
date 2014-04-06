@@ -3,14 +3,17 @@
 function push_message_to_peer($from,$peer,$token,$action)
 {
 // Put your device token here (without spaces):   
-$token = '3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4';  
+//$token = '3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4';  
 //echo "token = " . $token . "\n";  
   
-// Put your private key's passphrase here:ÃÜÓï   
+//private key's passphrase for this APP(vote)   
 $passphrase = '890iopkl;';  
   
 // Put your alert message here:   
-$message = 'aaa';  
+$message = array(
+	"loc-key" => $action,
+	"loc-args" : [ "Jenna", "Frank"]
+);
   
 $ctx = stream_context_create();  
 stream_context_set_option($ctx, 'ssl', 'local_cert', 'PushVoteCK.pem');  
@@ -24,7 +27,7 @@ $fp = stream_socket_client(
 if (!$fp)  
     exit("Failed to connect: $err $errstr" . PHP_EOL);  
   
-echo 'Connected to APNS' . PHP_EOL;  
+//echo 'Connected to APNS' . PHP_EOL;  
   
 // Create the payload body   
 $body['aps'] = array(  
