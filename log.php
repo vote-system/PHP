@@ -28,7 +28,5 @@ class vote_log {
     $log = $msg."   |  Date:  ".$date."\n"; 
     error_log($log, 3, self::GENERAL_ERROR_DIR); 
     } 
-
 } 
-
 ?> 

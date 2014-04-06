@@ -1,6 +1,6 @@
 <?php
 
-function push_message_to_peer($from,$peer,$token,$action)
+function push_message($from,$to,$action,$token)
 {
 // Put your device token here (without spaces):   
 //$token = '3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4';  
@@ -9,10 +9,12 @@ function push_message_to_peer($from,$peer,$token,$action)
 //private key's passphrase for this APP(vote)   
 $passphrase = '890iopkl;';  
   
-// Put your alert message here:   
+// Put your alert message here: 
+$user_group = array($from,$to);
+
 $message = array(
 	"loc-key" => $action,
-	"loc-args" : [ "Jenna", "Frank"]
+	"loc-args" => $user_group
 );
   
 $ctx = stream_context_create();  
@@ -31,8 +33,8 @@ if (!$fp)
   
 // Create the payload body   
 $body['aps'] = array(  
-    'alert' => $message,//推送消息   
-    'sound' => 'default'//播放默认声音   
+    'alert' => $message,//push message   
+    'sound' => 'default'//default sound   
     );  
   
 // Encode the payload as JSON   
