@@ -57,6 +57,7 @@ define("MV_FILE_FAIL", 5);
 define("RESIZE_IMAGE_FAIL", 6);
 define("UPDATE_IMAGE_SUCC", 7);
 define("UPDATE_IMAGE_FAIL", 8);
+define("FILE_DIMISION_NOT_SUPPORT", 9);
 
 //macro for friend
 define("ADD_FRIEND_REQUEST",1);

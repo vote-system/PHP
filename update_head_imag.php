@@ -4,8 +4,7 @@
 //2.resize the 100*100 image to 50*50(named medium-*) and 20*20(named tiny-*)
 //3.if resize success, write the image URL and update time to the database
 require_once('vote_fns.php');
-//error_reporting(EALL);
-$max_size = 100000;
+$max_size = 500000;
 
 define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
@@ -20,11 +19,12 @@ define('PSD',5);
 define('BMP',6);
 define('TIFF',7);
 
+//$usrname="zhaobo111";
+$usrname=$_POST['usrname'];
+
+$upload_dir = "/vote/upload/$usrname/";
+
 header('Content-Type: application/json');
-
-$username=$_POST['username'];
-
-$upload_dir = "/vote/upload/$username/";
 
 if(!is_dir($upload_dir))
 {
@@ -38,14 +38,13 @@ if(!is_dir($upload_dir))
 	}
 	umask($oldumask);
 }
-//echo "$_FILES['usrfile']['name']";
-//echo $_FILES['userfile']['name'];
 
 if ( (!($_FILES['userfile']['name'])) &&
 	 ($_FILES['userfile']['name'] =='none')) {
     //echo "<p>Problem: ".$_FILES['userfile']['name'].
     //   " is null \n";	
     $upload_file_resp['up_code'] = FILE_NAME_NULL; 
+	
 	echo json_encode($upload_file_resp);
     exit;
 }
@@ -53,6 +52,7 @@ if ($_FILES['userfile']['size']==0) {
   //echo "<p>Problem: ".$_FILES['userfile']['name'].
   //     " is zero length";
   $upload_file_resp['up_code'] = FILE_SIZE_NULL; 
+  
   echo json_encode($upload_file_resp);
   exit; 
 }
@@ -61,6 +61,7 @@ if ($_FILES['userfile']['size']>$max_size) {
   //echo "<p>Problem: ".$_FILES['userfile']['name']." is over "
   //      .$max_size." bytes";
   $upload_file_resp['up_code'] = FILE_SIZE_OVER; 
+  
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -71,6 +72,7 @@ if(!getimagesize($_FILES['userfile']['tmp_name'])) {
   //echo "<p>Problem: ".$_FILES['userfile']['name'].
   //	   " is corrupt, or not a gif, jpeg or png.</p>";
   $upload_file_resp['up_code'] = UPLOAD_CORRUPT; 
+  
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -80,6 +82,7 @@ if (!is_uploaded_file($_FILES['userfile']['tmp_name'])) {
   //echo "<p>Something funny happening with "
   //	   .$_FILES['userfile']['name'].", not uploading.";
   $upload_file_resp['up_code'] = UPLOAD_CORRUPT; 
+  
   echo json_encode($upload_file_resp);
   exit;
 }
@@ -98,13 +101,14 @@ switch ($type)
 	default: $ext = ".jpg";
 }
 //echo $ext;
-$upload_file = $upload_dir . $username . $ext;
+$upload_file = $upload_dir . $usrname . $ext;
 //echo $upload_file;
 if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 				   $upload_file))
 {
 	//echo 'Problem: Could not move file to destination directory';
 	$upload_file_resp['up_code'] = MV_FILE_FAIL; 
+    
     echo json_encode($upload_file_resp);
 	exit;
 }
@@ -114,55 +118,63 @@ else
 	if($ret != UPDATE_IMAGE_SUCC )
 	{
 		$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
+		
 		echo json_encode($upload_file_resp);
 		exit;
 	}
 	
 	list($width, $height) = getimagesize($upload_file);
-	if(($width==$height) && ($width == 100))
+	if(($width==$height) && ($width == 200))
 	{
-		for($i=2;i<4;i++)
+		for($i=2;$i<4;$i++)
 		{
-			if(i == MEDIUM_IMAG)
+			if($i == MEDIUM_IMAG)
 			{
-				$new_size = 50;
+				$newsize = 100;
 				$new_name = "medium-" . basename($upload_file); 
 			}
-			if(i == TINY_IMAG)
+			if($i == TINY_IMAG)
 			{
-				$new_size = 20;
-				$new_name = "tiny-" . basename($upload_file); 
+				$newsize = 40;
+				$new_name = "thumbnails-" . basename($upload_file); 
 			}
 			$ret = resize_image($upload_file,$newsize,$upload_dir,$new_name);
-			if(!ret)
+			if(!$ret)
 			{
 				$upload_file_resp['up_code'] = RESIZE_IMAGE_FAIL; 
+				
 				echo json_encode($upload_file_resp);
 			}
 			else
 			{
 				$url = $upload_dir . $new_name;
-				update_head_imag_db(MEDIUM_IMAG,$url)
+				update_head_imag_db(MEDIUM_IMAG,$url);
 				if($ret != UPDATE_IMAGE_SUCC )
 				{
 					$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
+					
 					echo json_encode($upload_file_resp);
 					exit;
 				}
 			}
 		}
+		$upload_file_resp['up_code'] = UPDATE_IMAGE_SUCC; 
 	}
-	$upload_file_resp['up_code'] = UPDATE_IMAGE_SUCC; 
+	else
+	{
+		$upload_file_resp['up_code'] = FILE_DIMISION_NOT_SUPPORT; 
+	}
+	
 	echo json_encode($upload_file_resp);
 }
 
 function resize_image($image_name,$newsize,$new_dir, $newfile_name) {
 //echo "image_name=" . $image_name . "\n";
-//echo "$newsize=" . $newsize. "\n";
+//echo "newsize=" . $newsize. "\n";
 //echo "new_file_name=" . $newfile_name . "\n";	  
 list($width, $height, $type) = getimagesize($image_name);
-thumb = imagecreatetruecolor($newsize, $newsize);
-if(!thumb)
+$thumb = imagecreatetruecolor($newsize, $newsize);
+if(!$thumb)
 	return false;
 //echo "type=" . $type . "\n";
 switch ($type) 
@@ -194,7 +206,7 @@ else
 // part3: save the image URL in the database
 // if (file existed)
 //		write to database
-update_head_imag_db($type,$url)
+function update_head_imag_db($type,$url)
 {
   $date = new DateTime();
   $timestamp = $date->getTimestamp();
@@ -206,9 +218,9 @@ update_head_imag_db($type,$url)
 	return DB_CONNECT_ERROR;
   }
 
-  // check if username is unique
+  // check if usrname is unique
   $result = $conn->query("select * from user
-                         where username='".$username."'");
+                         where usrname='".$usrname."'");
   if (!$result) {
     //$msg = "Function cookie_insert,db query failed!";
 	//$auth_log->general($msg);
@@ -225,7 +237,7 @@ update_head_imag_db($type,$url)
 	}
 	$result = $conn->query("update user_detail
 							set $item = '".$url."', image_timestamp = '".$timestamp."'
-							where username = '".$username."'");
+							where usrname = '".$usrname."'");
 	if (!$result) {
 		//$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
 		//$auth_log->general($msg);
