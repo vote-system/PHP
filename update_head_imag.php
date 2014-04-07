@@ -235,7 +235,7 @@ function update_head_imag_db($type,$url)
 		case MEDIUM_IMAG: $item = "medium_head_image_url"; break;
 		case TINY_IMAG: $item = "thumbnails_head_image_url"; break;
 	}
-	$result = $conn->query("update user_detail
+	$result = $conn->query("update usrinfo
 							set $item = '".$url."', image_timestamp = '".$timestamp."'
 							where usrname = '".$usrname."'");
 	if (!$result) {
