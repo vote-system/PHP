@@ -23,6 +23,7 @@ function add_friend_response($from,$to,$response)
 	if($response == AGREE_ADD_FRIEND)
 	{
 		//write to database
+		update_friend_db($from,$to);
 	}
 	else if($response == REFUSE_ADD_FRIEND)
 	{
@@ -64,4 +65,67 @@ function search_token_from_db($usrname)
 	$row = $result->fetch_array();
 	return $row[4];
 }
+
+function update_friend_db($from,$to)
+{
+  $usrid = search_usr_id($from);
+  if($usrid == DB_ITEM_NOT_FOUND || $usrid == NULL)
+	return ;
+
+  $friendid = search_usr_id($to);
+  if($friendid == DB_ITEM_NOT_FOUND || $usrid == NULL)
+	return ;
+
+  $ret = do_update_friend_db($usrid,$friendid);
+  if(!$ret)
+	  return;
+}
+
+function search_usr_id($usrname)
+{
+  $conn = db_connect();
+  if(!$conn)
+  {
+	$msg = "Function update_friend_db,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+
+  //save the usrid
+  $query = "select * from usrinfo where usrname='".$usrname."'";
+  $result = $conn->query();
+  if (!$result) {
+    $msg = "Function register,db query failed";
+	//$auth_log->general($msg);
+	return DB_QUERY_ERROR;
+  }
+
+  $row = mysqli_fetch_assoc($result);
+  if($row['usrid']);
+	return $row['usrid'];
+  else
+	return DB_ITEM_NOT_FOUND;
+}
+
+function do_update_friend_db($usrid,$friendid)
+{
+  $conn = db_connect();
+  if(!$conn)
+  {
+	$msg = "Function do_update_friend_db,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+
+  $query = "insert into friend values
+                           (NULL, '".$usrid."', '".$friendid."', NULL, NULL)"; 
+  $result = $conn->query($query);
+  if (!$result) {
+    $msg = "Function register,db insert failed";
+	//$auth_log->general($msg);
+	return DB_INSERT_ERROR;
+  }
+  return true;
+}
+
 ?>

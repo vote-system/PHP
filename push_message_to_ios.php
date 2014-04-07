@@ -1,5 +1,7 @@
 <?php
+require_once("vote_fns.php");
 
+push_message("zhaobo","dingyi",1,"3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4");
 function push_message($from,$to,$action,$token)
 {
 // Put your device token here (without spaces):   
@@ -10,11 +12,28 @@ function push_message($from,$to,$action,$token)
 $passphrase = '890iopkl;';  
   
 // Put your alert message here: 
-$user_group = array($from,$to);
+//$user_group = array($from,$to);
+switch ($action)
+{
+	case ADD_FRIEND_REQUEST:
+	$push_message = 'ADD_FRIEND_REQUEST';
+	break;
 
+	case AGREE_ADD_FRIEND:
+	$push_message = 'AGREE_ADD_FRIEND';
+	break;
+
+	case REFUSE_ADD_FRIEND:
+	$push_message = 'REFUSE_ADD_FRIEND';
+	break;
+	
+	default:
+		echo "push request content not support!\n";
+	break;
+}
 $message = array(
-	"loc-key" => $action,
-	"loc-args" => $user_group
+	"loc-key" => $push_message,
+	"loc-args" => $from
 );
   
 $ctx = stream_context_create();  
