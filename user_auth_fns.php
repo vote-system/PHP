@@ -29,7 +29,7 @@ function register($usrname, $email, $password) {
 	return DB_ITEM_FOUND;  
   }
   // if ok, put in db
-  $query = "insert into user values
+  $query = "insert into usrinfo values
                    (NULL,'".$usrname."', sha1('".$password."'), '".$email."',NULL, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1)";
   $result = $conn->query($query);
   if (!$result) {

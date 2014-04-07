@@ -19,6 +19,10 @@ define('PSD',5);
 define('BMP',6);
 define('TIFF',7);
 
+define("ORIGINAL_IMAG_DIMISION",200);
+define("MEDIUM_IMAG_DIMISION",100);
+define("THUMBNAILS_IMAG_DIMISION",40);
+
 //$usrname="zhaobo111";
 $usrname=$_POST['usrname'];
 
@@ -124,18 +128,18 @@ else
 	}
 	
 	list($width, $height) = getimagesize($upload_file);
-	if(($width==$height) && ($width == 200))
+	if(($width==$height) && ($width == ORIGINAL_IMAG_DIMISION))
 	{
 		for($i=2;$i<4;$i++)
 		{
 			if($i == MEDIUM_IMAG)
 			{
-				$newsize = 100;
+				$newsize = MEDIUM_IMAG_DIMISION;
 				$new_name = "medium-" . basename($upload_file); 
 			}
 			if($i == TINY_IMAG)
 			{
-				$newsize = 40;
+				$newsize = THUMBNAILS_IMAG_DIMISION;
 				$new_name = "thumbnails-" . basename($upload_file); 
 			}
 			$ret = resize_image($upload_file,$newsize,$upload_dir,$new_name);
@@ -218,8 +222,7 @@ function update_head_imag_db($type,$url)
 	return DB_CONNECT_ERROR;
   }
 
-  // check if usrname is unique
-  $result = $conn->query("select * from user
+  $result = $conn->query("select * from usrinfo
                          where usrname='".$usrname."'");
   if (!$result) {
     //$msg = "Function cookie_insert,db query failed!";
