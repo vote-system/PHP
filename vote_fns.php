@@ -6,6 +6,11 @@
 //define('FAIL', 0);
 //define('TRUE', 1);
 
+//macro to control debug log
+define("REG_DEBUG", 1);
+define("LOGIN_DEBUG", 1);
+define("USR_AUTH_DEBUG", 1);
+
 //macro for database
 define('DB_CONNECT_ERROR', 0);
 define('DB_CONNECT_SUCCESS', 1);

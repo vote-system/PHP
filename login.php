@@ -12,11 +12,14 @@ $device_token = $_POST['device_token'];
 //return the json type data to the client
 header('Content-Type: application/json');
 
-//$reg_resp['usrname'] = $usrname; 
-//$reg_resp['passwd'] = $passwd; 
-//echo $reg_resp["name_used"];
-//header('Content-Type: application/json');
-//echo json_encode($reg_resp);
+if(LOGIN_DEBUG)
+{
+	$debug['usrname'] = $usrname; 
+	$debug['passwd'] = $passwd; 
+	$debug['device_token'] = $device_token;  
+
+	echo json_encode($debug);
+}
 
 //header('Content-Type: application/json');
 //usrname&passwd login

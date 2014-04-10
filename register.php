@@ -2,9 +2,6 @@
 // include function files for this application
 require_once('vote_fns.php');
 
-//macro to control debug log
-define("REG_DEBUG", 1);
-
 $reg_log = new vote_log(); 
 
 //create short variable names
