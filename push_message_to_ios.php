@@ -31,8 +31,7 @@ switch ($action)
 		echo "push request content not support!\n";
 	break;
 }
-$push_message = 'ADD_FRIEND_REQUEST';
-$from = array("赵铂");
+
 $message = array(
 	"loc-key" => $push_message,
 	"loc-args" => $from
