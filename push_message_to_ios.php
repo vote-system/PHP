@@ -1,6 +1,8 @@
 <?php
+require_once("vote_fns.php");
 
-function push_message($from,$to,$action,$token)
+push_message("zhaobo","dingyi",1,"3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4");
+function push_message($from,$to,$action,$token,$append_message)
 {
 // Put your device token here (without spaces):   
 //$token = '3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4';  
@@ -10,11 +12,30 @@ function push_message($from,$to,$action,$token)
 $passphrase = '890iopkl;';  
   
 // Put your alert message here: 
-$user_group = array($from,$to);
+//$user_group = array($from,$to);
+switch ($action)
+{
+	case ADD_FRIEND_REQUEST:
+	$push_message = $from . 'ADD_FRIEND_REQUEST';
+	break;
 
+	case AGREE_ADD_FRIEND:
+	$push_message = $from . 'AGREE_ADD_FRIEND';
+	break;
+
+	case REFUSE_ADD_FRIEND:
+	$push_message = $from . 'REFUSE_ADD_FRIEND';
+	break;
+	
+	default:
+		echo "push request content not support!\n";
+	break;
+}
+$push_message = 'ADD_FRIEND_REQUEST';
+$from = array("赵铂");
 $message = array(
-	"loc-key" => $action,
-	"loc-args" => $user_group
+	"loc-key" => $push_message,
+	"loc-args" => $from
 );
   
 $ctx = stream_context_create();  
@@ -36,7 +57,10 @@ $body['aps'] = array(
     'alert' => $message,//push message   
     'sound' => 'default'//default sound   
     );  
-  
+$body['append_message'] = array(  
+    'friend_code' => $action,//push message   
+    'append_message' => $append_message //user append message  
+    );    
 // Encode the payload as JSON   
 $payload = json_encode($body);  
   
