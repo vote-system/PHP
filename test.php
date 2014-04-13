@@ -1,12 +1,38 @@
 <?php
-require_once("friend_fns.php");
-require_once("vote_fns.php");
+//require_once("friend_fns.php");
+//require_once("vote_fns.php");
 
-test_friend();
-function test_friend()
+$usrid = 2;
+$stranger_id = 4;
+//phpinfo();
+
+
+$line = "insert into stranger values
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+insert_item($line);
+
+
+function db_connect() {
+   $result = new mysqli('localhost', 'root', '841023', 'vote');
+   if (!$result) {
+	 echo "DB_CONNECT_ERROR\n";
+   } else {
+     return $result;
+   }
+}
+
+function insert_item($line)
 {
-	add_friend_response("zhaobo","dingyi",AGREE_ADD_FRIEND);
-	//add_friend_response("zhaobo","dingyi",REFUSE_ADD_FRIEND);
+  $conn = db_connect();
+  if(!$conn)
+  {
+	echo "DB_CONNECT_ERROR\n";
+  }
+  $result = $conn->query($line);
+  if (!$result) {
+	echo "DB_INSERT_ERROR\n";
+  }
+  return true;
 }
 
 ?>

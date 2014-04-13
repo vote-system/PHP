@@ -33,7 +33,24 @@ function handle_add_fri_resp($from,$to,$response)
 
 	//2.push the response to the peer
 	push_message($from,$to,$response,$token);
+	switch($response)
+	{
+		case AGREE_ADD_FRIEND:
+			//delete the line in stranger
+			
+			//insert_friend_table($from,$to,$response);
+			$line = "insert into stranger values
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+			insert_item($line);
+			break;
 
+		case REFUSE_ADD_FRIEND:
+
+			break;
+		case IGNORE_ADD_FRIEND:
+
+			break
+	}
 	//
 	if($response == AGREE_ADD_FRIEND)
 	{
@@ -238,7 +255,10 @@ function get_usrdetail($friendid)
 
 }
 
-
+function update_stranger_status($from,$to,$status)
+{
+	
+}
 
 
 ?>

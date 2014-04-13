@@ -69,12 +69,20 @@ define("ADD_FRIEND_REQUEST",1);
 define("DELETE_FRIEND_REQUEST",2);
 define("ADD_FRIEND_RESPONSE",3);
 define("DELETE_FRIEND_RESPONSE",4);
-define("AGREE_ADD_FRIEND",5);
-define("REFUSE_ADD_FRIEND",6);
-define("IGNORE_ADD_FRIEND",7);
+
 define("ADD_FRIEND_SUCCESS",8);
 define("DELETE_FRIEND_SUCCESS",9);
 define("GET_FRIEND_LIST",10);
+
+//macro for add friend response
+define("AGREE_ADD_FRIEND",0);
+define("REFUSE_ADD_FRIEND",1);
+define("IGNORE_ADD_FRIEND",2);
+
+//macro for stranger add friend status
+define("ADD_FRIEND_NOT_HANDLE",0);
+define("REFUSE_FRIEND_REQUEST",1);
+define("IGNORE_FRIEND_RESPONSE",2)
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
@@ -83,3 +91,4 @@ require_once('db_fns.php');
 require_once('user_auth_fns.php');
 require_once('log.php');
 ?>
+

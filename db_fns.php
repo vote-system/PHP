@@ -30,12 +30,12 @@ function insert_item($line)
   return true;
 }
 
-function update_item($table,$item,$value)
+function update_item($line)
 {
 
 }
 
-function delte_item($table,$item,$value)
+function delte_item($line)
 {
 
 }
