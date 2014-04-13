@@ -30,7 +30,7 @@ function register($usrname, $email, $password) {
   }
   // if ok, put in db
   $query = "insert into usrinfo values
-                   (NULL,'".$usrname."', sha1('".$password."'), '".$email."',NULL, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1)";
+                   (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)";
   $result = $conn->query($query);
   if (!$result) {
     $msg = "Function register,db insert usrname={$usrname} error";

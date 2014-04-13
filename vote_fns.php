@@ -66,9 +66,10 @@ define("ADD_FRIEND_RESPONSE",3);
 define("DELETE_FRIEND_RESPONSE",4);
 define("AGREE_ADD_FRIEND",5);
 define("REFUSE_ADD_FRIEND",6);
-define("ADD_FRIEND_SUCCESS",7);
-define("DELETE_FRIEND_SUCCESS",8);
-define("GET_FRIEND_LIST",9);
+define("IGNORE_ADD_FRIEND",7);
+define("ADD_FRIEND_SUCCESS",8);
+define("DELETE_FRIEND_SUCCESS",9);
+define("GET_FRIEND_LIST",10);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

@@ -11,7 +11,7 @@ header('Content-Type: application/json');
 switch($action)
 {
 	case ADD_FRIEND_REQUEST:
-	$result=add_friend_request($usrname,$friend_name,$message);
+	$result = handle_add_fri_req($usrname,$friend_name,$message);
 	if(!$result)
 		$friend['add_friend_request'] = ;
 	else
@@ -20,7 +20,7 @@ switch($action)
 	break;
 
 	case DELETE_FRIEND_REQUEST:
-	$result=del_friend_request($usrname,$friend_name);
+	$result = handle_del_fri_req($usrname,$friend_name);
 	if(!$result)
 		$friend['delete_friend_request'] = ;
 	else
@@ -29,7 +29,7 @@ switch($action)
 	break;
 
 	case ADD_FRIEND_RESPONSE:
-	$result=add_friend_response($usrname,$friend_name,$action);
+	$result = handle_add_fri_resp($usrname,$friend_name,$action);
 	if(!$result)
 		$friend['add_friend_response'] = ;
 	else
@@ -38,7 +38,7 @@ switch($action)
 	break;
 
 	case GET_FRIEND_LIST:
-	$result=get_friend_list($usrname);
+	$result = handle_get_fri_list($usrname);
 	if(!$result)
 	{
 		$friend['get_friend_list'] = ;

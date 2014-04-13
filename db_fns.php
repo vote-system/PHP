@@ -12,9 +12,22 @@ function db_connect() {
    }
 }
 
-function insert_item($table,$line)
+function insert_item($line)
 {
-	
+  $conn = db_connect();
+  if(!$conn)
+  {
+	//$msg = "Function do_update_friend_db,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+  $result = $conn->query($line);
+  if (!$result) {
+    //$msg = "Function register,db insert failed";
+	//$auth_log->general($msg);
+	return DB_INSERT_ERROR;
+  }
+  return true;
 }
 
 function update_item($table,$item,$value)

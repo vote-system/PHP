@@ -2,6 +2,9 @@
 // include function files for this application
 require_once('vote_fns.php');
 
+//macro to control debug log
+define("REG_DEBUG", 1);
+
 $reg_log = new vote_log(); 
 
 //create short variable names
@@ -12,12 +15,16 @@ $usrunique=$_POST['usr_unique'];
 
 header('Content-Type: application/json');
 
-//$reg_resp['debug'] = "usrunique=" . $usrunique; 
-//echo $reg_resp["name_used"];
-//header('Content-Type: application/json');
-//echo json_encode($reg_resp);
+if(REG_DEBUG)
+{
+	$reg_debug['email'] = $usrunique; 
+	$reg_debug['usrname'] = $usrunique; 
+	$reg_debug['passwd'] = $usrunique; 
+	$reg_debug['usr_unique'] = $usrunique; 
 
-//reg_resp = array("name_used"=> 0, "reg_code"=>0,);
+	echo json_encode($reg_debug);
+}
+
 //first check if the message is to check whether the usrname is unique
 if($usrunique == 1)
 {

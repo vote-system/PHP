@@ -13,13 +13,23 @@ create table usrinfo  (
   medium_head_imag_url varchar(40),
   thumbnails_head_imag_url varchar(40),
   usr_info_timestamp int default -1,
-  head_image_timestamp int default -1
+  head_image_timestamp int default -1,
+  friend_badge int unsigned default 0,
+  vote_badge int unsigned default 0
 );
 
 create table friend (
   id int not null auto_increment primary key,
   usrid int not null,
-  friendid int not null,
+  friend_id int not null,
   friend_group int,
   friend_remark varchar(40)
 );
+
+create table stranger (
+  id int not null auto_increment primary key,
+  usrid int not null,
+  stranger_id int not null,
+  status int default 0
+);
+

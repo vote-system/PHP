@@ -1,17 +1,32 @@
 <?php
 require_once("vote_fns.php");
 require_once("push_message_to_ios.php");
+require_once("badge_fns.php");
 
-function add_friend_request($from,$to)
+function handle_add_fri_req($from,$to)
 {
-	//1.search the device token of $to
+	//1.add item to stranger table
+	//insert_stranger_table($to,$from);
+	$line = "insert into stranger values
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+	insert_item($line);
+
+	//2.update the friend_badge in table usrinfo
+	update_badge("friend_badge",$to,ADD_BADGE);
+
+	//3.prepare to push message to peer
+	//	query the token and count the total badge
+	//  then push message to peer
 	$token = search_token_from_db($to);
 
-	//2.push the request to the peer
-	push_message($from,$to,ADD_FRIEND_REQUEST,$token,);
+	$friend_badge = query_badge("friend_badge",$to);
+	$vote_badge = query_badge("vote_badge",$to);
+	$total_badge = $friend_badge + $vote_badge;
+
+	push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
 }
 
-function add_friend_response($from,$to,$response)
+function handle_add_fri_resp($from,$to,$response)
 {
 	//1.search the device token of $to
 	$token = search_token_from_db($to);
@@ -19,20 +34,24 @@ function add_friend_response($from,$to,$response)
 	//2.push the response to the peer
 	push_message($from,$to,$response,$token);
 
-	//3.decide whether to write to database
+	//
 	if($response == AGREE_ADD_FRIEND)
 	{
-		//write to database
-		update_friend_db($from,$to);
+		//insert_friend_table($from,$to,$response);
+		$line = "insert into stranger values
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+		insert_item($line);
 	}
-	else if($response == REFUSE_ADD_FRIEND)
+	else
 	{
-		//do nothing
+		//update db, friend status and badge
+		//
+		update_stranger_status($from,$to,$response);
+		update_badge($to,SUBTRCT_BADGE);
 	}
-
 }
 
-function del_friend_request($from,$to)
+function handle_del_fri_req($from,$to)
 {
 	//delete the item from database
 	$ret = delete_friend_db($from,$to)
@@ -41,12 +60,33 @@ function del_friend_request($from,$to)
 	else
 		return false;
 }
-/*
-function delete_friend_response($from,$to,$response)
+
+function handle_get_fri_list($usrname)
 {
-	//do not know whether this function is useful or not!
+  $conn = db_connect();
+  if(!$conn)
+  {
+	return DB_CONNECT_ERROR;
+  }
+  $usrid = search_usr_id($usrname);
+
+  $result = $conn->query("select * from friend where usrid='".$usrid."'");
+  if (!$result) {
+     //$msg = "Function register,db query failed";
+     //$auth_log->general($msg);
+	 return DB_QUERY_ERROR;
+  }
+
+  while ($row = $result->fetch_assoc()) 
+  {
+     $friend_id = $row['friendid'];
+	 get_usrdetail($friendid);
+  }
+
+  /* free result set */
+  $result->free();
 }
-*/
+
 function search_token_from_db($usrname)
 {
 	$conn = db_connect();
@@ -68,7 +108,29 @@ function search_token_from_db($usrname)
 	return $row[4];
 }
 
-function update_friend_db($from,$to)
+function insert_stranger_table($usrid,$stranger_id)
+{
+  $conn = db_connect();
+  if(!$conn)
+  {
+	//$msg = "Function do_update_friend_db,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+
+  //friend relationship is bidirect, so insert two lines at the same time
+  $query = "insert into stranger values
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)"; 
+  $result = $conn->query($query);
+  if (!$result) {
+    $msg = "Function register,db insert failed";
+	//$auth_log->general($msg);
+	return DB_INSERT_ERROR;
+  }
+  return true;
+}
+
+function insert_friend_table($from,$to)
 {
   $usrid = search_usr_id($from);
   if($usrid == DB_ITEM_NOT_FOUND || $usrid == NULL)
@@ -78,9 +140,25 @@ function update_friend_db($from,$to)
   if($friendid == DB_ITEM_NOT_FOUND || $usrid == NULL)
 	return ;
 
-  $ret = do_update_friend_db($usrid,$friendid);
-  if(!$ret)
-	  return;
+  $conn = db_connect();
+  if(!$conn)
+  {
+	$msg = "Function do_update_friend_db,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+
+  //friend relationship is bidirect, so insert two lines at the same time
+  $query = "insert into friend values
+                           (NULL, '".$usrid."', '".$friend_id."', NULL, NULL),
+						   (NULL, '".$friend_id."', '".$usrid."', NULL, NULL)"; 
+  $result = $conn->query($query);
+  if (!$result) {
+    $msg = "Function register,db insert failed";
+	//$auth_log->general($msg);
+	return DB_INSERT_ERROR;
+  }
+  return true;
 }
 
 function search_usr_id($usrname)
@@ -109,30 +187,7 @@ function search_usr_id($usrname)
 	return DB_ITEM_NOT_FOUND;
 }
 
-function do_update_friend_db($usrid,$friendid)
-{
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-
-  //friend relationship is bidirect, so insert two lines at the same time
-  $query = "insert into friend values
-                           (NULL, '".$usrid."', '".$friendid."', NULL, NULL),
-						   (NULL, '".$friendid."', '".$usrid."', NULL, NULL)"; 
-  $result = $conn->query($query);
-  if (!$result) {
-    $msg = "Function register,db insert failed";
-	//$auth_log->general($msg);
-	return DB_INSERT_ERROR;
-  }
-  return true;
-}
-
-delete_friend_db($usrid,$friendid)
+function delete_friend_db($usrid,$friendid)
 {
   $conn = db_connect();
   if(!$conn)
@@ -151,34 +206,6 @@ delete_friend_db($usrid,$friendid)
 	return DB_INSERT_ERROR;
   }
   return true;
-}
-
-function get_friend_list($usrname)
-{
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-  $usrid = search_usr_id($usrname);
-
-  $result = $conn->query("select * from friend where usrid='".$usrid."'");
-  if (!$result) {
-     //$msg = "Function register,db query failed";
-     //$auth_log->general($msg);
-	 return DB_QUERY_ERROR;
-  }
-
-  while ($row = $result->fetch_assoc()) 
-  {
-     $friend_id = $row['friendid'];
-	 get_usrdetail($friendid);
-  }
-
-  /* free result set */
-  $result->free();
 }
 
 function get_usrdetail($friendid)
@@ -210,6 +237,8 @@ function get_usrdetail($friendid)
   $result->free();
 
 }
+
+
 
 
 ?>
