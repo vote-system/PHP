@@ -17,9 +17,10 @@ header('Content-Type: application/json');
 
 if(REG_DEBUG)
 {
-	$reg_debug['email'] = $usrunique; 
-	$reg_debug['usrname'] = $usrunique; 
-	$reg_debug['passwd'] = $usrunique; 
+
+	$reg_debug['email'] = $email; 
+	$reg_debug['usrname'] = $usrname; 
+	$reg_debug['passwd'] = $passwd; 
 	$reg_debug['usr_unique'] = $usrunique; 
 
 	echo json_encode($reg_debug);

@@ -32,6 +32,7 @@ switch ($action)
 		echo "push request content not support!\n";
 	break;
 }
+
 $message = array(
 	"loc-key" => $push_message,
 	"loc-args" => $from
