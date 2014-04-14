@@ -32,10 +32,11 @@ switch ($action)
 		echo "push request content not support!\n";
 	break;
 }
+$usrname = array($from);
 
 $message = array(
 	"loc-key" => $push_message,
-	"loc-args" => $from
+	"loc-args" => $usrname
 );
   
 $ctx = stream_context_create();  
