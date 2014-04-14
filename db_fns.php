@@ -12,7 +12,7 @@ function db_connect() {
    }
 }
 
-function insert_item($line)
+function vote_db_query($query)
 {
   $conn = db_connect();
   if(!$conn)
@@ -21,23 +21,14 @@ function insert_item($line)
 	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
   }
-  $result = $conn->query($line);
+  $result = $conn->query($query);
   if (!$result) {
     //$msg = "Function register,db insert failed";
 	//$auth_log->general($msg);
 	return DB_INSERT_ERROR;
   }
+  $result->free();
   return true;
-}
-
-function update_item($line)
-{
-
-}
-
-function delte_item($line)
-{
-
 }
 
 ?>

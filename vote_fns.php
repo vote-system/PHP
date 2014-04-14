@@ -79,10 +79,12 @@ define("AGREE_ADD_FRIEND",0);
 define("REFUSE_ADD_FRIEND",1);
 define("IGNORE_ADD_FRIEND",2);
 
-//macro for stranger add friend status
-define("ADD_FRIEND_NOT_HANDLE",0);
-define("REFUSE_FRIEND_REQUEST",1);
-define("IGNORE_FRIEND_RESPONSE",2)
+//macro for stranger table status
+define("ADD_FRIEND_NOT_SEND",0);
+define("ADD_FRIEND_SEND",1);
+define("AGREE_ADD_FRIEND",2);
+define("REFUSE_FRIEND_REQUEST",3);
+define("IGNORE_FRIEND_REQUEST",4);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

@@ -6,10 +6,17 @@ require_once("badge_fns.php");
 function handle_add_fri_req($from,$to)
 {
 	//1.add item to stranger table
-	//insert_stranger_table($to,$from);
-	$line = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
-	insert_item($line);
+	//add two item for each require
+	$usrid = $from;
+	$stranger_id = $to;
+	$status = ADD_FRIEND_SEND;
+	insert_stranger_table($usrid,$stranger_id,$status);
+
+	//add the peer item to stranger table
+	$usrid = $to;
+	$stranger_id = $from;
+	$status = IGNORE_FRIEND_RESPONSE;
+	insert_stranger_table($usrid,$stranger_id,$status);
 
 	//2.update the friend_badge in table usrinfo
 	update_badge("friend_badge",$to,ADD_BADGE);
@@ -33,39 +40,36 @@ function handle_add_fri_resp($from,$to,$response)
 
 	//2.push the response to the peer
 	push_message($from,$to,$response,$token);
+
+	$usrid = usrname_to_usrid($from);
+	$stranger_id = usrname_to_usrid($to);
+
 	switch($response)
 	{
 		case AGREE_ADD_FRIEND:
-			//delete the line in stranger
-			
-			//insert_friend_table($from,$to,$response);
-			$line = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
-			insert_item($line);
+			//change the status in stranger table
+			$status = AGREE_ADD_FRIEND;		  
+			update_stranger_status($usrid,$stranger_id,$status);
+	
+			//add two rows to friend table
+			$friend_id = $stranger_id;
+			insert_friend_table($usrid,$friend_id);	
 			break;
 
 		case REFUSE_ADD_FRIEND:
+			//change the status in stranger table
+			$status = REFUSE_FRIEND_REQUEST;
+			update_stranger_status($usrid,$stranger_id,$status);
+			break;
+
+		case IGNORE_ADD_FRIEND:
+			//change the status in stranger table
+			$status = IGNORE_FRIEND_REQUEST;
+			update_stranger_status($usrid,$stranger_id,$status);
 
 			break;
-		case IGNORE_ADD_FRIEND:
+	}
 
-			break
-	}
-	//
-	if($response == AGREE_ADD_FRIEND)
-	{
-		//insert_friend_table($from,$to,$response);
-		$line = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
-		insert_item($line);
-	}
-	else
-	{
-		//update db, friend status and badge
-		//
-		update_stranger_status($from,$to,$response);
-		update_badge($to,SUBTRCT_BADGE);
-	}
 }
 
 function handle_del_fri_req($from,$to)
@@ -85,7 +89,7 @@ function handle_get_fri_list($usrname)
   {
 	return DB_CONNECT_ERROR;
   }
-  $usrid = search_usr_id($usrname);
+  $usrid = usrname_to_usrid($usrname);
 
   $result = $conn->query("select * from friend where usrid='".$usrid."'");
   if (!$result) {
@@ -127,102 +131,38 @@ function search_token_from_db($usrname)
 
 function insert_stranger_table($usrid,$stranger_id)
 {
-  $conn = db_connect();
-  if(!$conn)
-  {
-	//$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-
-  //friend relationship is bidirect, so insert two lines at the same time
   $query = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."',NULL)"; 
-  $result = $conn->query($query);
-  if (!$result) {
-    $msg = "Function register,db insert failed";
-	//$auth_log->general($msg);
-	return DB_INSERT_ERROR;
-  }
+                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+  vote_db_query($query);
   return true;
 }
 
-function insert_friend_table($from,$to)
+function update_stranger_status($usrid,$stranger_id,$status)
 {
-  $usrid = search_usr_id($from);
-  if($usrid == DB_ITEM_NOT_FOUND || $usrid == NULL)
-	return ;
+	$query = "update usrinfo
+				set status = '".$status."'
+				where usrid = '".$usrid."' and strangerid = '".$strangerid."'";
+	$ret = vote_db_query($query);
+	return $ret;
 
-  $friendid = search_usr_id($to);
-  if($friendid == DB_ITEM_NOT_FOUND || $usrid == NULL)
-	return ;
+}
 
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-
+function insert_friend_table($usrid,$friend_id)
+{
   //friend relationship is bidirect, so insert two lines at the same time
   $query = "insert into friend values
                            (NULL, '".$usrid."', '".$friend_id."', NULL, NULL),
 						   (NULL, '".$friend_id."', '".$usrid."', NULL, NULL)"; 
-  $result = $conn->query($query);
-  if (!$result) {
-    $msg = "Function register,db insert failed";
-	//$auth_log->general($msg);
-	return DB_INSERT_ERROR;
-  }
-  return true;
-}
-
-function search_usr_id($usrname)
-{
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-
-  //save the usrid
-  $query = "select * from usrinfo where usrname='".$usrname."'";
-  $result = $conn->query();
-  if (!$result) {
-    $msg = "Function register,db query failed";
-	//$auth_log->general($msg);
-	return DB_QUERY_ERROR;
-  }
-
-  $row = mysqli_fetch_assoc($result);
-  if($row['usrid']);
-	return $row['usrid'];
-  else
-	return DB_ITEM_NOT_FOUND;
+  $ret = vote_db_query($query);
+  return $ret;
 }
 
 function delete_friend_db($usrid,$friendid)
 {
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-
   $delete = "delete from friend where
 			usrid='".$usrid."' and friendid='".$friendid."'";
-  $result = $conn->query($delete);
-  if (!$result) {
-    //$msg = "Function register,db insert failed";
-	//$auth_log->general($msg);
-	return DB_INSERT_ERROR;
-  }
-  return true;
+  $ret = vote_db_query($query);
+  return $ret;
 }
 
 function get_usrdetail($friendid)
@@ -255,9 +195,17 @@ function get_usrdetail($friendid)
 
 }
 
-function update_stranger_status($from,$to,$status)
+function usrname_to_usrid($usrname)
 {
-	
+  $conn = db_connect();
+  if(!$conn)
+	return DB_CONNECT_ERROR;
+  $result = $conn->query("select usrid from usrinfo where usrname='".$usrname."'");
+  if($result) 
+  {
+	$row = $result->fetch_array();
+	return $row[0];
+  } 
 }
 
 
