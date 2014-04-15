@@ -42,7 +42,7 @@ function ret_stranger_info($usrname)
 	  $stranger['gender'] = $row['gender'];
 	  $stranger['original_head_imag_url'] = $row['original_head_imag_url'];
 	  $stranger['medium_head_imag_url'] = $row['medium_head_imag_url'];
-	  echo json_encode($debug); 
+	  echo json_encode($stranger); 
   }
 	
 }

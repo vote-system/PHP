@@ -13,16 +13,25 @@ if(!$conn)
 	//$auth_log->general($msg);
 	return DB_CONNECT_ERROR;
 }
-$result = $conn->query("select * from user_detail where usrname='".$fetch_name."'");
+$result = $conn->query("select * from usrinfo where usrname='".$fetch_name."'");
 if (!$result) 
 {
 	$msg = "Function register,db query failed";
 	//$auth_log->general($msg);
 	return DB_QUERY_ERROR;
 }
-
-for ($count=0; $row = $result->fetch_assoc(); $count++) 
+else
 {
-	echo json_encode($row);
-}
+	$row = $result->fetch_array();
+	$stranger['usrname'] = $row['usrname'];
+	$stranger['signature'] = $row['signature'];
+	$stranger['screen_name'] = $row['screen_name'];
+	$stranger['gender'] = $row['gender'];
+	$stranger['original_head_imag_url'] = $row['original_head_imag_url'];
+	$stranger['medium_head_imag_url'] = $row['medium_head_imag_url'];
+	$strangers_array['strangers_array'] = $stranger;
+
+	echo json_encode($strangers_array); 
+} 
+
 ?>

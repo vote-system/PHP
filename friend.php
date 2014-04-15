@@ -1,5 +1,5 @@
 <?php
-require_once("friend_fns.php");
+require_once("vote_fns.php");
 
 $usrname=$_POST['usrname'];
 $action=$_POST['friend_action'];
@@ -12,38 +12,45 @@ switch($action)
 {
 	case ADD_FRIEND_REQUEST:
 	$result = handle_add_fri_req($usrname,$friend_name,$message);
+	/*
 	if(!$result)
 		$friend['add_friend_request'] = ;
 	else
 		$friend['add_friend_request'] = ;
 	echo json_encode($friend);
+	*/
 	break;
 
 	case DELETE_FRIEND_REQUEST:
 	$result = handle_del_fri_req($usrname,$friend_name);
+	/*
 	if(!$result)
 		$friend['delete_friend_request'] = ;
 	else
 		$friend['delete_friend_request'] = ;
 	echo json_encode($friend);
+	*/
 	break;
 
 	case ADD_FRIEND_RESPONSE:
 	$result = handle_add_fri_resp($usrname,$friend_name,$action);
+	/*
 	if(!$result)
 		$friend['add_friend_response'] = ;
 	else
 		$friend['add_friend_response'] = ;
 	echo json_encode($friend);
+	*/
 	break;
 
 	case GET_FRIEND_LIST:
 	$result = handle_get_fri_list($usrname);
-	if(!$result)
+	/*if(!$result)
 	{
 		$friend['get_friend_list'] = ;
 		echo json_encode($friend);
 	}
+	*/
 	break;
 
 	//case DELETE_FRIEND_RESPONSE:

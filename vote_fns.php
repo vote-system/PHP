@@ -7,9 +7,10 @@
 //define('TRUE', 1);
 
 //macro to control debug log
-define("REG_DEBUG", 1);
-define("LOGIN_DEBUG", 1);
-define("USR_AUTH_DEBUG", 1);
+define("REG_DEBUG", 0);
+define("LOGIN_DEBUG", 0);
+define("USR_AUTH_DEBUG", 0);
+define("FRIEND_DEBUG",1);
 
 //macro for database
 define('DB_CONNECT_ERROR', 0);
@@ -86,11 +87,18 @@ define("AGREE_ADD_FRIEND",2);
 define("REFUSE_FRIEND_REQUEST",3);
 define("IGNORE_FRIEND_REQUEST",4);
 
+//macro for badge
+define("ADD_BADGE",1);
+define("SUBTRCT_BADGE",2);
+
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
 require_once('data_valid_fns.php'); 
 require_once('db_fns.php');
 require_once('user_auth_fns.php');
 require_once('log.php');
+require_once('friend_fns.php');
+require_once('badge_fns.php');
+require_once("push_message_to_ios.php");
 ?>
 

@@ -1,12 +1,9 @@
 <?php
 require_once("vote_fns.php");
 
-define("ADD_BADGE",1);
-define("SUBTRCT_BADGE",2);
-
 function update_badge($badge_name,$usrname,$action)
 {
-  $badge = query_badge("friend_badge",$usrname)
+  $badge = query_badge("friend_badge",$usrname);
   if(!$badge)
   {
 	  return false;
@@ -32,7 +29,7 @@ function update_badge($badge_name,$usrname,$action)
 		return DB_CONNECT_ERROR;
     }
 	$query = "update usrinfo set '".$badge_name."' = '".$badge."'
-							where usrname = '".$usrname."'"
+							where usrname = '".$usrname."'";
 	$result = $conn->query();
 	if(!$result)
 		return false;
@@ -62,6 +59,14 @@ function query_badge($badge_name,$usrname)
   }
   $badge = $result->fetch_array($result);
   return $badge;
+}
+
+function get_user_badge($usrname)
+{
+	$friend_badge = query_badge("friend_badge",$usrname);
+	$vote_badge = query_badge("vote_badge",$usrname);
+	$total_badge = $friend_badge + $vote_badge;
+	return $total_badge;
 }
 
 ?>

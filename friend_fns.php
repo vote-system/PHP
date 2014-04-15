@@ -1,7 +1,7 @@
 <?php
 require_once("vote_fns.php");
-require_once("push_message_to_ios.php");
-require_once("badge_fns.php");
+//require_once("push_message_to_ios.php");
+//require_once("badge_fns.php");
 
 function handle_add_fri_req($from,$to)
 {
@@ -69,13 +69,12 @@ function handle_add_fri_resp($from,$to,$response)
 
 			break;
 	}
-
 }
 
 function handle_del_fri_req($from,$to)
 {
 	//delete the item from database
-	$ret = delete_friend_db($from,$to)
+	$ret = delete_friend_db($from,$to);
 	if(!$ret)
 		return true;
 	else
@@ -84,13 +83,19 @@ function handle_del_fri_req($from,$to)
 
 function handle_get_fri_list($usrname)
 {
+  //echo "function handle_get_fri_list \n";
   $conn = db_connect();
   if(!$conn)
   {
 	return DB_CONNECT_ERROR;
   }
   $usrid = usrname_to_usrid($usrname);
-
+	
+	if(FRIEND_DEBUG)
+	{
+		echo "usrid = " . $usrid;
+	}
+  
   $result = $conn->query("select * from friend where usrid='".$usrid."'");
   if (!$result) {
      //$msg = "Function register,db query failed";
@@ -100,8 +105,12 @@ function handle_get_fri_list($usrname)
 
   while ($row = $result->fetch_assoc()) 
   {
-     $friend_id = $row['friendid'];
-	 get_usrdetail($friendid);
+     $friend_id = $row['friend_id'];
+	 if(FRIEND_DEBUG)
+	{
+		echo "friend_id = " . $friend_id;
+	}
+	get_usrdetail($friendid);
   }
 
   /* free result set */
@@ -185,14 +194,14 @@ function get_usrdetail($friendid)
   while ($row = $result->fetch_assoc()) 
   {
 	 //only return part of items in table usrinfo
-     $friend_info = array_slice($row,4);
+     $friend_info = array_slice($row,5,15);
+	 $friend_array["friends_array"] = $friend_info;
 	 //not sure whether need to put the following line out of the while loop
 	 echo json_encode($friend_info);
   }
 
   /* free result set */
   $result->free();
-
 }
 
 function usrname_to_usrid($usrname)

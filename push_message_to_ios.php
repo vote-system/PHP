@@ -1,7 +1,7 @@
 <?php
 require_once("vote_fns.php");
 
-push_message("zhaobo","dingyi",1,"3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4","",0);
+//push_message("zhaobo","dingyi",1,"3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4","",0);
 
 function push_message($from,$to,$action,$token,$append_message,$badge)
 {
@@ -17,15 +17,15 @@ $passphrase = '890iopkl;';
 switch ($action)
 {
 	case ADD_FRIEND_REQUEST:
-	$push_message = $from . 'ADD_FRIEND_REQUEST';
+	$push_message = 'ADD_FRIEND_REQUEST';
 	break;
 
 	case AGREE_ADD_FRIEND:
-	$push_message = $from . 'AGREE_ADD_FRIEND';
+	$push_message = 'AGREE_ADD_FRIEND';
 	break;
 
 	case REFUSE_ADD_FRIEND:
-	$push_message = $from . 'REFUSE_ADD_FRIEND';
+	$push_message = 'REFUSE_ADD_FRIEND';
 	break;
 	
 	default:
@@ -33,9 +33,10 @@ switch ($action)
 	break;
 }
 
+$usr = array($from);
 $message = array(
 	"loc-key" => $push_message,
-	"loc-args" => $from
+	"loc-args" => $usr
 );
   
 $ctx = stream_context_create();  
@@ -52,13 +53,13 @@ if (!$fp)
   
 //echo 'Connected to APNS' . PHP_EOL;  
 
-$badge = query_usr_badge($to);
+$total_badge = get_user_badge($to);
   
 // Create the payload body   
 $body['aps'] = array(  
-    'alert' => $message,//push message   
-    'sound' => 'default',//default sound   
-	'badge' => $badge; //total badge of the usr
+    'alert' => $message,        //push message   
+    'sound' => 'default',      //default sound   
+	'badge' => $total_badge   //total badge of the usr
     );  
 $body['append_message'] = array(  
     'friend_code' => $action,//push message   
