@@ -32,24 +32,15 @@ switch($action)
 	*/
 	break;
 
-	case ADD_FRIEND_RESPONSE:
-	$result = handle_add_fri_resp($usrname,$friend_name,$action);
+	case AGREE_ADD_FRIEND:
+
+	$result = handle_add_fri_resp($usrname,$friend_name,$action);	
 	/*
 	if(!$result)
 		$friend['add_friend_response'] = ;
 	else
 		$friend['add_friend_response'] = ;
 	echo json_encode($friend);
-	*/
-	break;
-
-	case GET_FRIEND_LIST:
-	$result = handle_get_fri_list($usrname);
-	/*if(!$result)
-	{
-		$friend['get_friend_list'] = ;
-		echo json_encode($friend);
-	}
 	*/
 	break;
 

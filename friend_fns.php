@@ -33,7 +33,7 @@ function handle_add_fri_req($from,$to)
 	push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
 }
 
-function handle_add_fri_resp($from,$to,$response)
+function handle_add_fri_resp($from,$to,$action)
 {
 	//1.search the device token of $to
 	$token = search_token_from_db($to);
@@ -44,31 +44,26 @@ function handle_add_fri_resp($from,$to,$response)
 	$usrid = usrname_to_usrid($from);
 	$stranger_id = usrname_to_usrid($to);
 
-	switch($response)
+	//only handle agree at presetn
+	if($action == AGREE_ADD_FRIEND)
 	{
-		case AGREE_ADD_FRIEND:
-			//change the status in stranger table
-			$status = AGREE_ADD_FRIEND;		  
-			update_stranger_status($usrid,$stranger_id,$status);
+		$status = AGREE_ADD_FRIEND;		  
+		update_stranger_status($usrid,$stranger_id,$status);
+
+		//add two rows to friend table
+		$friend_id = $stranger_id;
+		insert_friend_table($usrid,$friend_id);	
 	
-			//add two rows to friend table
-			$friend_id = $stranger_id;
-			insert_friend_table($usrid,$friend_id);	
-			break;
-
-		case REFUSE_ADD_FRIEND:
-			//change the status in stranger table
-			$status = REFUSE_FRIEND_REQUEST;
-			update_stranger_status($usrid,$stranger_id,$status);
-			break;
-
-		case IGNORE_ADD_FRIEND:
-			//change the status in stranger table
-			$status = IGNORE_FRIEND_REQUEST;
-			update_stranger_status($usrid,$stranger_id,$status);
-
-			break;
 	}
+	/*
+	else if($response == REFUSE_ADD_FRIEND)
+	{
+		//change the status in stranger table
+		$status = REFUSE_FRIEND_REQUEST;
+		update_stranger_status($usrid,$stranger_id,$status);
+	}
+    */
+
 }
 
 function handle_del_fri_req($from,$to)
