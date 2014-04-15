@@ -7,9 +7,10 @@
 //define('TRUE', 1);
 
 //macro to control debug log
-define("REG_DEBUG", 1);
-define("LOGIN_DEBUG", 1);
-define("USR_AUTH_DEBUG", 1);
+define("REG_DEBUG", 0);
+define("LOGIN_DEBUG", 0);
+define("USR_AUTH_DEBUG", 0);
+define("FRIEND_DEBUG",1);
 
 //macro for database
 define('DB_CONNECT_ERROR', 0);
@@ -65,26 +66,26 @@ define("UPDATE_IMAGE_FAIL", 8);
 define("FILE_DIMISION_NOT_SUPPORT", 9);
 
 //macro for friend
-define("ADD_FRIEND_REQUEST",1);
-define("DELETE_FRIEND_REQUEST",2);
-define("ADD_FRIEND_RESPONSE",3);
-define("DELETE_FRIEND_RESPONSE",4);
+
+//define("ADD_FRIEND_RESPONSE",3);
+//define("DELETE_FRIEND_RESPONSE",4);
 
 define("ADD_FRIEND_SUCCESS",8);
 define("DELETE_FRIEND_SUCCESS",9);
 define("GET_FRIEND_LIST",10);
 
-//macro for add friend response
-define("AGREE_ADD_FRIEND",0);
-define("REFUSE_ADD_FRIEND",1);
-define("IGNORE_ADD_FRIEND",2);
-
 //macro for stranger table status
 define("ADD_FRIEND_NOT_SEND",0);
 define("ADD_FRIEND_SEND",1);
-define("AGREE_ADD_FRIEND",2);
-define("REFUSE_FRIEND_REQUEST",3);
-define("IGNORE_FRIEND_REQUEST",4);
+define("ADD_FRIEND_REQUEST",2);
+define("DELETE_FRIEND_REQUEST",3);
+define("AGREE_ADD_FRIEND",4);
+define("REFUSE_FRIEND_REQUEST",5);
+define("IGNORE_FRIEND_REQUEST",6);
+
+//macro for badge
+define("ADD_BADGE",1);
+define("SUBTRCT_BADGE",2);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
@@ -92,5 +93,8 @@ require_once('data_valid_fns.php');
 require_once('db_fns.php');
 require_once('user_auth_fns.php');
 require_once('log.php');
+require_once('friend_fns.php');
+require_once('badge_fns.php');
+require_once("push_message_to_ios.php");
 ?>
 

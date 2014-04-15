@@ -1,4 +1,5 @@
 <?php
+require_once("vote_fns.php");
 $usrname = $_GET['usrname'];
 
 $friend_badge = query_badge("friend_badge",$usrname);
