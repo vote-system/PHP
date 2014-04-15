@@ -66,26 +66,22 @@ define("UPDATE_IMAGE_FAIL", 8);
 define("FILE_DIMISION_NOT_SUPPORT", 9);
 
 //macro for friend
-define("ADD_FRIEND_REQUEST",1);
-define("DELETE_FRIEND_REQUEST",2);
-define("ADD_FRIEND_RESPONSE",3);
-define("DELETE_FRIEND_RESPONSE",4);
+
+//define("ADD_FRIEND_RESPONSE",3);
+//define("DELETE_FRIEND_RESPONSE",4);
 
 define("ADD_FRIEND_SUCCESS",8);
 define("DELETE_FRIEND_SUCCESS",9);
 define("GET_FRIEND_LIST",10);
 
-//macro for add friend response
-define("AGREE_ADD_FRIEND",0);
-define("REFUSE_ADD_FRIEND",1);
-define("IGNORE_ADD_FRIEND",2);
-
 //macro for stranger table status
 define("ADD_FRIEND_NOT_SEND",0);
 define("ADD_FRIEND_SEND",1);
-define("AGREE_ADD_FRIEND",2);
-define("REFUSE_FRIEND_REQUEST",3);
-define("IGNORE_FRIEND_REQUEST",4);
+define("ADD_FRIEND_REQUEST",2);
+define("DELETE_FRIEND_REQUEST",3);
+define("AGREE_ADD_FRIEND",4);
+define("REFUSE_FRIEND_REQUEST",5);
+define("IGNORE_FRIEND_REQUEST",6);
 
 //macro for badge
 define("ADD_BADGE",1);

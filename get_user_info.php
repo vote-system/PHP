@@ -5,6 +5,8 @@ $usrname = $_GET['usrname'];
 $fetch_name = $_GET['fetch_name'];
 
 header('Content-Type: application/json');
+if(!$usrname || !$fetch_name)
+	return;
 
 $conn = db_connect();
 if(!$conn)
