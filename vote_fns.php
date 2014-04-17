@@ -12,6 +12,9 @@ define("LOGIN_DEBUG", 0);
 define("USR_AUTH_DEBUG", 0);
 define("FRIEND_DEBUG",1);
 
+//macro for vote_db
+define('VOTE_DB_ERROR', 0);
+
 //macro for database
 define('DB_CONNECT_ERROR', 0);
 define('DB_CONNECT_SUCCESS', 1);

@@ -1,34 +1,51 @@
 <?php
 require_once('vote_fns.php');
 
-function db_connect() {
+function vote_db_connect() 
+{
    $result = new mysqli('localhost', 'root', '841023', 'vote');
    if (!$result) {
 	 $msg = "db connect error!";
 	 $log->general($msg);
-	 return DB_CONNECT_ERROR;
+	 return VOTE_DB_ERROR;
    } else {
      return $result;
    }
 }
 
+function vote_db_closed($result)
+{
+	$result->free();
+}
+
 function vote_db_query($query)
 {
-  $conn = db_connect();
-  if(!$conn)
-  {
-	//$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
+  $conn = vote_db_connect();
   $result = $conn->query($query);
   if (!$result) {
-    //$msg = "Function register,db insert failed";
-	//$auth_log->general($msg);
-	return DB_INSERT_ERROR;
+	return VOTE_DB_ERROR;
   }
-  $result->free();
-  return true;
+  vote_db_closed();
+  return $conn;
+}
+
+function vote_get_array($query)
+{
+  $result = vote_db_query($query);
+  $vote_array = $result->fetch_array($result);
+  vote_db_closed();
+  return $vote_array;
+}
+
+function vote_get_assoc($query)
+{
+  $result = vote_db_query($query);
+  $posts = array();
+  while ($row = mysql_fetch_assoc($result)) {
+	$posts[] = $row;
+  }
+  vote_db_closed($result);
+  return $posts;
 }
 
 ?>
