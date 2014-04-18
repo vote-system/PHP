@@ -32,17 +32,20 @@ function ret_stranger_info($usrname)
 	//$auth_log->general($msg);
 	return DB_INSERT_ERROR;
   }
-  $num_results = $result->num_rows;
-  for ($i=0; $i <$num_results; $i++)
+
+  $query = "select * from usrinfo where usrname = '".$usrname."'";
+  $rows = vote_get_assoc($query);
+  foreach ($rows as $row)
   {
-	  $row = $result->fetch_assoc();
 	  $stranger['usrname'] = $row['usrname'];
 	  $stranger['signature'] = $row['signature'];
 	  $stranger['screen_name'] = $row['screen_name'];
 	  $stranger['gender'] = $row['gender'];
 	  $stranger['original_head_imag_url'] = $row['original_head_imag_url'];
 	  $stranger['medium_head_imag_url'] = $row['medium_head_imag_url'];
-	  echo json_encode($stranger); 
+
+	  $stranger_array["strangers_array"] = $stranger;
+	  echo json_encode($stranger_array); 
   }
 	
 }

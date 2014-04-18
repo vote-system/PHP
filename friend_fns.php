@@ -33,7 +33,7 @@ function handle_add_fri_req($from,$to)
 	push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
 }
 
-function handle_add_fri_resp($from,$to,$action)
+function handle_agree_add_fri($from,$to)
 {
 	//1.search the device token of $to
 	$token = search_token_from_db($to);
@@ -44,26 +44,12 @@ function handle_add_fri_resp($from,$to,$action)
 	$usrid = usrname_to_usrid($from);
 	$stranger_id = usrname_to_usrid($to);
 
-	//only handle agree at presetn
-	if($action == AGREE_ADD_FRIEND)
-	{
-		$status = AGREE_ADD_FRIEND;		  
-		update_stranger_status($usrid,$stranger_id,$status);
+	$status = AGREE_ADD_FRIEND;		  
+	update_stranger_status($usrid,$stranger_id,$status);
 
-		//add two rows to friend table
-		$friend_id = $stranger_id;
-		insert_friend_table($usrid,$friend_id);	
-	
-	}
-	/*
-	else if($response == REFUSE_ADD_FRIEND)
-	{
-		//change the status in stranger table
-		$status = REFUSE_FRIEND_REQUEST;
-		update_stranger_status($usrid,$stranger_id,$status);
-	}
-    */
-
+	//add two rows to friend table
+	$friend_id = $stranger_id;
+	insert_friend_table($usrid,$friend_id);	
 }
 
 function handle_del_fri_req($from,$to)
@@ -78,31 +64,17 @@ function handle_del_fri_req($from,$to)
 
 function search_token_from_db($usrname)
 {
-	$conn = db_connect();
-	if(!$conn){
-		//$msg = "Function register,db connect error!";
-		//$auth_log->general($msg);
-		return DB_CONNECT_ERROR;
-	}
-	// check if username is unique
-	$result = $conn->query("select * from usrinfo where usrname='".$usrname."'");
-	if (!$result) {
-		//$msg = "Function register,db query failed";
-		//$auth_log->general($msg);
-		return DB_QUERY_ERROR;
-	}
-
-	//$user_info = $result->fetch_assoc();
-	$row = $result->fetch_array();
-	return $row[4];
+	$query = "select device_token from usrinfo where usrname='".$usrname."'";
+	$token = vote_get_array($query);
+	return $token;
 }
 
 function insert_stranger_table($usrid,$stranger_id)
 {
   $query = "insert into stranger values
                            (NULL, '".$usrid."', '".$stranger_id."',NULL)";
-  vote_db_query($query);
-  return true;
+  $ret = vote_db_query($query);
+  return $ret;
 }
 
 function update_stranger_status($usrid,$stranger_id,$status)
@@ -112,7 +84,6 @@ function update_stranger_status($usrid,$stranger_id,$status)
 				where usrid = '".$usrid."' and strangerid = '".$strangerid."'";
 	$ret = vote_db_query($query);
 	return $ret;
-
 }
 
 function insert_friend_table($usrid,$friend_id)
@@ -135,22 +106,9 @@ function delete_friend_db($usrid,$friendid)
 
 function get_usrdetail($friendid)
 {
-  $conn = db_connect();
-  if(!$conn)
-  {
-	$msg = "Function do_update_friend_db,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
-  $result = $conn->query("select * from usrinfo where usrid='".$friendid."'");
-  if (!$result) 
-  {
-     //$msg = "Function register,db query failed";
-     //$auth_log->general($msg);
-	 return DB_QUERY_ERROR;
-  }
-
-  while ($row = $result->fetch_assoc()) 
+  $query = "select * from usrinfo where usrid='".$friendid."'";
+  $rows = vote_get_assoc($query);
+  foreach($rows as $row) 
   {
 	 //only return part of items in table usrinfo
      $friend_info = array_slice($row,5,15);
@@ -158,22 +116,13 @@ function get_usrdetail($friendid)
 	 //not sure whether need to put the following line out of the while loop
 	 echo json_encode($friend_info);
   }
-
-  /* free result set */
-  $result->free();
 }
 
 function usrname_to_usrid($usrname)
 {
-  $conn = db_connect();
-  if(!$conn)
-	return DB_CONNECT_ERROR;
-  $result = $conn->query("select usrid from usrinfo where usrname='".$usrname."'");
-  if($result) 
-  {
-	$row = $result->fetch_array();
-	return $row[0];
-  } 
+  $query = "select usrid from usrinfo where usrname='".$usrname."'";
+  $row = vote_get_array($query);
+  return $row['usrid']; 
 }
 
 

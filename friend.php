@@ -34,7 +34,7 @@ switch($action)
 
 	case AGREE_ADD_FRIEND:
 
-	$result = handle_add_fri_resp($usrname,$friend_name,$action);	
+	$result = handle_agree_add_fri($usrname,$friend_name);	
 	/*
 	if(!$result)
 		$friend['add_friend_response'] = ;
