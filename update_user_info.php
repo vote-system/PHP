@@ -21,23 +21,6 @@ if($gender)
 	$item_name='gender';
 	update_item($item_name,$gender);	
 	return;	
-
-/*
-	$res = $conn->query("update user_detail
-							set gender = '".$gender."',info_timestamp = '".$timestamp."'
-							where usrname = '".$usrname."'");
-	if (!$res) {
-		//echo "db_update error\n";
-		$msg = "Function update_usr_info,db update failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-*/
 }
 
 if($signature)
@@ -45,23 +28,6 @@ if($signature)
 	$item_name='signature';
 	update_item($item_name,$signature);	
 	return;
-/*
-	$res = $conn->query("update user_detail
-							set signature = '".$signature."',info_timestamp = '".$timestamp."'
-							where usrname = '".$usrname."'");
-	if (!$res) {
-		echo "db_update error\n";
-		$msg = "Function update_usr_info,db update failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-*/
-
 }
 
 if($screen_name)
@@ -69,48 +35,11 @@ if($screen_name)
 	$item_name='screen_name';
 	update_item($item_name,$screen_name);	
 	return;
-
-/*
-	$res = $conn->query("update user_detail
-							set screen_name = '".$screen_name."',info_timestamp = '".$timestamp."'
-							where usrname = '".$usrname."'");
-	if (!$res) {
-		echo "db_update error\n";
-		$msg = "Function update_usr_info,db update failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-*/
 }
 
 if($screen_name_pinyin)
 {
 	//need to add code here, save this item according to the screen name;
-/*
-	$item_name='screen_name_pinyin';
-	update_item($item_name,$screen_name_pinyin);	
-	return;
-
-	$res = $conn->query("update user_detail
-							set screen_name_pinyin = '".$screen_name_pinyin."',info_timestamp = '".$timestamp."'
-							where usrname = '".$usrname."'");
-	if (!$res) {
-		echo "db_update error\n";
-		$msg = "Function update_usr_info,db update failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-*/
 }
 
 function update_item($item_name,$item_value)

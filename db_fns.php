@@ -48,4 +48,34 @@ function vote_get_assoc($query)
   return $posts;
 }
 
+function vote_item_existed_test($query)
+{
+  // connect to db
+  $conn = db_connect();
+  if(!$conn){
+	//$msg = "Function register,db connect error!";
+	//$auth_log->general($msg);
+	return DB_CONNECT_ERROR;
+  }
+  // check if usrname is unique
+  $result = $conn->query($query);
+  if (!$result) {
+    //$msg = "Function register,db query failed";
+	//$auth_log->general($msg);
+	return DB_QUERY_ERROR;
+  }
+
+  if ($result->num_rows>0) {
+	//$msg = "Function register,usrname={$usrname} already in used";
+	//$auth_log->general($msg);
+	vote_db_closed($result);
+	return true;  
+  }else{
+	vote_db_closed($result);
+	return false;
+  }
+	
+}
+
+
 ?>
