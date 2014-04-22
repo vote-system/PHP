@@ -7,10 +7,11 @@
 //define('TRUE', 1);
 
 //macro to control debug log
-define("REG_DEBUG", 0);
-define("LOGIN_DEBUG", 0);
-define("USR_AUTH_DEBUG", 0);
-define("FRIEND_DEBUG",1);
+define('REG_DEBUG', 0);
+define('LOGIN_DEBUG', 0);
+define('USR_AUTH_DEBUG', 0);
+define('FRIEND_DEBUG',0);
+define('DB_DEBUG',0);
 
 //macro for vote_db
 define('VOTE_DB_ERROR', 0);

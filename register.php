@@ -5,29 +5,28 @@ require_once('vote_fns.php');
 //macro to control debug log
 define("REG_DEBUG", 1);
 
-$reg_log = new vote_log(); 
+//$reg_log = new vote_log(); 
 
 //create short variable names
 $email=$_POST['email'];
 $usrname=$_POST['usrname'];
 $passwd=$_POST['passwd'];
-$usrunique=$_POST['usr_unique'];
+$usr_unique=$_POST['usr_unique'];
 
 header('Content-Type: application/json');
 
 if(REG_DEBUG)
 {
-
 	$reg_debug['email'] = $email; 
 	$reg_debug['usrname'] = $usrname; 
 	$reg_debug['passwd'] = $passwd; 
-	$reg_debug['usr_unique'] = $usrunique; 
+	$reg_debug['usr_unique'] = $usr_unique; 
 
 	echo json_encode($reg_debug);
 }
 
 //first check if the message is to check whether the usrname is unique
-if($usrunique == 1)
+if($usr_unique == 1)
 {
 	$uniq_res = username_unique($usrname);
 

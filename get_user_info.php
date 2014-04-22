@@ -10,6 +10,7 @@ if(!$usrname || !$fetch_name)
 
 $query = "select * from usrinfo where usrname='".$fetch_name."'";
 $row = vote_get_array($query);
+//print_r($row);
 
 $stranger['usrname'] = $row['usrname'];
 $stranger['signature'] = $row['signature'];

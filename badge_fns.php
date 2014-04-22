@@ -1,6 +1,21 @@
 <?php
 require_once("vote_fns.php");
 
+test_badge();
+function test_badge()
+{	
+	$badge_name="friend_badge";
+	$usrname="dingyi";
+	query_badge($badge_name,$usrname);
+	echo "\n";
+
+	$badge_name="vote_badge";
+	query_badge($badge_name,$usrname);
+	echo "\n";
+
+}
+
+
 function update_badge($badge_name,$usrname,$action)
 {
   $badge = query_badge("friend_badge",$usrname);
@@ -28,8 +43,9 @@ function query_badge($badge_name,$usrname)
 {
   //save the usrid
   $query = "select '".$badge_name."' from usrinfo where usrname='".$usrname."'";
-  $badge = vote_get_assoc($query);
-  return $badge;
+  $badge = vote_get_array($query);
+  echo $badge[$badge_name];
+  return $badge[$badge_name];
 }
 
 function get_user_badge($usrname)

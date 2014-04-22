@@ -3,18 +3,18 @@ require_once("vote_fns.php");
 //require_once("push_message_to_ios.php");
 //require_once("badge_fns.php");
 
-function handle_add_fri_req($from,$to)
+function handle_add_fri_req($from,$to,$message)
 {
 	//1.add item to stranger table
 	//add two item for each require
-	$usrid = $from;
-	$stranger_id = $to;
+	$usrid = usrname_to_usrid($from);
+	$stranger_id = usrname_to_usrid($to);
 	$status = ADD_FRIEND_SEND;
 	insert_stranger_table($usrid,$stranger_id,$status);
 
 	//add the peer item to stranger table
-	$usrid = $to;
-	$stranger_id = $from;
+	$usrid = usrname_to_usrid($to);
+	$stranger_id = usrname_to_usrid($from);
 	$status = IGNORE_FRIEND_RESPONSE;
 	insert_stranger_table($usrid,$stranger_id,$status);
 
@@ -69,10 +69,10 @@ function search_token_from_db($usrname)
 	return $token;
 }
 
-function insert_stranger_table($usrid,$stranger_id)
+function insert_stranger_table($usrid,$stranger_id,$status)
 {
   $query = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."',NULL)";
+                           (NULL, '".$usrid."', '".$stranger_id."','".$status."')";
   $ret = vote_db_query($query);
   return $ret;
 }
