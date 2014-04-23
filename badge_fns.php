@@ -1,0 +1,61 @@
+<?php
+require_once("vote_fns.php");
+
+//test_badge();
+function test_badge()
+{	
+	$usrname="dingyi";
+	$badge = query_badge($usrname);
+	echo $badge['friend_badge'];
+	echo $badge['vote_badge'];
+}
+
+function update_badge($badge_name,$usrname,$action)
+{
+  $badge_arr = query_badge($usrname);
+  $badge = $badge_arr[$badge_name];
+  if(!$badge){
+	  return false;
+  }else{
+	if($action == ADD_BADGE)
+		$badge +=1;
+	else
+		$badge -=1;
+
+	$query = "update usrinfo set '".$badge_name."' = '".$badge."'
+							where usrname = '".$usrname."'";
+	$result = vote_db_query($query);
+	if(!$result){
+		return false;
+	}else{
+		return true;
+	}
+  }
+  return false;
+}
+/*
+function query_badge($badge_name,$usrname)
+{
+  //save the usrid
+  $query = "select '".$badge_name."' from usrinfo where usrname='".$usrname."'";
+  $badge = vote_get_array($query);
+  echo $badge[$badge_name];
+  return $badge[$badge_name];
+}
+*/
+function query_badge($usrname)
+{
+  //save the usrid
+  $query = "select * from usrinfo where usrname='".$usrname."'";
+  $badge = vote_get_array($query);
+  return $badge;
+}
+
+function get_user_badge($usrname)
+{	
+	$badge = query_badge($usrname);
+	$total_badge = $badge['friend_badge'] +  $badge['vote_badge'];
+	return $total_badge;
+}
+
+?>
