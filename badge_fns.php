@@ -1,6 +1,7 @@
 <?php
 require_once("vote_fns.php");
 
+
 //test_badge();
 function test_badge()
 {	
@@ -12,8 +13,7 @@ function test_badge()
 
 function update_badge($badge_name,$usrname,$action)
 {
-  $badge_arr = query_badge($usrname);
-  $badge = $badge_arr[$badge_name];
+  $badge = query_badge($usrname);
   if(!$badge){
 	  return false;
   }else{
@@ -33,16 +33,7 @@ function update_badge($badge_name,$usrname,$action)
   }
   return false;
 }
-/*
-function query_badge($badge_name,$usrname)
-{
-  //save the usrid
-  $query = "select '".$badge_name."' from usrinfo where usrname='".$usrname."'";
-  $badge = vote_get_array($query);
-  echo $badge[$badge_name];
-  return $badge[$badge_name];
-}
-*/
+
 function query_badge($usrname)
 {
   //save the usrid
@@ -59,3 +50,4 @@ function get_user_badge($usrname)
 }
 
 ?>
+
