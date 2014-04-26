@@ -8,7 +8,7 @@ function test_badge()
 	$usrname="dingyi";
 	$badge = query_badge($usrname);
 	echo $badge['friend_badge'];
-	echo $badge['vote_badge'];
+	echo $badge['usr_vote_badge'];
 }
 
 function update_badge($badge_name,$usrname,$action)
@@ -45,7 +45,7 @@ function query_badge($usrname)
 function get_user_badge($usrname)
 {	
 	$badge = query_badge($usrname);
-	$total_badge = $badge['friend_badge'] +  $badge['vote_badge'];
+	$total_badge = $badge['friend_badge'] +  $badge['usr_vote_badge'];
 	return $total_badge;
 }
 

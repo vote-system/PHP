@@ -12,14 +12,15 @@ $query = "select * from usrinfo where usrname='".$fetch_name."'";
 $row = vote_get_array($query);
 //print_r($row);
 
-$stranger['usrname'] = $row['usrname'];
-$stranger['signature'] = $row['signature'];
-$stranger['screen_name'] = $row['screen_name'];
-$stranger['gender'] = $row['gender'];
-$stranger['original_head_imag_url'] = $row['original_head_imag_url'];
-$stranger['medium_head_imag_url'] = $row['medium_head_imag_url'];
-$strangers_array['strangers_array'] = $stranger;
+$usrinfo['usrname'] = $row['usrname'];
+$usrinfo['signature'] = $row['signature'];
+$usrinfo['screen_name'] = $row['screen_name'];
+$usrinfo['gender'] = $row['gender'];
+$usrinfo['original_head_imag_url'] = $row['original_head_imag_url'];
+$usrinfo['medium_head_imag_url'] = $row['medium_head_imag_url'];
+$usrinfo['usr_info_timestamp'] = (int)$row['usr_info_timestamp']);
+$usrinfo['head_image_timestamp'] = (int)$row['head_image_timestamp'];
 
-echo json_encode($strangers_array);
+echo json_encode($usrinfo);
 
 ?>

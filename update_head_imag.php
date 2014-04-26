@@ -23,7 +23,7 @@ define("ORIGINAL_IMAG_DIMISION",200);
 define("MEDIUM_IMAG_DIMISION",100);
 define("THUMBNAILS_IMAG_DIMISION",40);
 
-//$usrname="zhaobo111";
+//$usrname="test";
 $usrname=$_POST['usrname'];
 
 $upload_dir = "/vote/upload/$usrname/";
@@ -118,7 +118,7 @@ if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 }
 else
 {
-	$ret = update_head_imag_db(FULL_IMAG,$upload_file);
+	$ret = update_head_imag_db(FULL_IMAG,$upload_file,$usrname);
 	if($ret != UPDATE_IMAGE_SUCC )
 	{
 		$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -152,7 +152,7 @@ else
 			else
 			{
 				$url = $upload_dir . $new_name;
-				update_head_imag_db(MEDIUM_IMAG,$url);
+				$ret = update_head_imag_db(MEDIUM_IMAG,$url,$usrname);
 				if($ret != UPDATE_IMAGE_SUCC )
 				{
 					$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -210,45 +210,28 @@ else
 // part3: save the image URL in the database
 // if (file existed)
 //		write to database
-function update_head_imag_db($type,$url)
+function update_head_imag_db($type,$url,$usrname)
 {
-  $date = new DateTime();
-  $timestamp = $date->getTimestamp();
-  
-  $conn = db_connect();
-  if(!$conn){
-	//$msg = "Function cookie_insert,db connect error!";
-	//$auth_log->general($msg);
-	return DB_CONNECT_ERROR;
-  }
+  //$date = new DateTime();
+  //$timestamp = $date->getTimestamp();
+  $timestamp = 1;
 
-  $result = $conn->query("select * from usrinfo
-                         where usrname='".$usrname."'");
-  if (!$result) {
-    //$msg = "Function cookie_insert,db query failed!";
-	//$auth_log->general($msg);
-	return DB_QUERY_ERROR;
-  }
-
-  if ($result->num_rows>0) {
-
+  $query = "select * from usrinfo where usrname='".$usrname."'";
+  $exist = vote_item_existed_test($query);
+  if($exist == true)
+  {
 	switch($type)
     {
-		case FULL_IMAG: $item = "original_head_image_url"; break;
-		case MEDIUM_IMAG: $item = "medium_head_image_url"; break;
-		case TINY_IMAG: $item = "thumbnails_head_image_url"; break;
+		case FULL_IMAG: $item = "original_head_imag_url"; break;
+		case MEDIUM_IMAG: $item = "medium_head_imag_url"; break;
+		case TINY_IMAG: $item = "thumbnails_head_imag_url"; break;
 	}
-	$result = $conn->query("update usrinfo
-							set $item = '".$url."', image_timestamp = '".$timestamp."'
-							where usrname = '".$usrname."'");
-	if (!$result) {
-		//$msg = "Function cookie_insert,db insert cookie={$cookie} failed";
-		//$auth_log->general($msg);
-		return DB_INSERT_ERROR;
-	 }
-	 else{
+	$update = "update usrinfo set ".$item." = '".$url."', head_image_timestamp = '".$timestamp."'
+							where usrname = '".$usrname."'";
+	$ret = vote_db_query($update);
+
+	if($ret != VOTE_DB_ERROR)
 		return UPDATE_IMAGE_SUCC;
-	 }		
   }
 }
 

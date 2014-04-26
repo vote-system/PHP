@@ -12,6 +12,7 @@ define('LOGIN_DEBUG', 0);
 define('USR_AUTH_DEBUG', 0);
 define('FRIEND_DEBUG',0);
 define('DB_DEBUG',0);
+define('UPDATE_HEAD_IMAGE_DEBUG',1);
 
 //macro for vote_db
 define('VOTE_DB_ERROR', 0);

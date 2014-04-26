@@ -1,13 +1,23 @@
 <?php
 require_once('vote_fns.php');
 
+define("UPDATE_USRINFO_DEBUG",1);
+
 $usrname=$_POST['usrname'];
 $gender=$_POST['gender'];
 $signature=$_POST['signature'];
 $screen_name=$_POST['screen_name'];
-$screen_name_pinyin=$_POST['screen_name_pinyin'];
+//$screen_name_pinyin=$_POST['screen_name_pinyin'];
 
 header('Content-Type: application/json');
+
+if(UPDATE_USRINFO_DEBUG)
+{
+    $usrname="test";
+    $gender="f";
+    $signature="abc";
+    $screen_name="me";
+}
 
 if(!$usrname) //must fill the usrname with other parameter
 {	
@@ -16,66 +26,54 @@ if(!$usrname) //must fill the usrname with other parameter
 	return;
 }
 
+//$date = new DateTime();
+//$timestamp = $date->getTimestamp();
+//echo $timestamp;
+$timestamp = 1;
+
 if($gender)
 {
-	$item_name='gender';
-	update_item($item_name,$gender);	
-	return;	
+	$update = "update usrinfo
+			set gender = '".$gender."', usr_info_timestamp = '".$timestamp."'
+			where usrname = '".$usrname."'";
+	$ret = vote_db_query($update);
+	//echo $ret;
+	if($ret == VOTE_DB_ERROR)
+		$usrinfo_resp['update_gender'] = DB_UPDATE_ERROR;
+	else
+		$usrinfo_resp['update_gender'] = INFO_UPDATE_SUCCESS; 
 }
 
 if($signature)
 {
-	$item_name='signature';
-	update_item($item_name,$signature);	
-	return;
+	$update = "update usrinfo
+			set signature = '".$signature."', usr_info_timestamp = '".$timestamp."'
+			where usrname = '".$usrname."'";
+	$ret = vote_db_query($update);
+	//echo $ret;
+	if($ret == VOTE_DB_ERROR)
+		$usrinfo_resp['update_signature'] = DB_UPDATE_ERROR;
+	else
+		$usrinfo_resp['update_signature'] = INFO_UPDATE_SUCCESS; 
 }
 
 if($screen_name)
 {
-	$item_name='screen_name';
-	update_item($item_name,$screen_name);	
-	return;
+	$update = "update usrinfo
+			set screen_name = '".$screen_name."', usr_info_timestamp = '".$timestamp."'
+			where usrname = '".$usrname."'";
+	$ret = vote_db_query($update);
+	//echo $ret;
+	if($ret == VOTE_DB_ERROR)
+		$usrinfo_resp['screen_name'] = DB_UPDATE_ERROR;
+	else
+		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 
 }
 
 if($screen_name_pinyin)
 {
 	//need to add code here, save this item according to the screen name;
 }
-
-function update_item($item_name,$item_value)
-{
-	$date = new DateTime();
-	$timestamp = $date->getTimestamp();
-	//echo $timestamp;
-
-	$conn = db_connect();
-	if(!$conn){
-		$msg = "update_item ,db connect error!";
-		//$auth_log->general($msg);
-		
-		//echo "db_connect error\n";
-		$usrinfo_resp['usrinfo_code'] = DB_CONNECT_ERROR; 
-		echo json_encode($usrinfo_resp);
-		return;
-	}
-	
-	//echo "function update_item\n";
-	$update="update usrinfo
-			set $item_name = '".$item_value."', usr_info_timestamp = '".$timestamp."'
-			where usrname = '".$usrname."'";
-	$res = $conn->query($update);
-	
-	if (!$res) {
-		echo "db_update error\n";
-		$msg = "Function update_usr_info,db insert line failed";
-		//$auth_log->general($msg);
-		$usrinfo_resp['usrinfo_code'] = DB_UPDATE_ERROR; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-	 else{
-		$usrinfo_resp['usrinfo_code'] = INFO_UPDATE_SUCCESS; //user name and passwd not correct!
-		echo json_encode($usrinfo_resp);
-	 }
-}
+echo json_encode($usrinfo_resp);
 
 ?>
