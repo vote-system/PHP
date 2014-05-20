@@ -10,6 +10,8 @@ define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
 define('TINY_IMAG',3);
 
+define(HEADER_URL,"http://115.28.228.41");
+
 //definition for image type returned by getimagsize()
 define('GIF',1);
 define('JPG',2);
@@ -118,7 +120,8 @@ if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 }
 else
 {
-	$ret = update_head_imag_db(FULL_IMAG,$upload_file,$usrname);
+	$file_url = HEADER_URL . $upload_file;
+	$ret = update_head_imag_db(FULL_IMAG,$file_url,$usrname);
 	if($ret != UPDATE_IMAGE_SUCC )
 	{
 		$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -136,11 +139,13 @@ else
 			{
 				$newsize = MEDIUM_IMAG_DIMISION;
 				$new_name = "medium-" . basename($upload_file); 
+				$type = MEDIUM_IMAG;
 			}
 			if($i == TINY_IMAG)
 			{
 				$newsize = THUMBNAILS_IMAG_DIMISION;
 				$new_name = "thumbnails-" . basename($upload_file); 
+				$type = TINY_IMAG;
 			}
 			$ret = resize_image($upload_file,$newsize,$upload_dir,$new_name);
 			if(!$ret)
@@ -151,8 +156,8 @@ else
 			}
 			else
 			{
-				$url = $upload_dir . $new_name;
-				$ret = update_head_imag_db(MEDIUM_IMAG,$url,$usrname);
+				$file_url = HEADER_URL . $upload_dir . $new_name;
+				$ret = update_head_imag_db($type,$file_url,$usrname);
 				if($ret != UPDATE_IMAGE_SUCC )
 				{
 					$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -212,8 +217,8 @@ else
 //		write to database
 function update_head_imag_db($type,$url,$usrname)
 {
-  //$date = new DateTime();
-  //$timestamp = $date->getTimestamp();
+  $date = new DateTime();
+  $timestamp = $date->getTimestamp();
   $timestamp = 1;
 
   $query = "select * from usrinfo where usrname='".$usrname."'";

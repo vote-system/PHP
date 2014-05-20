@@ -1,7 +1,8 @@
 <?php
 require_once('vote_fns.php');
+require_once('pinyin.php');
 
-define("UPDATE_USRINFO_DEBUG",1);
+define("UPDATE_USRINFO_DEBUG",0);
 
 $usrname=$_POST['usrname'];
 $gender=$_POST['gender'];
@@ -59,21 +60,27 @@ if($signature)
 
 if($screen_name)
 {
+	//判断是否为中文，若是，则转为英文
+	$pinyin = get_pinyin_array($screen_name);
+
+	foreach ($pinyin as $key => $value) 
+	{
+		$screen_name_pinyin .= $pinyin['key'];
+	}
+	//$usrinfo_resp['screen_name_pinyin'] = $screen_name_pinyin;
+	//echo $screen_name_pinyin;
+
 	$update = "update usrinfo
-			set screen_name = '".$screen_name."', usr_info_timestamp = '".$timestamp."'
+			set screen_name = '".$screen_name."', usr_info_timestamp = '".$timestamp."',screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
 	if($ret == VOTE_DB_ERROR)
 		$usrinfo_resp['screen_name'] = DB_UPDATE_ERROR;
 	else
-		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 
+		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 	
 }
 
-if($screen_name_pinyin)
-{
-	//need to add code here, save this item according to the screen name;
-}
 echo json_encode($usrinfo_resp);
 
 ?>
