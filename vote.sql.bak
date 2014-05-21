@@ -13,7 +13,7 @@ create table usrinfo  (
   medium_head_imag_url varchar(100),
   thumbnails_head_imag_url varchar(100),
   usr_info_timestamp int default -1,
-  head_imag_timestamp int default -1,
+  head_image_timestamp int default -1,
   friend_badge int unsigned default 0,
   vote_badge int unsigned default 0
 );

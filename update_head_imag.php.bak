@@ -10,7 +10,7 @@ define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
 define('TINY_IMAG',3);
 
-define(HEADER_URL,"http://115.28.228.41/");
+define(HEADER_URL,"http://115.28.228.41");
 
 //definition for image type returned by getimagsize()
 define('GIF',1);

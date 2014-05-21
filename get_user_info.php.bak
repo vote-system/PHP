@@ -23,7 +23,7 @@ $usrinfo['original_head_imag_url'] = $row['original_head_imag_url'];
 $usrinfo['medium_head_imag_url'] = $row['medium_head_imag_url'];
 $usrinfo['thumbnails_head_imag_url'] = $row['thumbnails_head_imag_url'];
 $usrinfo['usr_info_timestamp'] = (int)$row['usr_info_timestamp'];
-$usrinfo['head_imag_timestamp'] = (int)$row['head_imag_timestamp'];
+$usrinfo['head_image_timestamp'] = (int)$row['head_image_timestamp'];
 
 echo json_encode($usrinfo);
 

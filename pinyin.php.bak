@@ -64,7 +64,7 @@ function get_pinyin_array($string)
 					$tmp2 = $tmp1;
 					for ($k=0;$k<sizeof($tmp2);$k++)
 					{
-						$tmp2[$k] .= $flow[$i][$j];
+						$tmp2[$k] .= "_".$flow[$i][$j]."_";
 					}
 					array_splice($pinyin,sizeof($pinyin),0,$tmp2);
 				}
