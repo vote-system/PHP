@@ -10,7 +10,16 @@ $signature=$_POST['signature'];
 $screen_name=$_POST['screen_name'];
 //$screen_name_pinyin=$_POST['screen_name_pinyin'];
 
+//$date = new DateTime();
+//$timestamp = $date->getTimestamp();
+//echo $timestamp;
+//$timestamp = 1;
+
 header('Content-Type: application/json');
+
+//$timestamp = get_time_stamp($usrname);
+//$usr_info_timestamp = $timestamp['usr_info_timestamp'];
+//$usr_info_timestamp++;
 
 if(UPDATE_USRINFO_DEBUG)
 {
@@ -27,15 +36,13 @@ if(!$usrname) //must fill the usrname with other parameter
 	return;
 }
 
-$date = new DateTime();
-$timestamp = $date->getTimestamp();
-//echo $timestamp;
-//$timestamp = 1;
+update_time_stamp($usrname,USR_INFO_TIME_STAMP);
 
 if($gender)
 {
+	
 	$update = "update usrinfo
-			set gender = '".$gender."', usr_info_timestamp = '".$timestamp."'
+			set gender = '".$gender."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
@@ -79,7 +86,7 @@ if($screen_name)
 	//$usrinfo_resp['screen_name_pinyin'] = $screen_name_pinyin;
 
 	$update = "update usrinfo
-			set screen_name = '".$screen_name."', usr_info_timestamp = '".$timestamp."',screen_name_pinyin = '".$screen_name_pinyin."'
+			set screen_name = '".$screen_name."', usr_info_timestamp = '".$usr_info_timestamp."',screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
@@ -88,6 +95,7 @@ if($screen_name)
 	else
 		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 	
 }
+
 
 echo json_encode($usrinfo_resp);
 

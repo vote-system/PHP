@@ -10,7 +10,7 @@ define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
 define('TINY_IMAG',3);
 
-define(HEADER_URL,"http://115.28.228.41/");
+define(HEADER_URL,"http://115.28.228.41/vote/");
 
 //definition for image type returned by getimagsize()
 define('GIF',1);
@@ -30,7 +30,11 @@ $usrname=$_POST['usrname'];
 
 //$date = new DateTime();
 //$timestamp = $date->getTimestamp();
-$timestamp = 1;
+//$timestamp = 1;
+
+//$timestamp = get_time_stamp($usrname);
+//$head_imag_timestamp = $timestamp['head_imag_timestamp'];
+//$head_imag_timestamp++;
 
 $upload_dir = "upload/$usrname/";
 
@@ -124,6 +128,7 @@ if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 }
 else
 {
+	chmod($upload_file,0666);
 	$file_url = HEADER_URL . $upload_file;
 	$ret = update_head_imag_db(FULL_IMAG,$file_url,$usrname);
 	if($ret != UPDATE_IMAGE_SUCC )
@@ -206,6 +211,7 @@ if(!$ret)
 $output_name = $new_dir . $newfile_name;
 // Output
 $ret = imagejpeg($thumb,$output_name);
+chmod($output_name,0666);
 if(!$ret)
 	return false;
 $ret = imagedestroy($thumb);
@@ -231,9 +237,11 @@ function update_head_imag_db($type,$url,$usrname)
 		case MEDIUM_IMAG: $item = "medium_head_imag_url"; break;
 		case TINY_IMAG: $item = "thumbnails_head_imag_url"; break;
 	}
-	$update = "update usrinfo set ".$item." = '".$url."', head_imag_timestamp = '".$timestamp."'
+	$update = "update usrinfo set ".$item." = '".$url."'
 							where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
+
+	update_time_stamp($usrname,HEAD_IMAG_TIME_STAMP);
 
 	if($ret != VOTE_DB_ERROR)
 		return UPDATE_IMAGE_SUCC;
