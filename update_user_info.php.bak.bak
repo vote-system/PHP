@@ -1,6 +1,7 @@
 <?php
 require_once('vote_fns.php');
 require_once('pinyin.php');
+require_once('time.php');
 
 define("UPDATE_USRINFO_DEBUG",0);
 
@@ -9,6 +10,8 @@ $gender=$_POST['gender'];
 $signature=$_POST['signature'];
 $screen_name=$_POST['screen_name'];
 //$screen_name_pinyin=$_POST['screen_name_pinyin'];
+
+$timestamp = get_current_timestamp();
 
 header('Content-Type: application/json');
 

@@ -1,7 +1,6 @@
 <?php
  
 //macro for all the source code.
-require_once('time.php');
 
 //TRUE and FAIL has the same value with system defined.
 //define('FAIL', 0);

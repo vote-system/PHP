@@ -1,11 +1,8 @@
 <?php
 require_once("vote_fns.php");
 
-//$name = "dingyi";
-//update_friend_badge($name,ADD_BADGE);
-$usrinfo = query_badge($usrname);
-  $friend_badge = $usrinfo['friend_badge'];
-  echo $friend_badge;
+$name = "dingyi";
+update_friend_badge($name,ADD_BADGE);
 
 function update_friend_badge($usrname,$action)
 {

@@ -20,7 +20,7 @@ function handle_add_fri_req($from,$to,$message)
 	insert_stranger_table($usrid,$stranger_id,$status);
 
 	//2.update the friend_badge in table usrinfo
-	update_friend_badge($to,ADD_BADGE);
+	update__friend_badge($to,ADD_BADGE);
 
 	//3.prepare to push message to peer
 	//	query the token and count the total badge

@@ -28,14 +28,6 @@ define("THUMBNAILS_IMAG_DIMISION",40);
 //$usrname="test";
 $usrname=$_POST['usrname'];
 
-//$date = new DateTime();
-//$timestamp = $date->getTimestamp();
-//$timestamp = 1;
-
-//$timestamp = get_time_stamp($usrname);
-//$head_imag_timestamp = $timestamp['head_imag_timestamp'];
-//$head_imag_timestamp++;
-
 $upload_dir = "upload/$usrname/";
 
 header('Content-Type: application/json');
