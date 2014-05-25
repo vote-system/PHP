@@ -1,7 +1,8 @@
 <?php
 require_once('vote_fns.php');
+require_once('pinyin.php');
 
-define("UPDATE_USRINFO_DEBUG",1);
+define("UPDATE_USRINFO_DEBUG",0);
 
 $usrname=$_POST['usrname'];
 $gender=$_POST['gender'];
@@ -26,15 +27,11 @@ if(!$usrname) //must fill the usrname with other parameter
 	return;
 }
 
-//$date = new DateTime();
-//$timestamp = $date->getTimestamp();
-//echo $timestamp;
-$timestamp = 1;
-
 if($gender)
 {
+	
 	$update = "update usrinfo
-			set gender = '".$gender."', usr_info_timestamp = '".$timestamp."'
+			set gender = '".$gender."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
@@ -47,7 +44,7 @@ if($gender)
 if($signature)
 {
 	$update = "update usrinfo
-			set signature = '".$signature."', usr_info_timestamp = '".$timestamp."'
+			set signature = '".$signature."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
@@ -59,21 +56,37 @@ if($signature)
 
 if($screen_name)
 {
+	//echo "screen_name = " . $screen_name . "\n";	
+
+	//判断是否为中文，若是，则转为英文
+	if(true){
+		$str = iconv("UTF-8", "GB2312//IGNORE", $screen_name);
+			if(!$str)
+				return;
+		$pinyin = get_pinyin_array($str);
+		$screen_name_pinyin = $pinyin[0];
+		//print_r($pinyin);
+		//echo $pinyin[0];
+	}else{
+		$screen_name_pinyin = $screen_name;
+	}
+	
+
+	//$usrinfo_resp['screen_name_pinyin'] = $screen_name_pinyin;
+
 	$update = "update usrinfo
-			set screen_name = '".$screen_name."', usr_info_timestamp = '".$timestamp."'
+			set screen_name = '".$screen_name."',screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
 	if($ret == VOTE_DB_ERROR)
 		$usrinfo_resp['screen_name'] = DB_UPDATE_ERROR;
 	else
-		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 
+		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 	
 }
 
-if($screen_name_pinyin)
-{
-	//need to add code here, save this item according to the screen name;
-}
+update_time_stamp($usrname,USR_INFO_TIME_STAMP);
+
 echo json_encode($usrinfo_resp);
 
 ?>

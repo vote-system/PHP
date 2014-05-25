@@ -1,39 +1,44 @@
 <?php
 require_once("vote_fns.php");
 
+//$name = "dingyi";
+//update_friend_badge($name,ADD_BADGE);
+$usrinfo = query_badge($usrname);
+  $friend_badge = $usrinfo['friend_badge'];
+  echo $friend_badge;
 
-//test_badge();
-function test_badge()
-{	
-	$usrname="dingyi";
-	$badge = query_badge($usrname);
-	echo $badge['friend_badge'];
-	echo $badge['usr_vote_badge'];
-}
-
-function update_badge($badge_name,$usrname,$action)
+function update_friend_badge($usrname,$action)
 {
-  $badge = query_badge($usrname);
-  if(!$badge){
-	  return false;
-  }else{
-	if($action == ADD_BADGE)
-		$badge +=1;
-	else
-		$badge -=1;
+  $usrinfo = query_badge($usrname);
+  $friend_badge = $usrinfo['friend_badge'];
+  echo $friend_badge;
 
-	$query = "update usrinfo set '".$badge_name."' = '".$badge."'
+	if($action == ADD_BADGE){
+		$friend_badge +=1;
+	}else{
+		$friend_badge -=1;
+	}
+	echo $usrname;
+	$query = "update usrinfo set friend_badge = '".$friend_badge."'
 							where usrname = '".$usrname."'";
 	$result = vote_db_query($query);
+	echo $result;
 	if(!$result){
 		return false;
 	}else{
 		return true;
 	}
-  }
-  return false;
 }
 
+function query_badge($usrname)
+{
+  //save the usrid
+  $query = "select * from usrinfo where usrname='".$usrname."'";
+  $usrinfo = vote_get_array($query);
+  return $usrinfo;
+}
+
+/*
 function query_badge($usrname)
 {
   //save the usrid
@@ -48,6 +53,7 @@ function get_user_badge($usrname)
 	$total_badge = $badge['friend_badge'] +  $badge['usr_vote_badge'];
 	return $total_badge;
 }
+*/
 
 ?>
 

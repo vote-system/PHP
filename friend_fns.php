@@ -2,6 +2,7 @@
 require_once("vote_fns.php");
 //require_once("push_message_to_ios.php");
 //require_once("badge_fns.php");
+handle_add_fri_req("dingyi","test","");
 
 function handle_add_fri_req($from,$to,$message)
 {
@@ -19,7 +20,7 @@ function handle_add_fri_req($from,$to,$message)
 	insert_stranger_table($usrid,$stranger_id,$status);
 
 	//2.update the friend_badge in table usrinfo
-	update_badge("friend_badge",$to,ADD_BADGE);
+	update_friend_badge($to,ADD_BADGE);
 
 	//3.prepare to push message to peer
 	//	query the token and count the total badge
@@ -64,8 +65,9 @@ function handle_del_fri_req($from,$to)
 
 function search_token_from_db($usrname)
 {
-	$query = "select device_token from usrinfo where usrname='".$usrname."'";
-	$token = vote_get_array($query);
+	$query = "select * from usrinfo where usrname='".$usrname."'";
+	$usrinfo = vote_get_array($query);
+	$token = $usrinfo["device_token"];
 	return $token;
 }
 

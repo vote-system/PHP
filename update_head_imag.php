@@ -10,6 +10,8 @@ define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
 define('TINY_IMAG',3);
 
+define(HEADER_URL,"http://115.28.228.41/vote/");
+
 //definition for image type returned by getimagsize()
 define('GIF',1);
 define('JPG',2);
@@ -26,7 +28,7 @@ define("THUMBNAILS_IMAG_DIMISION",40);
 //$usrname="test";
 $usrname=$_POST['usrname'];
 
-$upload_dir = "/vote/upload/$usrname/";
+$upload_dir = "upload/$usrname/";
 
 header('Content-Type: application/json');
 
@@ -118,7 +120,9 @@ if(!move_uploaded_file($_FILES['userfile']['tmp_name'],
 }
 else
 {
-	$ret = update_head_imag_db(FULL_IMAG,$upload_file,$usrname);
+	chmod($upload_file,0666);
+	$file_url = HEADER_URL . $upload_file;
+	$ret = update_head_imag_db(FULL_IMAG,$file_url,$usrname);
 	if($ret != UPDATE_IMAGE_SUCC )
 	{
 		$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -136,11 +140,13 @@ else
 			{
 				$newsize = MEDIUM_IMAG_DIMISION;
 				$new_name = "medium-" . basename($upload_file); 
+				$type = MEDIUM_IMAG;
 			}
 			if($i == TINY_IMAG)
 			{
 				$newsize = THUMBNAILS_IMAG_DIMISION;
 				$new_name = "thumbnails-" . basename($upload_file); 
+				$type = TINY_IMAG;
 			}
 			$ret = resize_image($upload_file,$newsize,$upload_dir,$new_name);
 			if(!$ret)
@@ -151,8 +157,8 @@ else
 			}
 			else
 			{
-				$url = $upload_dir . $new_name;
-				$ret = update_head_imag_db(MEDIUM_IMAG,$url,$usrname);
+				$file_url = HEADER_URL . $upload_dir . $new_name;
+				$ret = update_head_imag_db($type,$file_url,$usrname);
 				if($ret != UPDATE_IMAGE_SUCC )
 				{
 					$upload_file_resp['up_code'] = UPDATE_IMAGE_FAIL; 
@@ -197,6 +203,7 @@ if(!$ret)
 $output_name = $new_dir . $newfile_name;
 // Output
 $ret = imagejpeg($thumb,$output_name);
+chmod($output_name,0666);
 if(!$ret)
 	return false;
 $ret = imagedestroy($thumb);
@@ -212,10 +219,6 @@ else
 //		write to database
 function update_head_imag_db($type,$url,$usrname)
 {
-  //$date = new DateTime();
-  //$timestamp = $date->getTimestamp();
-  $timestamp = 1;
-
   $query = "select * from usrinfo where usrname='".$usrname."'";
   $exist = vote_item_existed_test($query);
   if($exist == true)
@@ -226,9 +229,11 @@ function update_head_imag_db($type,$url,$usrname)
 		case MEDIUM_IMAG: $item = "medium_head_imag_url"; break;
 		case TINY_IMAG: $item = "thumbnails_head_imag_url"; break;
 	}
-	$update = "update usrinfo set ".$item." = '".$url."', head_image_timestamp = '".$timestamp."'
+	$update = "update usrinfo set ".$item." = '".$url."'
 							where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
+
+	update_time_stamp($usrname,HEAD_IMAG_TIME_STAMP);
 
 	if($ret != VOTE_DB_ERROR)
 		return UPDATE_IMAGE_SUCC;
