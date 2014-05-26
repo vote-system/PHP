@@ -17,6 +17,11 @@ if($usrname)
 
 function ret_stranger_info($usrname)
 {
+	$stranger_list = array();
+	$query =   $query = "select * from usrinfo where usrname = '".$usrname."'";
+
+	$stranger_list = vote_get_assoc($stranger_id); 
+
   $conn = db_connect();
   if(!$conn)
   {
