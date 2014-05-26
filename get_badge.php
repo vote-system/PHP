@@ -1,6 +1,7 @@
 <?php
 require_once("vote_fns.php");
 $usrname = $_GET['usrname'];
+//$usrname = "dingyi";
 $badge_arr = query_badge($usrname);
 header('Content-Type: application/json');
 $badge['friend_badge'] = (int)$badge_arr['friend_badge']; 

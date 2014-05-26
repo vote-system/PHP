@@ -1,6 +1,6 @@
 <?php
 require_once("vote_fns.php");
-//require_once("push_message_to_ios.php");
+require_once("push_message_to_ios.php");
 //require_once("badge_fns.php");
 handle_add_fri_req("dingyi","test","");
 

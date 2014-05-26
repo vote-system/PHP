@@ -3,9 +3,9 @@ require_once("vote_fns.php");
 
 //$name = "dingyi";
 //update_friend_badge($name,ADD_BADGE);
-$usrinfo = query_badge($usrname);
-  $friend_badge = $usrinfo['friend_badge'];
-  echo $friend_badge;
+//$usrinfo = query_badge($usrname);
+//$friend_badge = $usrinfo['friend_badge'];
+//echo $friend_badge;
 
 function update_friend_badge($usrname,$action)
 {
@@ -47,13 +47,13 @@ function query_badge($usrname)
   return $badge;
 }
 
+*/
 function get_user_badge($usrname)
 {	
 	$badge = query_badge($usrname);
 	$total_badge = $badge['friend_badge'] +  $badge['usr_vote_badge'];
 	return $total_badge;
 }
-*/
 
 ?>
 
