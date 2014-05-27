@@ -67,7 +67,7 @@ function vote_get_array($query)
 {
   $result = vote_db_query($query);
   $vote_array = $result->fetch_array();
-  vote_db_closed($result);
+  //vote_db_closed($result);
   return $vote_array;
 }
 

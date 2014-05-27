@@ -75,7 +75,7 @@ function vote_get_assoc($query)
 {
   $result = vote_db_query($query);
   $posts = array();
-  while ($row = mysqli_fetch_assoc()) {
+  while ($row = $result->fetch_assoc()) {
 	$posts[] = $row;
   }
   vote_db_closed($result);

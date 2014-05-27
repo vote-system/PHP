@@ -34,7 +34,7 @@ function push_message($from,$to,$action,$token,$append_message,$badge)
 			return;
 		break;
 	}
-	//print_r($push_message);
+	print_r($push_message);
 	//$usrname = array($from);
 	$usrinfo = query_usr_info($from);
 	$screen_name = $usrinfo['screen_name'];

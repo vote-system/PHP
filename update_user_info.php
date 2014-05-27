@@ -1,6 +1,8 @@
 <?php
 require_once('vote_fns.php');
 require_once('pinyin.php');
+require_once('time.php');
+require_once('db_fns.php');
 
 define("UPDATE_USRINFO_DEBUG",0);
 

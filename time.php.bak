@@ -4,6 +4,7 @@ date_default_timezone_set('PRC');
 
 function get_current_timestamp()
 {
+	
 	$date = new DateTime();
 	$timestamp = $date->getTimestamp();
 	if($timestamp)

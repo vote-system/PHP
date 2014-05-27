@@ -8,7 +8,7 @@ $friend_name=$_POST['friend_name'];
 $message=$_POST['add_friend_message'];
 
 header('Content-Type: application/json');
-//print_r($action);
+print_r($action);
 switch($action)
 {
 	case ADD_FRIEND_REQUEST:

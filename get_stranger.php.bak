@@ -49,8 +49,8 @@ function ret_stranger_info($usrname)
 	  $i++;
 	}
 
-	$strangers_array["strangers_array"] = $friend_detail;
-	$json = json_encode($strangers_array);
+	$strangers_array["stranger_array"] = $friend_detail;
+	$json = json_encode($stranger_array);
 	echo stripslashes($json);
 }
 

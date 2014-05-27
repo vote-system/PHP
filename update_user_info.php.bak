@@ -1,6 +1,7 @@
 <?php
 require_once('vote_fns.php');
 require_once('pinyin.php');
+require_once("time.php");
 
 define("UPDATE_USRINFO_DEBUG",0);
 
@@ -11,10 +12,6 @@ $screen_name=$_POST['screen_name'];
 //$screen_name_pinyin=$_POST['screen_name_pinyin'];
 
 header('Content-Type: application/json');
-
-//$timestamp = get_time_stamp($usrname);
-//$usr_info_timestamp = $timestamp['usr_info_timestamp'];
-//$usr_info_timestamp++;
 
 if(UPDATE_USRINFO_DEBUG)
 {

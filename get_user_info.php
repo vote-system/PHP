@@ -1,5 +1,6 @@
 <?php
 require_once("vote_fns.php");
+require_once("db_fns.php");
 
 $usrname = $_GET['usrname'];
 $fetch_name = $_GET['fetch_name'];

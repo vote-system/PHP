@@ -1,8 +1,10 @@
 <?php
+require_once("db_fns.php");
+require_once("push_message_to_ios.php");
 require_once("vote_fns.php");
-//require_once("push_message_to_ios.php");
+
 //require_once("badge_fns.php");
-handle_add_fri_req("dingyi","test","");
+//handle_add_fri_req("dingyi","test","");
 
 function handle_add_fri_req($from,$to,$message)
 {
@@ -10,28 +12,35 @@ function handle_add_fri_req($from,$to,$message)
 	//add two item for each require
 	$usrid = usrname_to_usrid($from);
 	$stranger_id = usrname_to_usrid($to);
-	$status = ADD_FRIEND_SEND;
-	insert_stranger_table($usrid,$stranger_id,$status);
+	$ret = stranger_item_existed($usrid,$stranger_id);
+	//echo $ret;
+	if($ret == DB_ITEM_FOUND)
+	{ 
+		//item already existed, just return
+		return;
+	}
+	else{
+		$status = ADD_FRIEND_SEND;
+		insert_stranger_table($usrid,$stranger_id,$status);
 
-	//add the peer item to stranger table
-	$usrid = usrname_to_usrid($to);
-	$stranger_id = usrname_to_usrid($from);
-	$status = IGNORE_FRIEND_RESPONSE;
-	insert_stranger_table($usrid,$stranger_id,$status);
+		$status = IGNORE_FRIEND_RESPONSE;
+		insert_stranger_table($stranger_id,$usrid,$status);
 
-	//2.update the friend_badge in table usrinfo
-	update__friend_badge($to,ADD_BADGE);
+		//2.update the friend_badge in table usrinfo
+		update_friend_badge($to,ADD_BADGE);
 
-	//3.prepare to push message to peer
-	//	query the token and count the total badge
-	//  then push message to peer
-	$token = search_token_from_db($to);
+		//3.prepare to push message to peer
+		//	query the token and count the total badge
+		//  then push message to peer
+		$token = search_token_from_db($to);
 
-	$friend_badge = query_badge("friend_badge",$to);
-	$vote_badge = query_badge("vote_badge",$to);
-	$total_badge = $friend_badge + $vote_badge;
+		$friend_badge = query_badge("friend_badge",$to);
+		$vote_badge = query_badge("vote_badge",$to);
+		$total_badge = $friend_badge + $vote_badge;
 
-	push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
+		push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
+	}
+	
 }
 
 function handle_agree_add_fri($from,$to)
@@ -39,13 +48,20 @@ function handle_agree_add_fri($from,$to)
 	//1.search the device token of $to
 	$token = search_token_from_db($to);
 
+	$friend_badge = query_badge("friend_badge",$to);
+	$vote_badge = query_badge("vote_badge",$to);
+	$total_badge = $friend_badge + $vote_badge;
+
 	//2.push the response to the peer
-	push_message($from,$to,$response,$token);
+	$message = "";
+	push_message($from,$to,AGREE_ADD_FRIEND,$token,$message,$total_badge);
 
 	$usrid = usrname_to_usrid($from);
 	$stranger_id = usrname_to_usrid($to);
-
-	$status = AGREE_ADD_FRIEND;		  
+	echo "usrid=" . $usrid;
+	echo " stranger_id=" . $stranger_id;
+	$status = AGREE_ADD_FRIEND;		
+	echo "status=" . $status;
 	update_stranger_status($usrid,$stranger_id,$status);
 
 	//add two rows to friend table
@@ -73,6 +89,8 @@ function search_token_from_db($usrname)
 
 function insert_stranger_table($usrid,$stranger_id,$status)
 {
+	//echo "function insert_stranger_table";
+  
   $query = "insert into stranger values
                            (NULL, '".$usrid."', '".$stranger_id."','".$status."')";
   $ret = vote_db_query($query);
@@ -81,15 +99,20 @@ function insert_stranger_table($usrid,$stranger_id,$status)
 
 function update_stranger_status($usrid,$stranger_id,$status)
 {
-	$query = "update usrinfo
+	$query = "update stranger
 				set status = '".$status."'
-				where usrid = '".$usrid."' and strangerid = '".$strangerid."'";
+				where usrid = '".$usrid."' and stranger_id = '".$stranger_id."'";
 	$ret = vote_db_query($query);
 	return $ret;
 }
 
 function insert_friend_table($usrid,$friend_id)
 {
+  //echo "function insert_stranger_table";
+  $ret = friend_item_existed($usrid,$friend_id);
+  //echo $ret;
+  if($ret == DB_ITEM_FOUND)
+	  return;
   //friend relationship is bidirect, so insert two lines at the same time
   $query = "insert into friend values
                            (NULL, '".$usrid."', '".$friend_id."', NULL, NULL),
@@ -106,26 +129,30 @@ function delete_friend_db($usrid,$friendid)
   return $ret;
 }
 
-function get_usrdetail($friendid)
+function stranger_item_existed($usrid,$stranger_id)
 {
-  $query = "select * from usrinfo where usrid='".$friendid."'";
-  $rows = vote_get_assoc($query);
-  foreach($rows as $row) 
-  {
-	 //only return part of items in table usrinfo
-     $friend_info = array_slice($row,5,15);
-	 $friend_array["friends_array"] = $friend_info;
-	 //not sure whether need to put the following line out of the while loop
-	 echo json_encode($friend_info);
-  }
+	//echo "function stranger_item_existed";
+	  $query = "select * from stranger where usrid='".$usrid."'
+				and stranger_id='".$stranger_id."'" ;
+	  $name_existed = vote_item_existed_test($query);
+	  //echo $name_existed;
+	  if($name_existed)
+		  return DB_ITEM_FOUND;
+	  else
+		  return DB_ITEM_NOT_FOUND;
 }
 
-function usrname_to_usrid($usrname)
+function friend_item_existed($usrid,$friend_id)
 {
-  $query = "select usrid from usrinfo where usrname='".$usrname."'";
-  $row = vote_get_array($query);
-  return $row['usrid']; 
+	//echo "function stranger_item_existed";
+	  $query = "select * from friend where usrid='".$usrid."'
+				and friend_id='".$friend_id."'" ;
+	  $name_existed = vote_item_existed_test($query);
+	  //echo $name_existed;
+	  if($name_existed)
+		  return DB_ITEM_FOUND;
+	  else
+		  return DB_ITEM_NOT_FOUND;
 }
-
 
 ?>

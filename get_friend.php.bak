@@ -45,8 +45,8 @@ if($usrname)
 	  //echo stripslashes($json);
 	  $i++;
 	}
-	$friends_array["friends_array"] = $friend_detail;
-	$json = json_encode($friends_array);
+	$friend_array["friend_array"] = $friend_detail;
+	$json = json_encode($friend_array);
 	echo stripslashes($json);
 }
 

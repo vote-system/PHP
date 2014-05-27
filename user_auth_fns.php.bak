@@ -1,7 +1,6 @@
 <?php
 
 require_once('vote_fns.php');
-require_once('db_fns.php');
 
 //$auth_log = new vote_log();
 

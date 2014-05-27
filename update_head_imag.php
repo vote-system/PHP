@@ -4,6 +4,9 @@
 //2.resize the 100*100 image to 50*50(named medium-*) and 20*20(named tiny-*)
 //3.if resize success, write the image URL and update time to the database
 require_once('vote_fns.php');
+require_once('time.php');
+require_once('db_fns.php');
+
 $max_size = 500000;
 
 define('FULL_IMAG',1);
