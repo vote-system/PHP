@@ -28,28 +28,29 @@ function ret_stranger_info($usrname)
     $i = 0;
 	foreach ($stranger_list as $stranger)
 	{
-		
 		$stranger_id = $stranger['stranger_id'];
 		//print_r($stranger_id);
-	  $query = "select * from usrinfo where usrid = '".$stranger_id."'";
-	  $usrinfo = vote_get_array($query);
+		$query = "select * from usrinfo where usrid = '".$stranger_id."'";
+		$usrinfo = vote_get_array($query);
 
-	  $stranger_info['usrname'] = $usrinfo['usrname'];
-	  $stranger_info['signature'] = $usrinfo['signature'];
-	  $stranger_info['screen_name'] = $usrinfo['screen_name'];
-	  $stranger_info['gender'] = $usrinfo['gender'];
-	  $stranger_info['original_head_imag_url'] = $usrinfo['original_head_imag_url'];
-	  $stranger_info['medium_head_imag_url'] = $usrinfo['medium_head_imag_url'];
+		$stranger_info['usrname'] = $usrinfo['usrname'];
+		$stranger_info['signature'] = $usrinfo['signature'];
+		$stranger_info['screen_name'] = $usrinfo['screen_name'];
+		$stranger_info['gender'] = $usrinfo['gender'];
+		$stranger_info['original_head_imag_url'] = $usrinfo['original_head_imag_url'];
+		$stranger_info['medium_head_imag_url'] = $usrinfo['medium_head_imag_url'];
 
-	  $stranger_detail[$i] = $stranger_info;
-	  //print_r($stranger_info);
-	  //$json = json_encode($stranger_array);
-	  //echo stripslashes($json);
-	  //echo json_encode($stranger_array); 
-	  $i++;
+		$stranger_detail[$i] = $stranger_info;
+		//print_r($stranger_info);
+		//$json = json_encode($stranger_array);
+		//echo stripslashes($json);
+		//echo json_encode($stranger_array); 
+		//print_r($stranger_detail[$i]);
+		$i++;
 	}
 
-	$strangers_array["strangers_array"] = $friend_detail;
+	$strangers_array["strangers_array"] = $stranger_detail;
+	//print_r($strangers_array["strangers_array"]);
 	$json = json_encode($strangers_array);
 	echo stripslashes($json);
 }

@@ -192,4 +192,15 @@ function notify_password($usrname, $password) {
 	}      
 }
 
+function add_default_head_imag($usrname)
+{
+	$query = "update usrinfo
+			set original_head_imag_url = ORIGINAL_HEAD_IMAG_URL,
+				medium_head_imag_url = MEDIUM_HEAD_IMAG_URL,
+				thumbnails_head_imag_url = THUMBNAILS_HEAD_IMAG_URL,
+			where usrname = '".$usrname."'";
+	$ret = vote_db_query($query);
+	return $ret;
+}
+
 ?>

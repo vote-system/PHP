@@ -5,7 +5,7 @@ require_once('user_auth_fns.php');
 require_once('data_valid_fns.php');
 
 //macro to control debug log
-define("REG_DEBUG", 1);
+define("REG_DEBUG", 0);
 
 //$reg_log = new vote_log(); 
 
@@ -93,6 +93,9 @@ else
 	//$reg_resp['sessionid'] =  sha1($usrname);		
 	$msg = "user {$usrname}: regist success!";
 	//$reg_log->general($msg);
+
+	//add default head_imag_url
+	add_default_head_imag($usrname);
 
 	$reg_resp['reg_code'] = REGISTER_SUCCESS; //register success
 	echo json_encode($reg_resp);		

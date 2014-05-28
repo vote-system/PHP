@@ -103,6 +103,10 @@ define("SUBTRCT_BADGE",2);
 define("USR_INFO_TIME_STAMP",1);
 define("HEAD_IMAG_TIME_STAMP",2);
 
+define("ORIGINAL_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/default.png");
+define("MEDIUM_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/medium-default.png");
+define("THUMBNAILS_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/thumbnails-default.png");
+
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
 //require_once('data_valid_fns.php'); 
