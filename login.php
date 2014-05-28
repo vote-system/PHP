@@ -48,7 +48,14 @@ if ($usrname && $passwd)
 			setcookie("user_cookie", sha1($usrname));
 		}
 		$login_resp['login_code'] = LOGIN_SUCCESS; //login success
-	}
+
+		//set user status to active
+		$usr_active = USER_ACTIVE;
+		$query = "update usrinfo
+					set active = '".$usr_active."'
+					where usrname = '".$usrname."'";	
+		$ret = vote_db_query($query);		
+
 	else if( $result == DB_ITEM_NOT_FOUND)
 	{
 		$msg = "user {$usrname}: login failed!";

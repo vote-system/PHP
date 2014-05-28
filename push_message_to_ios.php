@@ -31,7 +31,7 @@ function push_message($from,$to,$action,$token,$append_message,$badge)
 		
 		default:
 			//echo "push request content not support!\n";
-			return;
+			return false;
 		break;
 	}
 	//print_r($push_message);
@@ -54,9 +54,10 @@ function push_message($from,$to,$action,$token,$append_message,$badge)
 		'ssl://gateway.sandbox.push.apple.com:2195', $err,  
 		$errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);  
   
-	if (!$fp)  
-		exit("Failed to connect: $err $errstr" . PHP_EOL);  
-	  
+	if (!$fp){ 
+		//exit("Failed to connect: $err $errstr" . PHP_EOL); 
+		return false;
+	}
 	//echo 'Connected to APNS' . PHP_EOL;  
 
 	$total_badge = get_user_badge($to);
@@ -87,6 +88,6 @@ function push_message($from,$to,$action,$token,$append_message,$badge)
 	*/  
 	// Close the connection to the server   
 	fclose($fp);  
-
+	return true;
 }
 ?>

@@ -13,6 +13,9 @@ error_reporting(E_ALL);
 //define('FAIL', 0);
 //define('TRUE', 1);
 
+define("USER_NOT_ACTIVE",0);
+define("USER_ACTIVE",1);
+
 //macro to control debug log
 define('REG_DEBUG', 0);
 define('LOGIN_DEBUG', 0);

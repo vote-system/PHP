@@ -95,7 +95,7 @@ else
 	//$reg_log->general($msg);
 
 	//add default head_imag_url
-	add_default_head_imag($usrname);
+	add_default_usrinfo($usrname);
 
 	$reg_resp['reg_code'] = REGISTER_SUCCESS; //register success
 	echo json_encode($reg_resp);		

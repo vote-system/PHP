@@ -17,7 +17,7 @@ function handle_add_fri_req($from,$to,$message)
 	if($ret == DB_ITEM_FOUND)
 	{ 
 		//item already existed, just return
-		return;
+		return false;
 	}
 	else{
 		$status = ADD_FRIEND_SEND;
@@ -38,7 +38,11 @@ function handle_add_fri_req($from,$to,$message)
 		$vote_badge = query_badge("vote_badge",$to);
 		$total_badge = $friend_badge + $vote_badge;
 
-		push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
+		$ret = push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
+		if(!$ret)
+			return false;
+		else
+			return true;
 	}
 	
 }

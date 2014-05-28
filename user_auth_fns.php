@@ -2,6 +2,7 @@
 
 require_once('vote_fns.php');
 require_once('db_fns.php');
+require_once('pinyin.php');
 
 //$auth_log = new vote_log();
 
@@ -192,13 +193,30 @@ function notify_password($usrname, $password) {
 	}      
 }
 
-function add_default_head_imag($usrname)
+function add_default_usrinfo($usrname)
 {
+	$original_head_imag = ORIGINAL_HEAD_IMAG_URL;
+	$medium_head_imag = MEDIUM_HEAD_IMAG_URL;
+	$thumbnails_head_iamg_url = THUMBNAILS_HEAD_IMAG_URL;
+	
+	$screen_name = $usrname;
+
+	$str = iconv("UTF-8", "GB2312//IGNORE", $screen_name);
+		if(!$str){
+			return;
+		}
+	$pinyin = get_pinyin_array($str);
+	$screen_name_pinyin = $pinyin[0];
+
 	$query = "update usrinfo
-			set original_head_imag_url = ORIGINAL_HEAD_IMAG_URL,
-				medium_head_imag_url = MEDIUM_HEAD_IMAG_URL,
-				thumbnails_head_imag_url = THUMBNAILS_HEAD_IMAG_URL,
+			set original_head_imag_url = '".$original_head_imag."',
+				medium_head_imag_url = '".$medium_head_imag."',
+				thumbnails_head_imag_url = '".$thumbnails_head_iamg_url."',
+				gender = 'm',
+				screen_name = '".$screen_name."',
+				screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";
+	//echo $query;
 	$ret = vote_db_query($query);
 	return $ret;
 }
