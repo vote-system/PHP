@@ -44,8 +44,8 @@ function login($usrname, $password,$device_token) {
   if($login_succ){
 	//insert the device token
 	$query = "update usrinfo
-							set device_token = '".$device_token."'
-							where usrname = '".$usrname."'";
+				set device_token = '".$device_token."'
+				where usrname = '".$usrname."'";
 	$ret = vote_db_query($query);		
 	return $ret;
   }

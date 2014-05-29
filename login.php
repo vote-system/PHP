@@ -54,8 +54,11 @@ if ($usrname && $passwd)
 		$query = "update usrinfo
 					set active = '".$usr_active."'
 					where usrname = '".$usrname."'";	
-		$ret = vote_db_query($query);		
+		$ret = vote_db_query($query);	
+		
+		//check whether there is unread message, if yes, push the message to the usr
 
+	}
 	else if( $result == DB_ITEM_NOT_FOUND)
 	{
 		$msg = "user {$usrname}: login failed!";
@@ -99,6 +102,34 @@ if (isset($_COOKIE['user_cookie']))
 		$login_resp['login_code'] = COOKIE_LOGIN_ERROR; //register error
 	}
 	echo json_encode($login_resp);
+}
 
+function check_and_push_unread_message($usrname)
+{
+	$usrid = 
+	$query = "select * from unread_message
+				where usrid='".$usrid"'";
+	$unread_message_existed = vote_item_existed_test($query);
+	if($unread_message_existed == false){	
+		return;
+	}else{
+		//push the message one bye one
+		$query = "select * from usrinfo where usrname='".$usrname."'";
+		$unread_message_array = vote_get_array($query);
+		$unread_message = $unread_message_array['message'];
+
+		foreach($unread_message as $message)
+		{
+			$usrid = $message['usrid'];
+			$action = $message['action'];
+
+			$ret = push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
+			if(!$ret)
+				return false;
+			else
+				return true;
+		}
+
+	}
 }
 ?>
