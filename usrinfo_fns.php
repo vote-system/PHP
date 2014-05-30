@@ -59,9 +59,16 @@ function get_usrdetail($friendid)
 
 function usrname_to_usrid($usrname)
 {
-  $query = "select usrid from usrinfo where usrname='".$usrname."'";
+  $query = "select * from usrinfo where usrname='".$usrname."'";
   $row = vote_get_array($query);
   return $row['usrid']; 
+}
+
+function usrid_to_usrname($usrname)
+{
+  $query = "select * from usrinfo where usrid='".$usrid."'";
+  $row = vote_get_array($query);
+  return $row['usrname']; 
 }
 
 function query_usr_info($usrname)

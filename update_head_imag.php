@@ -181,39 +181,40 @@ else
 	echo json_encode($upload_file_resp);
 }
 
-function resize_image($image_name,$newsize,$new_dir, $newfile_name) {
-//echo "image_name=" . $image_name . "\n";
-//echo "newsize=" . $newsize. "\n";
-//echo "new_file_name=" . $newfile_name . "\n";	  
-list($width, $height, $type) = getimagesize($image_name);
-$thumb = imagecreatetruecolor($newsize, $newsize);
-if(!$thumb)
-	return false;
-//echo "type=" . $type . "\n";
-switch ($type) 
+function resize_image($image_name,$newsize,$new_dir, $newfile_name) 
 {
-	case 1: $source = imagecreatefromgif($image_name); break;
-	case 2: $source = imagecreatefromjpeg($image_name); break;
-	case 3: $source = imagecreatefrompng($image_name); break;
-	default:  $source = imagecreatefromjpeg($image_name);
-}
+	//echo "image_name=" . $image_name . "\n";
+	//echo "newsize=" . $newsize. "\n";
+	//echo "new_file_name=" . $newfile_name . "\n";	  
+	list($width, $height, $type) = getimagesize($image_name);
+	$thumb = imagecreatetruecolor($newsize, $newsize);
+	if(!$thumb)
+		return false;
+	//echo "type=" . $type . "\n";
+	switch ($type) 
+	{
+		case 1: $source = imagecreatefromgif($image_name); break;
+		case 2: $source = imagecreatefromjpeg($image_name); break;
+		case 3: $source = imagecreatefrompng($image_name); break;
+		default:  $source = imagecreatefromjpeg($image_name);
+	}
 
-// Resize
-$ret = imagecopyresized($thumb, $source, 0, 0, 0, 0, $newsize, $newsize, $width, $height);
-if(!$ret)
-	return false;
+	// Resize
+	$ret = imagecopyresized($thumb, $source, 0, 0, 0, 0, $newsize, $newsize, $width, $height);
+	if(!$ret)
+		return false;
 
-$output_name = $new_dir . $newfile_name;
-// Output
-$ret = imagejpeg($thumb,$output_name);
-chmod($output_name,0666);
-if(!$ret)
-	return false;
-$ret = imagedestroy($thumb);
-if(!$ret)
-	return false;
-else
-	return true;
+	$output_name = $new_dir . $newfile_name;
+	// Output
+	$ret = imagejpeg($thumb,$output_name);
+	chmod($output_name,0666);
+	if(!$ret)
+		return false;
+	$ret = imagedestroy($thumb);
+	if(!$ret)
+		return false;
+	else
+		return true;
 }
 
 

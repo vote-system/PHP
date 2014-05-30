@@ -42,4 +42,3 @@ function get_user_badge($usrname)
 }
 
 ?>
-

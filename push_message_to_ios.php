@@ -4,12 +4,20 @@ require_once("usrinfo_fns.php");
 
 //push_message("dingyi","dingyi",ADD_FRIEND_REQUEST,"3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4","",0);
 
-function push_message($from,$to,$action,$token,$append_message,$badge)
+function push_message($from,$to,$action,$append_message)
 {
 	// Put your device token here (without spaces):   
 	//$token = '3f77d9491bdf75000d0d1b88cfa1f4f337f38979a6c566b32d2f7a1867fba4f4';  
 	//echo "token = " . $token . "\n";  
-	  
+
+	//1.search the device token of $to
+	$token = search_token_from_db($to);
+
+	$friend_badge = query_badge("friend_badge",$to);
+	$vote_badge = query_badge("vote_badge",$to);
+	$total_badge = $friend_badge + $vote_badge;
+
+
 	//private key's passphrase for this APP(vote)   
 	$passphrase = '890iopkl;';  
 	  
@@ -68,10 +76,10 @@ function push_message($from,$to,$action,$token,$append_message,$badge)
 		'sound' => 'default',      //default sound   
 		'badge' => $total_badge   //total badge of the usr
 		);  
-	//$body['append_message'] = array(  
-	//	'friend_code' => $action,//push message   
-	//	'append_message' => $append_message //user append message  
-	//	);    
+	$body['append_message'] = array(  
+		'friend_code' => $action,//push message   
+		'append_message' => $append_message //user append message  
+		);    
 	// Encode the payload as JSON   
 	$payload = json_encode($body);  
 	  

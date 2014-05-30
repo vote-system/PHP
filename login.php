@@ -3,6 +3,7 @@
 // include function files for this application
 require_once('vote_fns.php');
 require_once('user_auth_fns.php');
+require_once('usrinfo_fns.php');
 //session_start();
 
 //create short variable names
@@ -42,7 +43,7 @@ if ($usrname && $passwd)
 
 		$res = cookie_insert($usrname);
 		//echo "res={$res}\n";
-		if($res == COOKIE_SAVE_SUCCESS || $res == DB_SIMILAR_ITEM_FOUND){
+		if($res == COOKIE_SAVE_SUCCESS || $res == DB_ITEM_FOUND){
 			//only if cookie insert success in db then send cookie to customer
 			//setcookie("user_cookie", sha1($usrname),time()+3600,"/vote","115.28.228.41");
 			setcookie("user_cookie", sha1($usrname));
@@ -51,12 +52,15 @@ if ($usrname && $passwd)
 
 		//set user status to active
 		$usr_active = USER_ACTIVE;
+		//echo "usr_active=" .$usr_active;
 		$query = "update usrinfo
 					set active = '".$usr_active."'
-					where usrname = '".$usrname."'";	
+					where usrname = '".$usrname."'";
+		//echo "query = " .$query;
 		$ret = vote_db_query($query);	
 		
 		//check whether there is unread message, if yes, push the message to the usr
+		check_and_push_unread_message($usrname);
 
 	}
 	else if( $result == DB_ITEM_NOT_FOUND)
@@ -74,6 +78,7 @@ if ($usrname && $passwd)
 
 }
 
+/*
 //cookie login
 if (isset($_COOKIE['user_cookie']))
 {
@@ -91,6 +96,7 @@ if (isset($_COOKIE['user_cookie']))
 	{
 		$msg = "cookie {$cookie}: cookie not saved in db, please use usrname and password to login!";
 		//$log->general($msg);
+		//echo "COOKIE_NOT_SAVED";
 
 		$login_resp['login_code'] = COOKIE_NOT_SAVED; //register error
 	}
@@ -103,33 +109,55 @@ if (isset($_COOKIE['user_cookie']))
 	}
 	echo json_encode($login_resp);
 }
+*/
 
 function check_and_push_unread_message($usrname)
 {
-	$usrid = 
+	$usrid = usrname_to_usrid($usrname);
 	$query = "select * from unread_message
-				where usrid='".$usrid"'";
+				where usrid='".$usrid."'";
 	$unread_message_existed = vote_item_existed_test($query);
 	if($unread_message_existed == false){	
+		//echo "no unread_message";
 		return;
 	}else{
 		//push the message one bye one
-		$query = "select * from usrinfo where usrname='".$usrname."'";
+		$query = "select * from unread_message where usrname='".$usrname."'";
 		$unread_message_array = vote_get_array($query);
-		$unread_message = $unread_message_array['message'];
-
-		foreach($unread_message as $message)
+		$unread_messages = $unread_message_array['message'];
+		
+		$message_number = count($unread_message);
+		while($message_number>0)
+		//foreach($unread_messages as $message)
 		{
-			$usrid = $message['usrid'];
-			$action = $message['action'];
+			$usrid = $unread_messages[0]['usrid'];
+			$from = usrid_to_usrname($usrid);
+			$to = $usrname;
+			$action = $unread_messages[0]['action'];
+			$append_message = $unread_messages[0]['append_message'];
 
-			$ret = push_message($from,$to,ADD_FRIEND_REQUEST,$token,$message,$total_badge);
-			if(!$ret)
+			$ret = push_message($from,$to,$action,$append_message);
+			if(!$ret){
+				//push message failed, write the unread_message back to the database
+				//try to push the message until next time user successful login.
+				$query = "update unread_message set message='".$unread_messages."'
+							where usrid='".$usrid."'";
+				vote_db_query($query);
+				break;
+			}else{
+				array_shift($unread_messages); 
+				$message_number = count($unread_message);
+				
+			}
+			if($message_number == 0)
+			{
+				$query = "delete from unread_message 
+							where usrid='".$usrid."'";
+				$ret = vote_db_query($query);
+			}else{
 				return false;
-			else
-				return true;
+			}
 		}
-
 	}
 }
 ?>

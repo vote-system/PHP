@@ -17,7 +17,7 @@ function register($usrname, $email, $password) {
   else
   {
 	$query = "insert into usrinfo values
-             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0)";
+             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0,0)";
 	$ret = vote_db_query($query);		
 	return $ret;
   }
@@ -35,8 +35,8 @@ function username_unique($usrname) {
 	  return DB_ITEM_NOT_FOUND;
 }
 
-function login($usrname, $password,$device_token) {
-
+function login($usrname, $password,$device_token) 
+{
   $query = "select * from usrinfo
             where usrname='".$usrname."'
             and passwd = sha1('".$password."')";
@@ -75,7 +75,7 @@ function cookie_insert($usrname){
   $cookie_existed = vote_item_existed_test($query);
 
   if($cookie_existed){
-	DB_SIMILAR_ITEM_FOUND;
+	DB_ITEM_FOUND;
   }else{
 	$query = "update usrinfo
 			 set cookie = sha1('".$usrname."')
