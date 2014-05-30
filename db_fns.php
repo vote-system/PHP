@@ -66,20 +66,24 @@ function vote_db_query($query)
 function vote_get_array($query)
 {
   $result = vote_db_query($query);
-  $vote_array = $result->fetch_array();
-  //vote_db_closed($result);
-  return $vote_array;
+  if($result){
+	  $vote_array = $result->fetch_array();
+	  //vote_db_closed($result);
+	  return $vote_array;
+  }
 }
 
 function vote_get_assoc($query)
 {
   $result = vote_db_query($query);
-  $posts = array();
-  while ($row = $result->fetch_assoc()) {
-	$posts[] = $row;
+  if($result){
+	  $posts = array();
+	  while ($row = $result->fetch_assoc()) {
+		$posts[] = $row;
+	  }
+	  vote_db_closed($result);
+	  return $posts;
   }
-  vote_db_closed($result);
-  return $posts;
 }
 
 function vote_item_existed_test($query)
