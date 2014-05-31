@@ -58,6 +58,7 @@ function get_pinyin_array($string)
 				foreach ($pinyin as $key => $value)
 				{
 					$pinyin[$key] .= $flow[$i][0];
+
 				}
 				for ($j=1;$j<sizeof($flow[$i]);$j++)
 				{
@@ -89,3 +90,4 @@ function get_pinyin_array($string)
 //$flow = get_pinyin_array($text);
 //print_r($flow);
 ?>
+

@@ -9,11 +9,11 @@ create table usrinfo  (
   signature varchar(100),
   screen_name varchar(40),
   screen_name_pinyin varchar(40),
-  original_head_imag_url varchar(40),
-  medium_head_imag_url varchar(40),
-  thumbnails_head_imag_url varchar(40),
+  original_head_imag_url varchar(100),
+  medium_head_imag_url varchar(100),
+  thumbnails_head_imag_url varchar(100),
   usr_info_timestamp int default -1,
-  head_image_timestamp int default -1,
+  head_imag_timestamp int default -1,
   friend_badge int unsigned default 0,
   vote_badge int unsigned default 0
 );
