@@ -2,29 +2,20 @@
 require_once('db_fns.php');
 require_once('vote_fns.php');
 
-function update_friend_badge($usrname,$action)
+function update_friend_badge($usrname)
 {
     $usrinfo = query_badge($usrname);
     $friend_badge = $usrinfo['friend_badge'];
     //echo $friend_badge;
 	if($friend_badge < 0)
-		return;
+		return false;
+	$friend_badge +=1;
 
-	if($action == ADD_BADGE){
-		$friend_badge +=1;
-	}else{
-		$friend_badge -=1;
-	}
 	//echo $usrname;
 	$query = "update usrinfo set friend_badge = '".$friend_badge."'
 							where usrname = '".$usrname."'";
 	$result = vote_db_query($query);
-	//echo $result;
-	if(!$result){
-		return false;
-	}else{
-		return true;
-	}
+	return $result;
 }
 
 function query_badge($usrname)
@@ -64,7 +55,7 @@ function usrname_to_usrid($usrname)
   return $row['usrid']; 
 }
 
-function usrid_to_usrname($usrname)
+function usrid_to_usrname($usrid)
 {
   $query = "select * from usrinfo where usrid='".$usrid."'";
   $row = vote_get_array($query);
@@ -76,6 +67,14 @@ function query_usr_info($usrname)
   $query = "select * from usrinfo where usrname='".$usrname."'";
   $usrinfo = vote_get_array($query);
   return $usrinfo;
+}
+
+function search_token_from_db($usrname)
+{
+	$query = "select * from usrinfo where usrname='".$usrname."'";
+	$usrinfo = vote_get_array($query);
+	$token = $usrinfo["device_token"];
+	return $token;
 }
 
 

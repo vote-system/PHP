@@ -4,6 +4,7 @@
 require_once('vote_fns.php');
 require_once('user_auth_fns.php');
 require_once('usrinfo_fns.php');
+require_once('push_message_to_ios.php');
 //session_start();
 
 //create short variable names
@@ -114,49 +115,67 @@ if (isset($_COOKIE['user_cookie']))
 function check_and_push_unread_message($usrname)
 {
 	$usrid = usrname_to_usrid($usrname);
-	$query = "select * from unread_message
-				where usrid='".$usrid."'";
+	$query = "select * from unread_message where usrid='".$usrid."'";
 	$unread_message_existed = vote_item_existed_test($query);
+	//echo "unread_message_existed=" .$unread_message_existed. " \n";
+	
 	if($unread_message_existed == false){	
 		//echo "no unread_message";
 		return;
 	}else{
 		//push the message one bye one
-		$query = "select * from unread_message where usrname='".$usrname."'";
+		$query = "select * from unread_message where usrid='".$usrid."'";
 		$unread_message_array = vote_get_array($query);
-		$unread_messages = $unread_message_array['message'];
+		$message = $unread_message_array['message'];
+		$unread_messages = unserialize($message);
+		//print_r($unread_messages);
 		
-		$message_number = count($unread_message);
+		$message_number = count($unread_messages);
+		//echo "message_number = " .$message_number;
 		while($message_number>0)
 		//foreach($unread_messages as $message)
+		//for($i=0;i<$message_number;$i++)
 		{
-			$usrid = $unread_messages[0]['usrid'];
-			$from = usrid_to_usrname($usrid);
+			$stranger_id = $unread_messages[0]['stranger_id'];
+			$from = usrid_to_usrname($stranger_id);
+			//$to = usrid_to_usrname($usrid);
 			$to = $usrname;
 			$action = $unread_messages[0]['action'];
 			$append_message = $unread_messages[0]['append_message'];
-
+			
+			//echo "usrid=" .$usrid. " \n";
+			//echo "action=" .$action. " \n";
+			//echo "append_message=" .$append_message. " \n";
+			
 			$ret = push_message($from,$to,$action,$append_message);
+			
+			//echo "message_number=" . $message_number . "\n";
+			//if($message_number == 2)
+			//	$ret = true;
+			//else if($message_number == 1)
+			//	$ret = false;
 			if(!$ret){
 				//push message failed, write the unread_message back to the database
 				//try to push the message until next time user successful login.
-				$query = "update unread_message set message='".$unread_messages."'
+				$message = serialize($unread_messages);
+				$query = "update unread_message set message='".$message."'
 							where usrid='".$usrid."'";
+				//echo "query=" .$query . "\n";
 				vote_db_query($query);
 				break;
 			}else{
 				array_shift($unread_messages); 
-				$message_number = count($unread_message);
-				
+				$message_number = count($unread_messages);
+				//echo "after: message_number=" . $message_number . "\n";				
 			}
-			if($message_number == 0)
-			{
-				$query = "delete from unread_message 
-							where usrid='".$usrid."'";
-				$ret = vote_db_query($query);
-			}else{
-				return false;
-			}
+		}
+		if($message_number == 0)
+		{
+			$query = "delete from unread_message 
+						where usrid='".$usrid."'";
+			$ret = vote_db_query($query);
+		}else{
+			return false;
 		}
 	}
 }

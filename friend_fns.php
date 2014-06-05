@@ -2,16 +2,27 @@
 require_once("db_fns.php");
 require_once("push_message_to_ios.php");
 require_once("vote_fns.php");
+require_once("usrinfo_fns.php");
 
-//require_once("badge_fns.php");
 //handle_add_fri_req("dingyi","test","");
+
 
 function handle_add_fri_req($from,$to,$append_message)
 {
+	//update badge number
+	//$badge_arr = query_badge($to);
+	//$friend_badge = $badge_arr['friend_badge'];
+	//$friend_badge +=1;
+	//$query = "update usrinfo
+	//			set friend_badge = '".$friend_badge."'
+	//			where usrname = '".$usrname."'";
+	//$ret = vote_db_query($query);	
+
 	//1.add item to stranger table
 	//add two item for each require
-	$usrid = usrname_to_usrid($from);
-	$stranger_id = usrname_to_usrid($to);
+	$stranger_id = usrname_to_usrid($from);
+	$usrid = usrname_to_usrid($to);
+
 	$ret = stranger_item_existed($usrid,$stranger_id);
 	//echo $ret;
 	if($ret == DB_ITEM_FOUND)
@@ -27,35 +38,38 @@ function handle_add_fri_req($from,$to,$append_message)
 		$status = IGNORE_FRIEND_RESPONSE;
 		insert_stranger_table($stranger_id,$usrid,$status);
 
-		//2.update the friend_badge in table usrinfo
-		update_friend_badge($to,ADD_BADGE);
+		
 	}
+
+	//2.update the friend_badge in table usrinfo
+	update_friend_badge($to);
+
 	//3.prepare to push message to peer
 	
 	$usr_active = check_usr_status($to);
-	echo "$usr_active = " .$usr_active;
+	//echo "usr_active = " .$usr_active;
 	if($usr_active == USER_ACTIVE)
 	{	
 		$ret = push_message($from,$to,ADD_FRIEND_REQUEST,$append_message);
-		if(!$ret)
-			return false;
-		else
-			return true;
+		return $ret;
 	}
 	else if($usr_active == USER_NOT_ACTIVE)
-	{
+	{	
+		//echo "USER_NOT_ACTIVE\n";
 		//push the message to a queue
 		$friend_action = ADD_FRIEND_REQUEST;
 		//从数据库中取出该usr的未读信息，添加到尾部，在写入到数据库
-		push_back_friend_message($to,$stranger_id,$friend_action,$append_message);
+		push_back_friend_message($usrid,$stranger_id,$friend_action,$append_message);
 
-		}
+	}
 }
 
 function handle_agree_add_fri($from,$to)
 {
-	$usrid = usrname_to_usrid($from);
-	$stranger_id = usrname_to_usrid($to);
+	update_friend_badge($to);
+
+	$stranger_id = usrname_to_usrid($from);
+	$usrid = usrname_to_usrid($to);
 	//echo "usrid=" . $usrid;
 	//echo " stranger_id=" . $stranger_id;
 	$status = AGREE_ADD_FRIEND;		
@@ -78,7 +92,7 @@ function handle_agree_add_fri($from,$to)
 		$friend_action = AGREE_ADD_FRIEND;
 		$append_message = "";
 		//从数据库中取出该usr的未读信息，添加到尾部，在写入到数据库
-		push_back_friend_message($to,$stranger_id,$friend_action,$append_message);
+		push_back_friend_message($usrid,$stranger_id,$friend_action,$append_message);
 
 	}
 }
@@ -91,14 +105,6 @@ function handle_del_fri_req($from,$to)
 		return true;
 	else
 		return false;
-}
-
-function search_token_from_db($usrname)
-{
-	$query = "select * from usrinfo where usrname='".$usrname."'";
-	$usrinfo = vote_get_array($query);
-	$token = $usrinfo["device_token"];
-	return $token;
 }
 
 function insert_stranger_table($usrid,$stranger_id,$status)
@@ -176,10 +182,10 @@ function check_usr_status($usrname)
 	return $usrinfo['active'];
 }
 
-function push_back_friend_message($usrname,$usrid,$friend_action,$append_message)
+function push_back_friend_message($usrid,$stranger_id,$friend_action,$append_message)
 {
 	$stranger_message = array(
-		"usrid" => $usrid,
+		"stranger_id" => $stranger_id,
 		"action" => $friend_action,	
 		"append_message" => $append_message,
 	);
@@ -188,14 +194,17 @@ function push_back_friend_message($usrname,$usrid,$friend_action,$append_message
 	$item_existed = vote_item_existed_test($query);
 
 	
-	if($item_existed == true)
-	{
+	if($item_existed == true){
 		//item existed, first query the item, then update it
 		$query = "select * from unread_message where usrid='".$usrid."'";
 		$unread_message_item = vote_get_array($query);
 		$message_string = $unread_message_item['message'];
 		$unread_message = unserialize($message_string);
+		//echo "before message:\n ";
+		//print_r($unread_message);
 		$unread_message[] = $stranger_message;
+		//echo " after message:\n";
+		//print_r($unread_message);
 		$message_string = serialize($unread_message);
 		//write the array back to the database
 		$query = "update unread_message
@@ -204,7 +213,8 @@ function push_back_friend_message($usrname,$usrid,$friend_action,$append_message
 		$ret = vote_db_query($query);
 		return $ret;
 	}else if($item_existed == false){
-		$message_string = serialize($stranger_message);
+		$unread_message[] = $stranger_message;
+		$message_string = serialize($unread_message);
 		$query = "insert into unread_message values
 				(NULL,'".$usrid."','".$message_string."')";
 		$ret = vote_db_query($query);

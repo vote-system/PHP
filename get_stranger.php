@@ -36,9 +36,13 @@ function ret_stranger_info($usrname)
 		$stranger_info['usrname'] = $usrinfo['usrname'];
 		$stranger_info['signature'] = $usrinfo['signature'];
 		$stranger_info['screen_name'] = $usrinfo['screen_name'];
+		$stranger_info['screen_name_pinyin'] = $usrinfo['screen_name_pinyin'];
 		$stranger_info['gender'] = $usrinfo['gender'];
 		$stranger_info['original_head_imag_url'] = $usrinfo['original_head_imag_url'];
 		$stranger_info['medium_head_imag_url'] = $usrinfo['medium_head_imag_url'];
+		$stranger_info['thumbnails_head_imag_url'] = $usrinfo['thumbnails_head_imag_url'];
+		$stranger_info['usr_info_timestamp'] = (int)$usrinfo['usr_info_timestamp'];
+		$stranger_info['head_imag_timestamp'] = (int)$usrinfo['head_imag_timestamp'];
 
 		$stranger_detail[$i] = $stranger_info;
 		//print_r($stranger_info);
@@ -51,8 +55,9 @@ function ret_stranger_info($usrname)
 
 	$strangers_array["strangers_array"] = $stranger_detail;
 	//print_r($strangers_array["strangers_array"]);
-	$json = json_encode($strangers_array);
-	echo stripslashes($json);
+	echo json_encode($strangers_array,JSON_UNESCAPED_SLASHES);
+	//$json = json_encode($strangers_array);
+	//echo stripslashes($json);
 }
 
 ?>
