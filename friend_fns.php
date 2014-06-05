@@ -2,13 +2,22 @@
 require_once("db_fns.php");
 require_once("push_message_to_ios.php");
 require_once("vote_fns.php");
+require_once("usrinfo_fns.php");
 
-//require_once("badge_fns.php");
 //handle_add_fri_req("dingyi","test","");
 
 
 function handle_add_fri_req($from,$to,$append_message)
 {
+	//update badge number
+	//$badge_arr = query_badge($to);
+	//$friend_badge = $badge_arr['friend_badge'];
+	//$friend_badge +=1;
+	//$query = "update usrinfo
+	//			set friend_badge = '".$friend_badge."'
+	//			where usrname = '".$usrname."'";
+	//$ret = vote_db_query($query);	
+
 	//1.add item to stranger table
 	//add two item for each require
 	$stranger_id = usrname_to_usrid($from);
@@ -29,9 +38,12 @@ function handle_add_fri_req($from,$to,$append_message)
 		$status = IGNORE_FRIEND_RESPONSE;
 		insert_stranger_table($stranger_id,$usrid,$status);
 
-		//2.update the friend_badge in table usrinfo
-		update_friend_badge($to,ADD_BADGE);
+		
 	}
+
+
+	//2.update the friend_badge in table usrinfo
+	update_friend_badge($to);
 
 	//3.prepare to push message to peer
 	
@@ -40,10 +52,7 @@ function handle_add_fri_req($from,$to,$append_message)
 	if($usr_active == USER_ACTIVE)
 	{	
 		$ret = push_message($from,$to,ADD_FRIEND_REQUEST,$append_message);
-		if(!$ret)
-			return false;
-		else
-			return true;
+		return $ret;
 	}
 	else if($usr_active == USER_NOT_ACTIVE)
 	{	
@@ -58,6 +67,9 @@ function handle_add_fri_req($from,$to,$append_message)
 
 function handle_agree_add_fri($from,$to)
 {
+
+	update_friend_badge($to);
+
 	$stranger_id = usrname_to_usrid($from);
 	$usrid = usrname_to_usrid($to);
 	//echo "usrid=" . $usrid;

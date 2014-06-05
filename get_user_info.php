@@ -7,6 +7,15 @@ $fetch_name = $_GET['fetch_name'];
 
 header('Content-Type: application/json');
 
+//$a = "http://115.28.228.41/vote/test";
+//echo $a;
+//echo "  ";
+//echo json_encode($a);
+//echo "  ";
+
+//$str = iconv("UTF-8", "GB2312//IGNORE", $a);
+//echo $str. "  ";
+//echo json_encode($str);
 
 if(!$usrname || !$fetch_name)
 	return;
@@ -26,6 +35,6 @@ $usrinfo['thumbnails_head_imag_url'] = $row['thumbnails_head_imag_url'];
 $usrinfo['usr_info_timestamp'] = (int)$row['usr_info_timestamp'];
 $usrinfo['head_imag_timestamp'] = (int)$row['head_imag_timestamp'];
 
-echo json_encode($usrinfo);
+echo json_encode($usrinfo,JSON_UNESCAPED_SLASHES);
 
 ?>

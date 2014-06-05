@@ -12,11 +12,8 @@ function push_message($from,$to,$action,$append_message)
 
 	//1.search the device token of $to
 	$token = search_token_from_db($to);
-
-	$friend_badge = query_badge("friend_badge",$to);
-	$vote_badge = query_badge("vote_badge",$to);
-	$total_badge = $friend_badge + $vote_badge;
-
+	if($token == null)
+		return false;
 
 	//private key's passphrase for this APP(vote)   
 	$passphrase = '890iopkl;';  
@@ -81,7 +78,8 @@ function push_message($from,$to,$action,$append_message)
 		//'append_message' => $append_message //user append message  
 		);    
 	// Encode the payload as JSON   
-	print_r($body);
+
+	//print_r($body);
 	$payload = json_encode($body);  
 	  
 	// Build the binary notification   

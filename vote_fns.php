@@ -1,6 +1,6 @@
 <?php
 
-ini_set('display_errors','yes');
+//ini_set('display_errors','yes');
 //report all errors
 //error_reporting(E_ALL | E_STRICT);
 error_reporting(E_ALL);
@@ -50,6 +50,9 @@ define('REG_UNKNOWN_ERROR', 7);
 //macro for login
 define('LOGIN_ERROR', 0);
 define('LOGIN_SUCCESS', 1);
+
+define('LOGOUT_ERROR', 0);
+define('LOGOUT_SUCCESS', 1);
 
 define('COOKIE_LOGIN_ERROR', 0);
 define('COOKIE_LOGIN_SUCCESS', 1);

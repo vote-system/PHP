@@ -1,0 +1,387 @@
+/*
+Copyright (c) 2009, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 2.8.0r4
+*/
+html{color:#333;background:#FFF;direction:ltr;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}del,ins{text-decoration:none;}li{list-style:none;}caption,th{text-align:left;},b{font-weight: normal;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:baseline;}sub{vertical-align:baseline;}legend{color:#000;}input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}input,button,textarea,select{*font-size:100%;}
+@-css-compiler-profile 'default';
+
+html {
+	_background: url(about:blank) no-repeat fixed; /* ’‚—˘IE6œ¬ƒ£ƒ‚fixed∂®Œª ±æÕ≤ªª·…¡∂Ø¡À°£°£°£ */
+}
+
+body {
+	font-size: 9pt;
+	font-family: Tahoma, Verdana, STHeiTi, simsun, sans-serif;
+	word-wrap:break-word;
+    background: none;
+}
+strong {
+	font-weight: bold;
+}
+em {
+	font-style: italic;
+}
+a:link, a:visited {
+	color: #336699;
+	text-decoration: none;
+}
+a:hover {
+	color: #336699;
+	text-decoration: underline;
+}
+p {
+	line-height: 1.4em;
+}
+label select,
+label input,
+label textarea {
+	vertical-align: middle;
+}
+button, input[type=button] {
+	padding: 2px 5px;
+	color: #FFF;
+	background-color: #005EAC;
+	border-top: 1px solid #B8D4E8;
+	border-left: 1px solid #B8D4E8;
+	border-right: 1px solid #114680;
+	border-bottom: 1px solid #114680;
+	cursor: pointer;
+	*overflow: visible;
+}
+button:disabled, input[type=button]:disabled {
+	color: #CCC;
+	background-color: #F0F0F0;
+	border-top: 1px solid #D7D7D7;
+	border-left: 1px solid #D7D7D7;
+	border-right: 1px solid #808285;
+	border-bottom: 1px solid #808285;
+}
+input[type=text], input[type=password] {
+	border: 1px solid #BDC7D8;
+	padding: 0.4ex;
+	width: 120px;
+}
+select {
+	height: 22px;
+	border: 1px solid #BDC7D8;
+	line-height: 1.1;
+	padding: 1px;
+}
+p img, li img, dd img {
+	vertical-align: middle;
+}
+button img {
+	margin: 0;
+	vertical-align: middle;
+}
+
+.box, .hbox, .clearfix {*zoom:1;}
+.box:after, .hbox:after, .clearfix:after {content:"\20";display:block;clear:both;}
+.hide, .hidden {display:none!important;}
+.description {color:gray;}
+
+.close-button-alpha {
+	display: block; 
+	width: 20px; 
+	height: 20px; 
+	overflow: hidden; 
+	background: 0 0 no-repeat; 
+	text-indent: -9999em; 
+	outline: 0 none; 
+	_background: none; 
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=image, src='http://a.xnimg.cn/imgpro/button/close-alpha.png');
+}
+.close-button-alpha:hover {
+	background-position: 0 -20px; 
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=image, src='http://a.xnimg.cn/imgpro/button/close-alpha-hover.png');
+	cursor: pointer;
+}
+
+
+#header{
+	width:100%;
+	height: 86px;
+	background: repeat-x;
+	background-color:#0033CC;
+}
+#nav{
+	width:900px;
+	margin: 0 auto;
+	clear:all;
+}
+#nav .logo{
+	float: left;
+	width:252px;
+	height: 86px;
+	background: 0 0 no-repeat;
+}
+#nav .font{
+	float: left;
+	width:630px;
+	padding-left: 18px;
+	color:#F8F8F8;
+}
+#nav .friend{
+	font-family: 'Œ¢»Ì—≈∫⁄';
+	margin-top:41px; 
+	float: left;
+	font-size: 18px;
+	font-weight: bold;	
+}
+#nav .right{
+	margin-top:45px; 
+	float: right;
+	font-size: 14px;
+	color:#D8D8D8;
+}
+#nav .right a{
+	color: #fff;
+	text-decoration: none;
+}
+
+#main{
+	position: relative;
+	width:900px;
+	height: 544px;
+	clear:all;
+	margin:60px auto;
+}
+#main .main_left{
+	float: left;
+	width:650px;
+}
+#main .tab{
+	clear: all;
+	position:relative;
+	height: 43px;
+	margin-bottom: 20px;
+}
+#main .tab a{
+	float: left;
+}
+#main .tab .phone{
+	background: -10px 0 no-repeat;
+	width:140px;
+	height: 43px;
+}
+#main .tab .pchoice{
+	background: no-repeat;
+	width:140px;
+	height: 43px;
+}
+#main .tab .line{
+	float: left;
+	margin: 0px 25px 0px;
+	height: 25px;
+	width:1px;
+	background-color:#DDDDDD; 
+}
+#main .tab .email{
+	background: -18px 0 no-repeat;
+	width:140px;
+	height: 43px;	
+	position: absolute;
+	left: 193px;
+}
+#main .tab .echoice{
+	background:  0px 0 no-repeat;
+	width:140px;
+	height: 43px;
+}
+
+#main .reg_form dl{
+	width:650px;
+	margin:9px 0 0 0; 
+}
+#main .reg_form dl.sex{
+	width:650px;
+    font-size:14px;
+    height: 41px;
+    line-height: 41px;
+}
+#main .reg_form dl.sex dd {
+    _margin-top: 10px;
+}
+#main .reg_form dl.sixteen{
+	width:650px;
+}
+#main .reg_form dl.reg_btn{
+	width:650px;
+	margin:45px 0 0px 0; 
+}
+#main .reg_form dl dt{
+	float: left;
+	width:60px;
+	+width:66px;
+	padding-right: 16px;
+	+padding-right: 10px;
+	font-size: 14px;
+	color: #333333;
+	line-height: 40px;
+	text-align: right;
+	display: inline;
+}
+#main .reg_form dl dt.sixteen{
+	height: 20px;
+	line-height: 27px;
+}
+#main .reg_form dl dt.fifty{
+	height: 20px;
+	line-height: 50px;
+}
+#main .reg_form dl dd{
+	float:right;
+	width:570px;
+	position: relative;
+	display: inline;
+}
+#main .reg_form dl dd input{
+	padding:7px 10px;
+	width:233px;
+	height: 25px;
+    line-height: 25px;
+	border-radius: 3px;
+	margin-right: 7px;
+}
+#main .reg_form dl dd input.inputtext{
+	border:1px solid #B4B4B4;
+}
+#main .reg_form dl dd input.inputtext:hover{
+	border:1px solid #64A2DB;
+	outline-style: none;
+}
+#main .reg_form .left{
+	float: left;
+}
+#main .reg_form dd.gender{
+	line-height: 33px;
+	height: 33px;
+}
+#main .reg_form input.radio{
+	text-align: left;
+	width:25px;
+	height: 15px;
+}
+#gender_error_span {
+    margin: 0;
+    display: inline;
+}
+#main .reg_form select.year{
+	text-align: left;
+	width:70px;
+	height: 27px;
+}
+#main .reg_form select.month{
+	text-align: left;
+	width:65px;
+	height: 27px;
+}
+#main .reg_form select.stage{
+	text-align: left;
+	width:255px;
+	height: 27px;
+}
+#main .reg_form .regbtn { 
+	width:213px; 
+	height:43px; 
+	margin:10px 0;
+	display:block;
+	cursor:pointer;
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: 700;
+	font-family: "Œ¢»Ì—≈∫⁄";
+	border:1px solid #3B6E22;
+    border-radius: 3px;
+    background: 0px -1px repeat;
+	background-color:#00FF33;
+}
+#main .reg_form .regbtn:hover{
+	width:213px; 
+	height:43px; 
+	margin:10px 0;
+	display:block;
+	cursor:pointer;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 700;
+	font-family: "Œ¢»Ì—≈∫⁄";
+    border-radius: 3px;
+	border:1px solid #3B6E22;
+	background: 0px 0px repeat;	
+}
+#main .reg_form .verify_submit_over{
+	width:213px; 
+	height:44px; 
+	margin:10px 0;
+	display:block;
+	cursor:pointer;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 700;
+	font-family: "Œ¢»Ì—≈∫⁄";
+	border:1px solid #3B6E22;
+	background: 0px 0px repeat;	
+    border-radius: 3px;
+}
+#main .reg_form input.agree{
+	width:15px;
+	line-height: 33px;
+	height: 12px;
+}
+#main .reg_form span.agree{
+	line-height: 33px;
+	height: 30px;
+	color: #B4B4B4;
+}
+#main .reg_form span a{
+	text-decoration: none;
+	color:#005EAC;
+}
+
+#main .reg_quick{
+	float: left;
+	width:175px;
+	border: 2px solid #D6DAE4;
+	padding:35px;
+}
+
+#main .reg_quick h2{
+	font-family: "Œ¢»Ì—≈∫⁄";
+	font-size: 20px;
+	color: #336699;
+	padding-bottom: 10px;
+	border-bottom: 1px dashed #E5E5E5;
+}
+#main .reg_quick .cont{
+	width:175px;
+	height: 152px;
+    color:#666666;
+    font-size:14px;
+}
+#main .reg_quick .cont p {
+    line-height: 30px;
+}
+#main .reg_quick .cont p.green {
+    color: #78b163;
+}
+#main .reg_quick .cont p strong {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.box_error{
+	width: 230px;
+	margin-top: 13px;
+}
+.box_error b{
+	font-weight: 500;
+	color: #999999;
+}
+.error{
+	height: 15px;
+	padding: 0px 0 3px 20px;
+	background: 0px 0 no-repeat;
+}
