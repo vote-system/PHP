@@ -6,7 +6,7 @@ create table usrinfo  (
   device_token varchar(100),
   usrname varchar(16) not null,
   gender char(1),
-  signature varchar(100),
+  signature varchar(300),
   screen_name varchar(40),
   screen_name_pinyin varchar(40),
   original_head_imag_url varchar(100),
@@ -15,7 +15,8 @@ create table usrinfo  (
   usr_info_timestamp int default -1,
   head_imag_timestamp int default -1,
   friend_badge int unsigned default 0,
-  vote_badge int unsigned default 0
+  vote_badge int unsigned default 0,
+  active int default 0
 );
 
 create table friend (
@@ -31,5 +32,11 @@ create table stranger (
   usrid int not null,
   stranger_id int not null,
   status int default 0
+);
+
+create table unread_message(
+  id int not null auto_increment primary key,
+  usrid int not null,
+  message mediumtext
 );
 

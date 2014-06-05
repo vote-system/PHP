@@ -1,6 +1,8 @@
 <?php
 require_once('vote_fns.php');
 require_once('pinyin.php');
+require_once('time.php');
+require_once('db_fns.php');
 
 define("UPDATE_USRINFO_DEBUG",0);
 
@@ -10,16 +12,7 @@ $signature=$_POST['signature'];
 $screen_name=$_POST['screen_name'];
 //$screen_name_pinyin=$_POST['screen_name_pinyin'];
 
-//$date = new DateTime();
-//$timestamp = $date->getTimestamp();
-//echo $timestamp;
-//$timestamp = 1;
-
 header('Content-Type: application/json');
-
-//$timestamp = get_time_stamp($usrname);
-//$usr_info_timestamp = $timestamp['usr_info_timestamp'];
-//$usr_info_timestamp++;
 
 if(UPDATE_USRINFO_DEBUG)
 {
@@ -35,7 +28,6 @@ if(!$usrname) //must fill the usrname with other parameter
 	echo json_encode($usrinfo_resp);
 	return;
 }
-
 
 if($gender)
 {
@@ -85,7 +77,7 @@ if($screen_name)
 	//$usrinfo_resp['screen_name_pinyin'] = $screen_name_pinyin;
 
 	$update = "update usrinfo
-			set screen_name = '".$screen_name."', usr_info_timestamp = '".$usr_info_timestamp."',screen_name_pinyin = '".$screen_name_pinyin."'
+			set screen_name = '".$screen_name."',screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 	//echo $ret;
@@ -96,6 +88,7 @@ if($screen_name)
 }
 
 update_time_stamp($usrname,USR_INFO_TIME_STAMP);
+
 echo json_encode($usrinfo_resp);
 
 ?>

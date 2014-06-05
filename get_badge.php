@@ -1,5 +1,6 @@
 <?php
-require_once("vote_fns.php");
+require_once("usrinfo_fns.php");
+
 $usrname = $_GET['usrname'];
 //$usrname = "dingyi";
 $badge_arr = query_badge($usrname);

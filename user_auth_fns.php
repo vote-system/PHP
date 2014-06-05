@@ -1,6 +1,8 @@
 <?php
 
 require_once('vote_fns.php');
+require_once('db_fns.php');
+require_once('pinyin.php');
 
 //$auth_log = new vote_log();
 
@@ -15,7 +17,7 @@ function register($usrname, $email, $password) {
   else
   {
 	$query = "insert into usrinfo values
-             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0)";
+             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0,0)";
 	$ret = vote_db_query($query);		
 	return $ret;
   }
@@ -33,8 +35,8 @@ function username_unique($usrname) {
 	  return DB_ITEM_NOT_FOUND;
 }
 
-function login($usrname, $password,$device_token) {
-
+function login($usrname, $password,$device_token) 
+{
   $query = "select * from usrinfo
             where usrname='".$usrname."'
             and passwd = sha1('".$password."')";
@@ -42,8 +44,8 @@ function login($usrname, $password,$device_token) {
   if($login_succ){
 	//insert the device token
 	$query = "update usrinfo
-							set device_token = '".$device_token."'
-							where usrname = '".$usrname."'";
+				set device_token = '".$device_token."'
+				where usrname = '".$usrname."'";
 	$ret = vote_db_query($query);		
 	return $ret;
   }
@@ -73,7 +75,7 @@ function cookie_insert($usrname){
   $cookie_existed = vote_item_existed_test($query);
 
   if($cookie_existed){
-	DB_SIMILAR_ITEM_FOUND;
+	DB_ITEM_FOUND;
   }else{
 	$query = "update usrinfo
 			 set cookie = sha1('".$usrname."')
@@ -189,6 +191,34 @@ function notify_password($usrname, $password) {
 		//throw new Exception('Could not send email.');
       }
 	}      
+}
+
+function add_default_usrinfo($usrname)
+{
+	$original_head_imag = ORIGINAL_HEAD_IMAG_URL;
+	$medium_head_imag = MEDIUM_HEAD_IMAG_URL;
+	$thumbnails_head_iamg_url = THUMBNAILS_HEAD_IMAG_URL;
+	
+	$screen_name = $usrname;
+
+	$str = iconv("UTF-8", "GB2312//IGNORE", $screen_name);
+		if(!$str){
+			return;
+		}
+	$pinyin = get_pinyin_array($str);
+	$screen_name_pinyin = $pinyin[0];
+
+	$query = "update usrinfo
+			set original_head_imag_url = '".$original_head_imag."',
+				medium_head_imag_url = '".$medium_head_imag."',
+				thumbnails_head_imag_url = '".$thumbnails_head_iamg_url."',
+				gender = 'm',
+				screen_name = '".$screen_name."',
+				screen_name_pinyin = '".$screen_name_pinyin."'
+			where usrname = '".$usrname."'";
+	//echo $query;
+	$ret = vote_db_query($query);
+	return $ret;
 }
 
 ?>

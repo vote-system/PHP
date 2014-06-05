@@ -1,11 +1,20 @@
 <?php
- 
-//macro for all the source code.
-require_once('time.php');
+
+ini_set('display_errors','yes');
+//report all errors
+//error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
+//report runtime error
+//error_reporting(E_ERROR | E_WARNING | E_PARSE);
+//report no error
+//error_reporting(0);
 
 //TRUE and FAIL has the same value with system defined.
 //define('FAIL', 0);
 //define('TRUE', 1);
+
+define("USER_NOT_ACTIVE",0);
+define("USER_ACTIVE",1);
 
 //macro to control debug log
 define('REG_DEBUG', 0);
@@ -88,6 +97,7 @@ define("DELETE_FRIEND_REQUEST",3);
 define("AGREE_ADD_FRIEND",4);
 define("REFUSE_FRIEND_REQUEST",5);
 define("IGNORE_FRIEND_REQUEST",6);
+define("IGNORE_FRIEND_RESPONSE",7);
 
 //macro for badge
 define("ADD_BADGE",1);
@@ -95,6 +105,11 @@ define("SUBTRCT_BADGE",2);
 
 define("USR_INFO_TIME_STAMP",1);
 define("HEAD_IMAG_TIME_STAMP",2);
+
+
+define("ORIGINAL_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/default.png");
+define("MEDIUM_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/medium-default.png");
+define("THUMBNAILS_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/thumbnails-default.png");
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions
@@ -105,5 +120,7 @@ define("HEAD_IMAG_TIME_STAMP",2);
 //require_once('friend_fns.php');
 //require_once('badge_fns.php');
 //require_once("push_message_to_ios.php");
+//require_once("time.php");
+
 ?>
 
