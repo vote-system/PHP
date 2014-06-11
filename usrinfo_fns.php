@@ -77,5 +77,43 @@ function search_token_from_db($usrname)
 	return $token;
 }
 
+function save_unpush_message($usrid,$stranger_id,$friend_action)
+{
+	$stranger_message = array(
+		"stranger_id" => $stranger_id,
+		"action" => $friend_action,	
+		//"append_message" => $append_message,
+	);
+	
+	$query = "select * from unread_message where usrid='".$usrid."'";
+	$item_existed = vote_item_existed_test($query);
+	
+	if($item_existed == true){
+		//item existed, first query the item, then update it
+		$query = "select * from unread_message where usrid='".$usrid."'";
+		$unread_message_item = vote_get_array($query);
+		$message_string = $unread_message_item['message'];
+		$unread_message = unserialize($message_string);
+		//echo "before message:\n ";
+		//print_r($unread_message);
+		$unread_message[] = $stranger_message;
+		//echo " after message:\n";
+		//print_r($unread_message);
+		$message_string = serialize($unread_message);
+		//write the array back to the database
+		$query = "update unread_message
+				set message = '".$message_string."'
+				where usrid = '".$usrid."'";
+		$ret = vote_db_query($query);
+		return $ret;
+	}else if($item_existed == false){
+		$unread_message[] = $stranger_message;
+		$message_string = serialize($unread_message);
+		$query = "insert into unread_message values
+				(NULL,'".$usrid."','".$message_string."')";
+		$ret = vote_db_query($query);
+		return $ret;
+	}
+}
 
 ?>

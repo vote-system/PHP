@@ -95,12 +95,15 @@ define("GET_FRIEND_LIST",10);
 //macro for stranger table status
 define("ADD_FRIEND_NOT_SEND",0);
 define("ADD_FRIEND_SEND",1);
-define("ADD_FRIEND_REQUEST",2);
 define("DELETE_FRIEND_REQUEST",3);
-define("AGREE_ADD_FRIEND",4);
 define("REFUSE_FRIEND_REQUEST",5);
 define("IGNORE_FRIEND_REQUEST",6);
 define("IGNORE_FRIEND_RESPONSE",7);
+
+//macro for push notification message
+define("ADD_FRIEND_REQUEST",2);
+define("AGREE_ADD_FRIEND",4);
+define("VOTE_NOTIFICATION",5);
 
 //macro for badge
 define("ADD_BADGE",1);
@@ -112,6 +115,13 @@ define("HEAD_IMAG_TIME_STAMP",2);
 define("ORIGINAL_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/default.png");
 define("MEDIUM_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/medium-default.png");
 define("THUMBNAILS_HEAD_IMAG_URL","http://115.28.228.41/vote/upload/default/thumbnails-default.png");
+
+define("SET_UP_VOTE_SUCC",0);
+define("SET_UP_VOTE_FAIL",1);
+define("VOTE_EXISTED",2);
+
+define("UPDATE_SUCCESS",0);
+define("UPDATE_FAIL",1);
 
 // We can include this file in all our files
 // this way, every file will contain all our functions and exceptions

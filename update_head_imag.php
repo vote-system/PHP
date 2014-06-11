@@ -237,7 +237,7 @@ function update_head_imag_db($type,$url,$usrname)
 							where usrname = '".$usrname."'";
 	$ret = vote_db_query($update);
 
-	update_time_stamp($usrname,HEAD_IMAG_TIME_STAMP);
+	update_usrinfo_timestamp($usrname,HEAD_IMAG_TIME_STAMP);
 
 	if($ret != VOTE_DB_ERROR)
 		return UPDATE_IMAGE_SUCC;
