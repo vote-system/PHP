@@ -87,7 +87,7 @@ if($screen_name)
 		$usrinfo_resp['screen_name'] = INFO_UPDATE_SUCCESS; 	
 }
 
-update_usrinfo_timestamp($usrname,USR_INFO_TIME_STAMP);
+update_time_stamp($usrname,USR_INFO_TIME_STAMP);
 
 echo json_encode($usrinfo_resp);
 
