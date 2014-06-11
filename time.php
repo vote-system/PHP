@@ -18,32 +18,11 @@ function get_time_stamp($usrname)
     return $timestamp;
 }
 
-function update_time_stamp($usrname,$type)
+function update_usrinfo_timestamp($usrname,$type)
 {
 	$query = "select * from usrinfo where usrname='".$usrname."'";
     $usrinfo = vote_get_array($query);
-	/*
-	if($type == USR_INFO_TIME_STAMP)
-	{
-		$usr_info_timestamp = $usrinfo["usr_info_timestamp"];
-		$usr_info_timestamp++;
-		$query = "update usrinfo
-			set usr_info_timestamp = '".$usr_info_timestamp."'
-			where usrname = '".$usrname."'";
-		$ret = vote_db_query($query);
-		return $ret;
-	}
-	else if($type == HEAD_IMAG_TIME_STAMP)
-	{
-		$head_imag_timestamp = $usrinfo["head_imag_timestamp"];
-		$head_imag_timestamp++;
-		$query = "update usrinfo
-			set head_imag_timestamp = '".$head_imag_timestamp."'
-			where usrname = '".$usrname."'";
-		$ret = vote_db_query($query);
-		return $ret;
-	}
-	*/
+
 	$timestamp = get_current_timestamp();
 	if($type == USR_INFO_TIME_STAMP)
 	{
@@ -62,5 +41,16 @@ function update_time_stamp($usrname,$type)
 	return $ret;
 }
 
+
+function update_vote_timestamp($organizer,$vote_id)
+{
+	$timestamp = get_current_timestamp();
+	$query = "update vote_info
+		set update_timestamp = '".$timestamp."'
+		where organizer='".$organizer."' and vote_id='".$vote_id."'";
+	$ret = vote_db_query($query);
+
+	return $ret;
+}
 
 ?>

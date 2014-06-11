@@ -296,7 +296,7 @@ button img {
 	border:1px solid #3B6E22;
     border-radius: 3px;
     background: 0px -1px repeat;
-	background-color:#00FF33;
+	background-color:#2E8B57;
 }
 #main .reg_form .regbtn:hover{
 	width:213px; 
@@ -311,6 +311,7 @@ button img {
     border-radius: 3px;
 	border:1px solid #3B6E22;
 	background: 0px 0px repeat;	
+	background-color:#48D1CC;
 }
 #main .reg_form .verify_submit_over{
 	width:213px; 
@@ -384,4 +385,26 @@ button img {
 	height: 15px;
 	padding: 0px 0 3px 20px;
 	background: 0px 0 no-repeat;
+}
+
+.footer{
+	border-top: 6px solid #BDBDBD;
+	background-color: #E4E4E4;
+	height: 75px;
+}
+#footer .cont{
+	width:900px;
+	margin: 0px auto;
+	text-align: right;
+	color: #A1A1A1;
+}
+#footer span{
+	font-size: 12px;
+	display: block;
+	line-height: 25px;
+	vertical-align: bottom;
+}
+#footer .cont a{
+	color: #6993C1;
+	text-decoration: none;
 }

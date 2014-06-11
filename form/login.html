@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="ua-windows ua-webkit">
+<head>
+	<meta charset="gbk-2131">
+	<meta content="来这里为好玩的事情投上一票吧" name="description">
+	<title>投票吧</title>
+	<link rel="stylesheet" href="../styles/home.css">
+</head>
+<body>
+	<div id="anony-nav">
+		<div class="nav-links">
+			<ul>
+				<li>
+					<a target="_blank" class="link-food" href="">美食</a>
+				</li>
+				<li>
+					<a target="_blank" class="link-play" href="">娱乐</a>
+				</li>
+				<li>
+					<a target="_blank" class="link-life" href="">生活</a>
+				</li>
+				<li>
+					<a target="_blank" class="link-news" href="">新闻</a>
+				</li>
+			</ul>
+		</div>
+		<h1>
+			<a href="">投票吧</a>
+		</h1>
+		<div class="nav-srh">
+			<form action="_blank" method="get">
+				<span class="inp">
+					<input type="text" maxlength="20" size="12" placeholder="好友" name="q" autocomplete="off">
+				</span>
+				<span class="bn">
+					<input type="submit" value="搜素好友">
+				</span>
+			</form>
+		</div>
+	</div>
+	<div id="anony-reg">
+		<div class="wrapper">
+			<div class="login">
+				<form id="lzform" name="lzform" method="post" action="http://115.28.228.41/vote/login">
+					<fieldset>
+						<legend>登陆</legend>
+						<input type="hidden" value="index_nav" name="source">
+						<div class="item item-account">
+							<input type="text" name="email" id="form_email" value class="inp" placeholder="用户名" tabindex="1">
+							<div class="opt">
+								<label for="form_remember">
+									<input name="remember" type="checkbox" id="form_remember" tabindex="4">"记住我"
+								</label>
+							</div>
+						</div>
+						<div class="item item-password">
+							<input name="form_password" placeholder="密码" id="form_password" class="ipn" type="password" tabindex="2">
+							<div class="opt">
+								<a href="http://115.28.228.41/vote/forgotpasswd.php">忘记密码</a>
+							</div>
+						</div>
+						<div class="item-submit">
+							<input value="登陆" type="submit" class="bn_submit" tabindex="4">
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="reg">
+				<a href="http://115.28.228.41/vote/register.php" class="link-reg">"加入我们"
+				<i>注册</i>
+			</div>
+		</div>
+	</div>
+</body>
+		

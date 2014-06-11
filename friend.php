@@ -5,6 +5,8 @@ require_once("vote_fns.php");
 $usrname=$_POST['usrname'];
 $action=$_POST['friend_action'];
 $friend_name=$_POST['friend_name'];
+
+//save the message to show when user get!
 $message=$_POST['add_friend_message'];
 
 header('Content-Type: application/json');
@@ -12,7 +14,7 @@ header('Content-Type: application/json');
 switch($action)
 {
 	case ADD_FRIEND_REQUEST:
-	$result = handle_add_fri_req($usrname,$friend_name,$message);
+	$result = handle_add_fri_req($usrname,$friend_name);
 	
 	if(!$result)
 		$friend['add_friend_request'] = 0;
