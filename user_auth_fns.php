@@ -17,7 +17,8 @@ function register($usrname, $email, $password) {
   else
   {
 	$query = "insert into usrinfo values
-             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0,0)";
+             (NULL,sha1('".$password."'), '".$email."',NULL, NULL,'".$usrname."', 
+			 NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,-1,0,0,0,NULL)";
 	$ret = vote_db_query($query);		
 	return $ret;
   }
