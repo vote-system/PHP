@@ -1,7 +1,7 @@
 <?php
 require_once('db_fns.php');
 
-$usrname = $_POST['usrname'];
+$usrname = $_GET['usrname'];
 
 header('Content-Type: application/json');
 
@@ -16,8 +16,9 @@ foreach($participant_vote_ids as $vote_id)
 {
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
 	$vote_info[] = vote_get_array($query);
+	$votes[] = $vote_info;
 }
 
-echo json_encode($vote_info);
+echo json_encode($votes);
 
 ?>

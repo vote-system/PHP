@@ -10,8 +10,10 @@ $vote_id = $_POST['vote_id'];
 $usrname = $_POST['usrname'];
 $title = $_POST['title'];
 $end_time = $_POST['end_time'];
+$category = $_POST['category'];
 $participants = $_POST['participants'];
 $options = $_POST['options'];
+$private = $_POST['private'];
 
 if($title){
 	$query = "update vote_info
@@ -37,6 +39,19 @@ if($end_time){
 		$update_vote['update_end_time'] = UPDATE_SUCCESS; 
 	}else{
 		$update_vote['update_end_time'] = UPDATE_FAIL; 
+	}
+}
+
+if($category){
+	$query = "update vote_info
+				set category = '".$category."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_category'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_category'] = UPDATE_FAIL; 
 	}
 }
 
@@ -66,7 +81,21 @@ if($options){
 	}
 }
 
-update_vote_timestamp($organizer,$vote_id)
+if($private){
+	$query = "update vote_info
+				set private = '".$private."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_options'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_options'] = UPDATE_FAIL; 
+	}
+}
+
+update_vote_info_timestamp($organizer,$vote_id);
+
 echo json_encode($update_vote);
 
 ?>
