@@ -20,7 +20,7 @@ $bool_vote_allowed = true;
 
 foreach($participants as $participant)
 {
-	if(strcmp($participant,$usrname)){
+	if(!strcmp($participant,$usrname)){
 		$bool_vote_allowed = true;
 		break;
 	}else{
@@ -30,7 +30,7 @@ foreach($participants as $participant)
 
 if(!$bool_vote_allowed )
 {
-	$submit_vote['submit_vote'] = 0;
+	$submit_vote['submit_vote'] = SUBMIT_VOTE_ERROR;
 	echo json_encode($submit_vote);
 	return;
 }
@@ -48,9 +48,9 @@ $query = "update vote_info
 $ret = vote_db_query($query);	
 
 if($ret){
-	$submit_vote['submit_vote'] = 1;
+	$submit_vote['submit_vote'] = SUBMIT_VOTE_SUCC;
 }else{
-	$submit_vote['submit_vote'] = 0;
+	$submit_vote['submit_vote'] = SUBMIT_VOTE_ERROR;
 }
 
 echo json_encode($submit_vote);

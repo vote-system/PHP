@@ -123,17 +123,8 @@ define("VOTE_EXISTED",2);
 define("UPDATE_SUCCESS",0);
 define("UPDATE_FAIL",1);
 
-// We can include this file in all our files
-// this way, every file will contain all our functions and exceptions
-//require_once('data_valid_fns.php'); 
-//require_once('db_fns.php');
-//require_once('user_auth_fns.php');
-//require_once('log.php');
-//require_once('friend_fns.php');
-//require_once('badge_fns.php');
-//require_once("push_message_to_ios.php");
-//require_once("time.php");
-
+define("SUBMIT_VOTE_SUCC",0);
+define("SUBMIT_VOTE_ERROR",1);
 
 ?>
 

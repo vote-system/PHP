@@ -10,13 +10,6 @@ header('Content-Type: application/json');
 $usrname = $_POST['usrname'];
 $vote_info = $_POST['vote_info'];
 
-//print_r($vote_info);
-
-//$vote_info = json_decode($vote_info);
-
-//echo $usrname;
-//print_r($vote_info);
-
 $organizer = $vote_info['organizer'];
 $title = $vote_info['title'];
 $start_time = $vote_info['start_time'];
@@ -26,16 +19,13 @@ $participants = $vote_info['participants'];
 $options = $vote_info['options'];
 $private = $vote_info['private'];
 
-define("VOTE_DEBUG",1);
-if(VOTE_DEBUG){
-	$organizer = "dingyi";
-	$start_time = "121312131213";
-}
+define("VOTE_DEBUG",0);
 
-if($organizer != $usrname)
+if(strcmp($organizer,$usrname))
 {
-	$setup_vote['setup_vote'] = VOTE_EXISTED; 
+	$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
 	echo json_encode($setup_vote);
+	return;
 }
 
 $query = "select * from vote_info
@@ -43,50 +33,59 @@ $query = "select * from vote_info
 		and start_time='".$start_time."'";
 $vote_existed = vote_item_existed_test($query);
 
-if(!$vote_existed)
+if($vote_existed)
+{
+	$setup_vote['setup_vote'] = VOTE_EXISTED; 
+	echo json_encode($setup_vote);
+	return;
+}
+else
 {
 	$participants_db = serialize($participants);
 	$options = serialize($options);
 
+	$timestamp = get_current_timestamp();
+
 	//echo $query;
 	$query = "insert into vote_info values
              (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
-			 '".$update_timestamp."','".$vote_timestamp."','".$category."','".$participants_db."','".$options."','".$private."')";
+			 '".$timestamp."','".$timestamp."','".$category."','".$participants_db."','".$options."',NULL,'".$private."')";
 	$ret = vote_db_query($query);
-	if($ret){
+	if($ret)
+	{
 		$setup_vote['setup_vote'] = SET_UP_VOTE_SUCC; 
-
-		update_vote_info_timestamp($organizer,$vote_id);
-		update_vote_timestamp($organizer,$vote_id);
-		
-		//echo json_encode($setup_vote);
-	}else{
+	}
+	else
+	{
 		$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
 		echo json_encode($setup_vote);
 		return;
 	}
 
-	$query = "select * from vote_info where organizer='".$usrname."' and start_time = '".$start_time."'";
+	$query = "select * from vote_info where organizer='".$organizer."' and start_time = '".$start_time."'";
 	$vote_info = vote_get_array($query);
-	print_r($vote_info);
 	$setup_vote['vote_id'] = $vote_info['vote_id']; 
-	$setup_vote['update_timestamp'] = $vote_info['update_timestamp']; 
+	$setup_vote['basic_timestamp'] = $vote_info['update_timestamp']; 
 	$setup_vote['vote_timestamp'] = $vote_info['vote_timestamp']; 
 
-    save_and_push_vote_info($usrname,$participant_vote_id,$organizer);
+	save_vote_id($usrname,$vote_id)
+	
+	save_and_push_vote_info($usrname,$vote_info['vote_id'],$organizer);
 
 	echo json_encode($setup_vote);
 }
-
-function save_and_push_vote_info($usrname,$participant_vote_id,$organizer)
-{
-	//record the vote_id every user participate
+function save_vote_id($usrname,$vote_id)
+{	
 	$query = "select * from usrinfo where usrname='".$usrname."'";
 	$usrinfo = vote_get_array($query);
 	$participant_vote_id = unserialize($usrinfo['participant_vote_id']);
 	$participant_vote_id[] = $vote_id;
 	$participant_vote_id = serialize($participant_vote_id);
+	
+}
 
+function save_and_push_vote_info($usrname,$vote_id,$organizer)
+{
 	$query = "update usrinfo
 				set participant_vote_id = '".$participant_vote_id."'
 				where usrname = '".$usrname."'";
@@ -95,6 +94,7 @@ function save_and_push_vote_info($usrname,$participant_vote_id,$organizer)
 	//then push the message to every user
 	foreach($participants as $participant)
 	{
+		save_vote_id($participant,$vote_id);
 		$usr_active = check_usr_status($participant);
 		//echo "usr_active = " .$usr_active;
 		if($usr_active == USER_ACTIVE)
