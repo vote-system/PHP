@@ -38,9 +38,9 @@ if(!$bool_vote_allowed )
 $vote_detail = unserialize($vote_info['vote_detail']);
 
 foreach($selections as $selection){
-	$vote_detail[$selection-1] = $usrname;
+	$vote_detail[$selection] = $usrname;
 }
-$vote_detail = unserialize($vote_detail);
+$vote_detail = serialize($vote_detail);
 
 $query = "update vote_info
 		set vote_detail = '".$vote_detail."'

@@ -16,7 +16,9 @@ foreach($participant_vote_ids as $vote_id)
 {
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
 	$vote_info[] = vote_get_array($query);
+	$vote_info['screen_name'] = get_screen_name($usrname);
 	$votes[] = $vote_info;
+
 }
 
 echo json_encode($votes);

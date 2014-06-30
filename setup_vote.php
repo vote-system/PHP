@@ -15,6 +15,7 @@ $title = $vote_info['title'];
 $start_time = $vote_info['start_time'];
 $end_time = $vote_info['end_time'];
 $category = $vote_info['category'];
+$max_choice = $vote_info['max_choice'];
 $participants = $vote_info['participants'];
 $options = $vote_info['options'];
 $private = $vote_info['private'];
@@ -49,7 +50,7 @@ else
 	//echo $query;
 	$query = "insert into vote_info values
              (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
-			 '".$timestamp."','".$timestamp."','".$category."','".$participants_db."','".$options."',NULL,'".$private."')";
+			 '".$timestamp."','".$timestamp."','".$category."','".$max_choice."','".$participants_db."','".$options."',NULL,'".$private."')";
 	$ret = vote_db_query($query);
 	if($ret)
 	{
@@ -64,11 +65,11 @@ else
 
 	$query = "select * from vote_info where organizer='".$organizer."' and start_time = '".$start_time."'";
 	$vote_info = vote_get_array($query);
-	$setup_vote['vote_id'] = $vote_info['vote_id']; 
-	$setup_vote['basic_timestamp'] = $vote_info['update_timestamp']; 
-	$setup_vote['vote_timestamp'] = $vote_info['vote_timestamp']; 
+	$setup_vote['vote_id'] = (int)$vote_info['vote_id']; 
+	$setup_vote['basic_timestamp'] = (int)$vote_info['update_timestamp']; 
+	$setup_vote['vote_timestamp'] = (int)$vote_info['vote_timestamp']; 
 
-	save_vote_id($usrname,$vote_id)
+	save_vote_id($usrname,$vote_id);
 	
 	save_and_push_vote_info($usrname,$vote_info['vote_id'],$organizer);
 
