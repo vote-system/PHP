@@ -38,7 +38,8 @@ if(!$bool_vote_allowed )
 $vote_detail = unserialize($vote_info['vote_detail']);
 
 foreach($selections as $selection){
-	$vote_detail[$selection] = $usrname;
+	$vote_detail[$selection]['$usrname'] = $usrname;
+	$vote_detail[$selection]['$screen_name'] = get_screen_name($usrname);
 }
 $vote_detail = serialize($vote_detail);
 

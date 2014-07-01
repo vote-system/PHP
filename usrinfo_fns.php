@@ -105,7 +105,7 @@ function save_unpush_message($selfid,$peerid,$action)
 
 }
 
-function get_screen_name($name)
+function get_screen_name($usrname)
 {	
 	$query = "select * from usrinfo where usrname='".$usrname."'";
 	$usrinfo = vote_get_array($query);
