@@ -4,7 +4,7 @@
 require_once('vote_fns.php');
 require_once('user_auth_fns.php');
 require_once('usrinfo_fns.php');
-require_once('push_message_to_ios.php');
+require_once('push_notification.php');
 //session_start();
 
 //create short variable names

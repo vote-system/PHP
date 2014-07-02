@@ -44,7 +44,7 @@ function update_vote_info_timestamp($organizer,$vote_id)
 {
 	$timestamp = get_current_timestamp();
 	$query = "update vote_info
-		set update_timestamp = '".$timestamp."'
+		set basic_timestamp = '".$timestamp."'
 		where organizer='".$organizer."' and vote_id='".$vote_id."'";
 	$ret = vote_db_query($query);
 
