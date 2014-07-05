@@ -3,70 +3,117 @@
 require_once("db_fns.php");
 require_once("vote_fns.php");
 require_once("push_notification.php");
-
-$vote_info = $_POST['vote_info'];
-$usrname = $_POST['usrname'];
+require_once("time.php");
 
 header('Content-Type: application/json');
 
-$vote_info = json_decode($vote_info);
+$usrname = $_POST['usrname'];
+$vote_info = $_POST['vote_info'];
 
 $organizer = $vote_info['organizer'];
 $title = $vote_info['title'];
-$start_timestamp = $vote_info['start_timestamp'];
+$start_time = $vote_info['start_time'];
 $end_time = $vote_info['end_time'];
-$update_timestamp = $vote_info['update_timestamp'];
+$category = $vote_info['category'];
+$max_choice = $vote_info['max_choice'];
 $participants = $vote_info['participants'];
 $options = $vote_info['options'];
+$private = $vote_info['private'];
 
-if($organizer != $usrname)
+define("VOTE_DEBUG",0);
+
+if(strcmp($organizer,$usrname))
 {
-	$setup_vote['setup_vote'] = VOTE_EXISTED; 
+	$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
 	echo json_encode($setup_vote);
+	return;
 }
 
 $query = "select * from vote_info
-		where organizer='".$organizer."' and start_timestamp='".$start_timestamp."'";
+		where organizer='".$organizer."' 
+		and start_time='".$start_time."'";
 $vote_existed = vote_item_existed_test($query);
-if($vote_existed == false)
+
+if($vote_existed)
 {
-	$participants = serialize($participants);
+	$setup_vote['setup_vote'] = VOTE_EXISTED; 
+	echo json_encode($setup_vote);
+	return;
+}
+else
+{
+	$participants_db = serialize($participants);
 	$options = serialize($options);
+
+	$timestamp = get_current_timestamp();
 
 	//echo $query;
 	$query = "insert into vote_info values
-             (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."','".$update_timestamp."','".$participants."','".$options."',NULL,NULL)";
-
+             (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
+			 '".$timestamp."','".$timestamp."','".$category."','".$max_choice."','".$participants_db."','".$options."',NULL,'".$private."')";
 	$ret = vote_db_query($query);
-	if($ret){
+	if($ret)
+	{
 		$setup_vote['setup_vote'] = SET_UP_VOTE_SUCC; 
-		//echo json_encode($setup_vote);
-	}else{
-		$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
-		//echo json_encode($setup_vote);
 	}
+	else
+	{
+		$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
+		echo json_encode($setup_vote);
+		return;
+	}
+
+	$query = "select * from vote_info where organizer='".$organizer."' and start_time = '".$start_time."'";
+	$vote_info = vote_get_array($query);
+	$setup_vote['vote_id'] = (int)$vote_info['vote_id']; 
+	$setup_vote['basic_timestamp'] = (int)$vote_info['update_timestamp']; 
+	$setup_vote['vote_timestamp'] = (int)$vote_info['vote_timestamp']; 
+
+	save_vote_id($usrname,$vote_id);
+	
+	save_and_push_vote_info($usrname,$vote_info['vote_id'],$organizer);
+
+	echo json_encode($setup_vote);
+}
+function save_vote_id($usrname,$vote_id)
+{	
+	$query = "select * from usrinfo where usrname='".$usrname."'";
+	$usrinfo = vote_get_array($query);
+	$participant_vote_id = unserialize($usrinfo['participant_vote_id']);
+	$participant_vote_id[] = $vote_id;
+	$participant_vote_id = serialize($participant_vote_id);
+	
+}
+
+function save_and_push_vote_info($usrname,$vote_id,$organizer)
+{
+	$query = "update usrinfo
+				set participant_vote_id = '".$participant_vote_id."'
+				where usrname = '".$usrname."'";
+	$ret = vote_db_query($query);
 
 	//then push the message to every user
 	foreach($participants as $participant)
 	{
-		$usr_active = check_usr_status($to);
+		save_vote_id($participant,$vote_id);
+		$usr_active = check_usr_status($participant);
 		//echo "usr_active = " .$usr_active;
 		if($usr_active == USER_ACTIVE)
 		{	
-			$ret = push_message($organizer,$participant,ADD_FRIEND_REQUEST)
+			$ret = push_notification($organizer,$participant,VOTE_NOTIFICATION);
 			continue;
 		}
 		else if($usr_active == USER_NOT_ACTIVE)
 		{	
 			//echo "USER_NOT_ACTIVE\n";
 			//push the message to a queue
-			$friend_action = ADD_FRIEND_REQUEST;
-			//从数据库中取出该usr的未读信息，添加到尾部，在写入到数据库
-			push_back_friend_message($usrid,$stranger_id,$friend_action,$append_message);
 
+			$participant_id = usrname_to_usrid($participant);
+			$organizer_id = usrname_to_usrid($organizer);
+			save_unpush_message($participant_id,$organizer_id,VOTE_NOTIFICATION);
 		}
-		$ret = push_vote_message($organizer,$participant,$action)
 	}
+
 }
 
 ?>

@@ -42,11 +42,22 @@ function update_usrinfo_timestamp($usrname,$type)
 }
 
 
-function update_vote_timestamp($organizer,$vote_id)
+function update_vote_info_timestamp($organizer,$vote_id)
 {
 	$timestamp = get_current_timestamp();
 	$query = "update vote_info
 		set update_timestamp = '".$timestamp."'
+		where organizer='".$organizer."' and vote_id='".$vote_id."'";
+	$ret = vote_db_query($query);
+
+	return $ret;
+}
+
+function update_vote_timestamp($organizer,$vote_id)
+{
+	$timestamp = get_current_timestamp();
+	$query = "update vote_info
+		set vote_timestamp = '".$timestamp."'
 		where organizer='".$organizer."' and vote_id='".$vote_id."'";
 	$ret = vote_db_query($query);
 

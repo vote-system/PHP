@@ -2,6 +2,7 @@
 require_once('db_fns.php');
 
 $usrname = $_GET['usrname'];
+$vote_id = $_GET['vote_id'];
 
 header('Content-Type: application/json');
 
@@ -17,14 +18,7 @@ foreach($participant_vote_ids as $vote_id)
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
 	$vote_info = vote_get_array($query);
 
-	$vote_preview['title'] = $vote_info['title'];
-	$vote_preview['private'] = $vote_info['private'];
-	$vote_preview['organizer_screen_name'] = get_screen_name($vote_info['organizer']);
-	$vote_preview['end_time'] = $vote_info['end_time'];
-	$vote_preview['update_timestamp'] = $vote_info['update_timestamp'];
-	$vote_preview['vote_timestamp'] = $vote_info['vote_timestamp'];
-
-	$votes[] = $vote_preview;
+	$votes[] = $vote_info;
 }
 
 echo json_encode($votes);
