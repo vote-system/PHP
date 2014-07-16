@@ -4,6 +4,10 @@ require_once('vote_fns.php');
 if(DB_DEBUG)
 	test_db();
 
+/***
+*
+*
+**/
 function test_db()
 {
 	$usrname="testdb";

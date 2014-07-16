@@ -1,4 +1,5 @@
 <?php
+
 require_once("db_fns.php");
 date_default_timezone_set('PRC');
 

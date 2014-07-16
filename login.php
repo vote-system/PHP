@@ -117,6 +117,7 @@ function check_and_push_unread_message($usrname)
 	$usrid = usrname_to_usrid($usrname);
 	$query = "select * from unread_message where usrid='".$usrid."'";
 	$unread_message_existed = vote_item_existed_test($query);
+
 	//echo "unread_message_existed=" .$unread_message_existed. " \n";
 	
 	if($unread_message_existed == false){	

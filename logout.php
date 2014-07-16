@@ -2,6 +2,7 @@
 
 require_once('db_fns.php');
 require_once('vote_fns.php');
+
 header('Content-Type: application/json');
 
 $usrname=$_POST['usrname'];

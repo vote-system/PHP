@@ -10,18 +10,14 @@ header('Content-Type: application/json');
 //first, return the vote info where user is organizer
 //seconde, return the vote info where user is participants
 
-$query = "select * from usrinfo where usrname = '".$usrname."'";
-$usrinfo = vote_get_array($query);
-$participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
-
-$votes = array();
+//$query = "select * from usrinfo where usrname = '".$usrname."'";
+//$usrinfo = vote_get_array($query);
+//$participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
 
 foreach($participant_vote_ids as $vote_id)
 {
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
 	$vote_info = vote_get_array($query);
-	//$vote_info["screen_name"] = get_screen_name($usrname);
-	//$votes[] = $vote_info;
 
 	$vote_preview['vote_id'] = (int)$vote_info['vote_id'];
 	$vote_preview['organizer'] = $vote_info['organizer'];
@@ -41,6 +37,5 @@ foreach($participant_vote_ids as $vote_id)
 
 //echo json_encode($vote_preview);
 echo json_encode($vote_preview,JSON_UNESCAPED_SLASHES);
-
 
 ?>

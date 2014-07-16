@@ -41,6 +41,7 @@ function handle_add_fri_req($from,$to)
 		
 	}
 
+
 	//2.update the friend_badge in table usrinfo
 	update_friend_badge($to);
 
@@ -66,6 +67,7 @@ function handle_add_fri_req($from,$to)
 
 function handle_agree_add_fri($from,$to)
 {
+
 	update_friend_badge($to);
 
 	$stranger_id = usrname_to_usrid($from);
