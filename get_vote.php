@@ -12,8 +12,6 @@ $query = "select * from usrinfo where usrname = '".$usrname."'";
 $usrinfo = vote_get_array($query);
 $participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
 
-
-
 foreach($participant_vote_ids as $vote_id)
 {
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
@@ -21,7 +19,7 @@ foreach($participant_vote_ids as $vote_id)
 
 	$vote_preview['title'] = $vote_info['title'];
 	$vote_preview['vote_id'] = (int)$vote_info['vote_id'];
-	$vote_preview['private'] = $vote_info['private'];
+	$vote_preview['private'] = (int)$vote_info['private'];
 	$vote_preview['organizer'] = $vote_info['organizer'];
 	$vote_preview['end_time'] = (double)$vote_info['end_time'];
 	$vote_preview['start_time'] = (double)$vote_info['start_time'];

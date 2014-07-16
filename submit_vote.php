@@ -2,13 +2,16 @@
 
 require_once("db_fns.php");
 require_once("vote_fns.php");
+require_once("usrinfo_fns.php");
+require_once("time.php");
 
 header('Content-Type: application/json');
 
 $usrname = $_POST['usrname'];
 //$organizer = $_POST['usrname'];
 $vote_id = $_POST['vote_id'];
-$selections = $_POST['selections'];
+$old_selections = $_POST['old_selections'];
+$new_selections = $_POST['new_selections'];
 
 $query = "select * from vote_info where vote_id = '".$vote_id."'";
 $vote_info = vote_get_array($query);
@@ -37,10 +40,35 @@ if(!$bool_vote_allowed )
 
 $vote_detail = unserialize($vote_info['vote_detail']);
 
-foreach($selections as $selection){
-	$vote_detail[$selection]['$usrname'] = $usrname;
-	$vote_detail[$selection]['$screen_name'] = get_screen_name($usrname);
+//first submit vote,old_selections is null, else old_selections have values
+$screen_name = get_screen_name($usrname);
+if( (!$old_selections) && $new_selections )
+{
+	foreach($old_selections as $selection)
+	{
+		unset($vote_detail[$selection][$usrname]);
+		//unset($vote_detail[$selection]['screen_name'][$screen_name]);
+	}
+
+	foreach($new_selections as $selection)
+	{
+		$vote_detail[$selection][$usrname] = $screen_name;
+	}
 }
+else if($new_selections)
+{
+	foreach($new_selections as $selection)
+	{
+		$vote_detail[$selection][$usrname] = $screen_name;
+	}
+}
+else
+{
+	$submit_vote['submit_vote'] = SUBMIT_VOTE_ERROR;
+	echo json_encode($submit_vote);
+	return;
+}
+
 $vote_detail = serialize($vote_detail);
 
 $query = "update vote_info
@@ -53,6 +81,8 @@ if($ret){
 }else{
 	$submit_vote['submit_vote'] = SUBMIT_VOTE_ERROR;
 }
+
+update_vote_timestamp($vote_id);
 
 echo json_encode($submit_vote);
 

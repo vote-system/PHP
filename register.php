@@ -3,7 +3,7 @@
 require_once('vote_fns.php');
 require_once('user_auth_fns.php');
 require_once('data_valid_fns.php');
-require_once('usrinfo.php');
+require_once('usrinfo_fns.php');
 //macro to control debug log
 define("REG_DEBUG", 0);
 
@@ -98,7 +98,7 @@ else
 	add_default_usrinfo($usrname);
 
 	$usrid =  usrname_to_usrid($usrname);
-	$query = "select * from unread_message wheree usrid='".$usrid."'"
+	$query = "select * from unread_message where usrid='".$usrid."'";
 	$existed = vote_item_existed_test($query);
 	if(!$existed)
 	{

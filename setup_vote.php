@@ -7,8 +7,19 @@ require_once("time.php");
 
 header('Content-Type: application/json');
 
-$usrname = $_POST['usrname'];
-$vote_info = $_POST['vote_info'];
+//$usrname = $_POST['usrname'];
+//$vote_info = $_POST['vote_info'];
+//$vote_info = json_decode($_POST['vote_info'],true);
+//echo $vote_info;
+
+$raw_post_data = file_get_contents('php://input', 'r');
+//echo $raw_post_data;
+
+$raw_post_data_json = json_decode($raw_post_data,true);
+//print_r($raw_post_data_json);
+
+$usrname = $raw_post_data_json['usrname'];
+$vote_info = $raw_post_data_json['vote_info'];
 
 $organizer = $vote_info['organizer'];
 $title = $vote_info['title'];
@@ -19,6 +30,10 @@ $max_choice = $vote_info['max_choice'];
 $participants = $vote_info['participants'];
 $options = $vote_info['options'];
 $private = $vote_info['private'];
+
+//echo $options;
+//echo "\n";
+//print_r($options);
 
 define("VOTE_DEBUG",0);
 
@@ -34,6 +49,7 @@ $query = "select * from vote_info
 		and start_time='".$start_time."'";
 $vote_existed = vote_item_existed_test($query);
 
+$vote_existed = null;
 if($vote_existed)
 {
 	$setup_vote['setup_vote'] = VOTE_EXISTED; 
@@ -44,6 +60,8 @@ else
 {
 	$participants_db = serialize($participants);
 	$options = serialize($options);
+	//echo $options;
+	//echo "\n";
 
 	$timestamp = get_current_timestamp();
 
@@ -72,6 +90,8 @@ else
 	save_vote_id($usrname,$setup_vote['vote_id']);
 	
 	save_and_push_vote_info($usrname,$setup_vote['vote_id'],$organizer);
+
+	update_vote_info_timestamp($vote_id);
 
 	echo json_encode($setup_vote);
 }
