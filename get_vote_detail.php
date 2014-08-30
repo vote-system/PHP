@@ -10,9 +10,9 @@ header('Content-Type: application/json');
 //first, return the vote info where user is organizer
 //seconde, return the vote info where user is participants
 
-//$query = "select * from usrinfo where usrname = '".$usrname."'";
-//$usrinfo = vote_get_array($query);
-//$participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
+$query = "select * from usrinfo where usrname = '".$usrname."'";
+$usrinfo = vote_get_array($query);
+$participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
 
 foreach($participant_vote_ids as $vote_id)
 {

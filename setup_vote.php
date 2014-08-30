@@ -30,6 +30,10 @@ $max_choice = $vote_info['max_choice'];
 $participants = $vote_info['participants'];
 $options = $vote_info['options'];
 $private = $vote_info['private'];
+$anonymous = $vote_info['anonymous'];
+$the_public = $vote_info['the_public'];
+$description = $vote_info['description'];
+$image_url = $vote_info['image_url'];
 
 //echo $options;
 //echo "\n";
@@ -68,7 +72,9 @@ else
 	//echo $query;
 	$query = "insert into vote_info values
              (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
-			 '".$timestamp."','".$timestamp."','".$category."','".$max_choice."','".$participants_db."','".$options."',NULL,'".$private."')";
+			 '".$timestamp."','".$timestamp."','".$category."','".$max_choice."',
+			 '".$participants_db."','".$options."',NULL,'".$private."','".$anonymous."',
+			 ,'".$the_public."','".$description."','".$image_url."')";
 	$ret = vote_db_query($query);
 	if($ret)
 	{
@@ -99,12 +105,25 @@ function save_vote_id($usrname,$vote_id)
 {	
 	$query = "select * from usrinfo where usrname='".$usrname."'";
 	$usrinfo = vote_get_array($query);
+
+	
 	$participant_vote_id = unserialize($usrinfo['participant_vote_id']);
 	$participant_vote_id[] = $vote_id;
 	$participant_vote_id = serialize($participant_vote_id);
 
+	//set the default value for the following two value
+	$vote_notification = unserialize($usrinfo['vote_notification']);
+	$vote_notification[$vote_id] = true;
+	$vote_notification = serialize($vote_notification);
+
+	$vote_delete_forever = unserialize($usrinfo['vote_delete_forever']);
+	$vote_delete_forever[$vote_id] = true;
+	$vote_delete_forever = serialize($vote_delete_forever);
+
 	$query = "update usrinfo
-				set participant_vote_id = '".$participant_vote_id."'
+				set participant_vote_id = '".$participant_vote_id."',
+				vote_notification = '".$vote_notification."',
+				vote_delete_forever = '".$vote_delete_forever."'
 				where usrname = '".$usrname."'";
 	$ret = vote_db_query($query);
 	return $ret;

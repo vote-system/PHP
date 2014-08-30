@@ -13,7 +13,7 @@ define('FULL_IMAG',1);
 define('MEDIUM_IMAG',2);
 define('TINY_IMAG',3);
 
-define(HEADER_URL,"http://115.28.228.41/vote/");
+define('HEADER_URL',"http://115.28.228.41/vote/");
 
 //definition for image type returned by getimagsize()
 define('GIF',1);
@@ -30,6 +30,7 @@ define("THUMBNAILS_IMAG_DIMISION",40);
 
 //$usrname="test";
 $usrname=$_POST['usrname'];
+//$usrname="dingyi";
 
 $upload_dir = "upload/$usrname/";
 

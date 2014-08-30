@@ -15,6 +15,12 @@ $participants = $_POST['participants'];
 $options = $_POST['options'];
 $private = $_POST['private'];
 
+$anonymous = $_POST['anonymous'];
+$the_public = $_POST['the_public'];
+$description = $_POST['description'];
+$image_url = $_POST['image_url'];
+
+
 if($title){
 	$query = "update vote_info
 				set title = '".$title."'
@@ -93,6 +99,60 @@ if($private){
 		$update_vote['update_options'] = UPDATE_FAIL; 
 	}
 }
+
+
+if($anonymous){
+	$query = "update vote_info
+				set anonymous = '".$anonymous."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_options'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_options'] = UPDATE_FAIL; 
+	}
+}
+
+if($the_public){
+	$query = "update vote_info
+				set the_public = '".$the_public."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_options'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_options'] = UPDATE_FAIL; 
+	}
+}
+
+if($description){
+	$query = "update vote_info
+				set description = '".$description."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_options'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_options'] = UPDATE_FAIL; 
+	}
+}
+
+if($image_url){
+	$query = "update vote_info
+				set image_url = '".$image_url."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_options'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_options'] = UPDATE_FAIL; 
+	}
+}
+
 
 update_vote_info_timestamp($organizer,$vote_id);
 

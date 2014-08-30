@@ -42,17 +42,24 @@ $vote_detail = unserialize($vote_info['vote_detail']);
 
 //first submit vote,old_selections is null, else old_selections have values
 $screen_name = get_screen_name($usrname);
-if( (!$old_selections) && $new_selections )
+//print_r($old_selections);
+
+//print_r($new_selections);
+
+if($old_selections && $new_selections )
 {
 	foreach($old_selections as $selection)
 	{
-		unset($vote_detail[$selection][$usrname]);
+		//unset($vote_detail[$selection][$usrname]);
 		//unset($vote_detail[$selection]['screen_name'][$screen_name]);
+		$vote_detail[$selection][$usrname] = NULL;
+		//print_r($vote_detail[$selection][$usrname]);
 	}
 
 	foreach($new_selections as $selection)
 	{
 		$vote_detail[$selection][$usrname] = $screen_name;
+		//print_r($vote_detail[$selection][$usrname]);
 	}
 }
 else if($new_selections)
