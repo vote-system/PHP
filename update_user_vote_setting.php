@@ -14,23 +14,41 @@ $vote_delete_forever = $_POST['delete_forever'];
 
 $query = "select * from usrinfo where usrname = '".$usrname."'";
 $usrinfo = vote_get_array($query);
-$vote_notification = unserialize($usrinfo['vote_notification']);
-$vote_delete_forever = unserialize($usrinfo['vote_delete_forever']);
 
-$vote_notification[$vote_id] = $vote_notification;
-$vote_delete_forever[$vote_id] = $vote_delete_forever;
-
-$vote_notification = serialize($vote_notification);
-$vote_delete_forever = serialize($vote_delete_forever);
-
-$query = "update usrinfo
-		set vote_notification = '".$vote_notification."',
-		vote_delete_forever = '".$vote_delete_forever."'
+if($vote_notification)
+{
+	$vote_notification = unserialize($usrinfo['vote_notification']);
+	$vote_notification[$vote_id] = $vote_notification;
+	$vote_notification = serialize($vote_notification);
+	$query = "update usrinfo
+		set vote_notification = '".$vote_notification."'
 		where usrname = '".$usrname."'";
-$ret = vote_db_query($query);
+	$ret = vote_db_query($query);
 
+	if($ret){
+		$update_vote_setting['update_vote_notification'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote_setting['update_vote_notification'] = UPDATE_FAIL; 
+	}
+}
 
-//return $ret;
+if($vote_delete_forever)
+{
+	$vote_delete_forever = unserialize($usrinfo['vote_delete_forever']);
+	$vote_delete_forever[$vote_id] = $vote_delete_forever;
+	$vote_delete_forever = serialize($vote_delete_forever);
+	$query = "update usrinfo
+		set vote_delete_forever = '".$vote_delete_forever."'
+		where usrname = '".$usrname."'";
+	$ret = vote_db_query($query);
 
+	if($ret){
+		$update_vote_setting['update_vote_delete_forever'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote_setting['update_vote_delete_forever'] = UPDATE_FAIL; 
+	}
+}
+
+echo json_encode($update_vote_setting);
 
 ?>

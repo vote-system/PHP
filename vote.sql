@@ -17,7 +17,9 @@ create table usrinfo  (
   friend_badge int unsigned default 0,
   vote_badge int unsigned default 0,
   active int default 0,
-  participant_vote_id mediumtext 
+  participant_vote_id mediumtext,
+  vote_notification mediumtext,
+  vote_delete_forever mediumtext
 );
 
 create table friend (
@@ -38,7 +40,7 @@ create table stranger (
 create table unread_message(
   id int not null auto_increment primary key,
   usrid int not null,
-  message mediumtext,
+  message mediumtext
 );
 
 create table vote_info(
@@ -54,6 +56,10 @@ create table vote_info(
   participants mediumtext not null,
   options mediumtext not null,
   vote_detail mediumtext,
-  private bool default 0
+  private bool default 0,
+  anonymous bool default 1,
+  the_public bool default 0,
+  description varchar(100),
+  image_url varchar(50)
 );
 

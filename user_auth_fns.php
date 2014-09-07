@@ -214,6 +214,7 @@ function add_default_usrinfo($usrname)
 				medium_head_imag_url = '".$medium_head_imag."',
 				thumbnails_head_imag_url = '".$thumbnails_head_iamg_url."',
 				gender = 'm',
+				signature = '这家伙很懒，什么都没留下',
 				screen_name = '".$screen_name."',
 				screen_name_pinyin = '".$screen_name_pinyin."'
 			where usrname = '".$usrname."'";

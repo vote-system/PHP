@@ -25,11 +25,11 @@ $organizer = $vote_info['organizer'];
 $title = $vote_info['title'];
 $start_time = $vote_info['start_time'];
 $end_time = $vote_info['end_time'];
-$category = $vote_info['category'];
+//$category = $vote_info['category'];
 $max_choice = $vote_info['max_choice'];
 $participants = $vote_info['participants'];
 $options = $vote_info['options'];
-$private = $vote_info['private'];
+//$private = $vote_info['private'];
 $anonymous = $vote_info['anonymous'];
 $the_public = $vote_info['the_public'];
 $description = $vote_info['description'];
@@ -53,7 +53,7 @@ $query = "select * from vote_info
 		and start_time='".$start_time."'";
 $vote_existed = vote_item_existed_test($query);
 
-$vote_existed = null;
+//$vote_existed = null;
 if($vote_existed)
 {
 	$setup_vote['setup_vote'] = VOTE_EXISTED; 
@@ -72,9 +72,9 @@ else
 	//echo $query;
 	$query = "insert into vote_info values
              (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
-			 '".$timestamp."','".$timestamp."','".$category."','".$max_choice."',
-			 '".$participants_db."','".$options."',NULL,'".$private."','".$anonymous."',
-			 ,'".$the_public."','".$description."','".$image_url."')";
+			 '".$timestamp."','".$timestamp."',NULL,'".$max_choice."',
+			 '".$participants_db."','".$options."',NULL,NULL,'".$anonymous."',
+			 '".$the_public."','".$description."','".$image_url."')";
 	$ret = vote_db_query($query);
 	if($ret)
 	{
@@ -117,7 +117,7 @@ function save_vote_id($usrname,$vote_id)
 	$vote_notification = serialize($vote_notification);
 
 	$vote_delete_forever = unserialize($usrinfo['vote_delete_forever']);
-	$vote_delete_forever[$vote_id] = true;
+	$vote_delete_forever[$vote_id] = false;
 	$vote_delete_forever = serialize($vote_delete_forever);
 
 	$query = "update usrinfo
