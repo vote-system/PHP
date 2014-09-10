@@ -1,5 +1,6 @@
 <?php
 require_once('db_fns.php');
+require_once('usrinfo_fns.php');
 
 $usrname = $_GET['usrname'];
 
@@ -23,6 +24,7 @@ foreach($participant_vote_ids as $vote_id)
 	$vote_preview['vote_id'] = (int)$vote_info['vote_id'];
 	$vote_preview['private'] = (int)$vote_info['private'];
 	$vote_preview['organizer'] = $vote_info['organizer'];
+	$vote_preview['organizer_screen_name'] = get_screen_name($vote_info['organizer']);
 	$vote_preview['end_time'] = (double)$vote_info['end_time'];
 	$vote_preview['start_time'] = (double)$vote_info['start_time'];
 	$vote_preview['category'] = $vote_info['category'];
