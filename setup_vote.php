@@ -4,6 +4,7 @@ require_once("db_fns.php");
 require_once("vote_fns.php");
 require_once("push_notification.php");
 require_once("time.php");
+require_once("usrinfo_fns.php");
 
 header('Content-Type: application/json');
 
@@ -135,12 +136,12 @@ function save_and_push_vote_info($usrname,$vote_id,$organizer)
 	//then push the message to every user
 	foreach($participants as $participant)
 	{
-		save_vote_id($participant,$vote_id);
-		$usr_active = check_usr_status($participant);
+		save_vote_id($participant['usrname'],$vote_id);
+		$usr_active = check_usr_status($participant['usrname']);
 		//echo "usr_active = " .$usr_active;
 		if($usr_active == USER_ACTIVE)
 		{	
-			$ret = push_notification($organizer,$participant,VOTE_NOTIFICATION);
+			$ret = push_notification($organizer,$participant['usrname'],VOTE_NOTIFICATION);
 			continue;
 		}
 		else if($usr_active == USER_NOT_ACTIVE)
@@ -148,7 +149,7 @@ function save_and_push_vote_info($usrname,$vote_id,$organizer)
 			//echo "USER_NOT_ACTIVE\n";
 			//push the message to a queue
 
-			$participant_id = usrname_to_usrid($participant);
+			$participant_id = usrname_to_usrid($participant['usrname']);
 			$organizer_id = usrname_to_usrid($organizer);
 			save_unpush_message($participant_id,$organizer_id,VOTE_NOTIFICATION);
 		}

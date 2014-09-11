@@ -23,7 +23,7 @@ $bool_vote_allowed = true;
 
 foreach($participants as $participant)
 {
-	if(!strcmp($participant,$usrname)){
+	if(!strcmp($participant['usrname'],$usrname)){
 		$bool_vote_allowed = true;
 		break;
 	}else{

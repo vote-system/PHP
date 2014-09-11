@@ -28,7 +28,15 @@ foreach($participant_vote_ids as $vote_id)
 	$vote_preview['vote_timestamp'] = (int)$vote_info['vote_timestamp'];
 	$vote_preview['category'] = $vote_info['category'];
 	$vote_preview['max_choice'] = (int)$vote_info['max_choice'];
-	$vote_preview['participants'] = unserialize($vote_info['participants']);
+	//$vote_preview['participants'] = unserialize($vote_info['participants']);
+	
+	$participants = unserialize($vote_info['participants']);
+	foreach($participants as $participant)
+	{
+		  $participant['screenname'] = get_screen_name($participant['usrname']);
+	}
+	$vote_preview['participants'] = $participants;
+
 	$vote_preview['options'] = unserialize($vote_info['options']);
 	$vote_preview['vote_detail'] = unserialize($vote_info['vote_detail']);
 	$vote_preview['private'] = (int)$vote_info['private'];
