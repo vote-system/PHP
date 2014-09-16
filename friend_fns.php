@@ -100,8 +100,25 @@ function handle_agree_add_fri($from,$to)
 
 function handle_del_fri_req($from,$to)
 {
-	//delete the item from database
-	$ret = delete_friend_db($from,$to);
+	$usrid = usrname_to_usrid($from);
+	$friendid = usrname_to_usrid($to);
+
+	$query = "delete from friend where
+	usrid='".$usrid."' and friend_id='".$friendid."'";
+	$ret = vote_db_query($query);
+
+	$query = "delete from friend where
+		usrid='".$friendid."' and friend_id='".$usrid."'";
+	$ret = vote_db_query($query);
+
+	$query = "delete from stranger where
+		usrid='".$usrid."' and stranger_id='".$friendid."'";
+	$ret = vote_db_query($query);
+
+	$query = "delete from stranger where
+		usrid='".$friendid."' and stranger_id='".$usrid."'";
+	$ret = vote_db_query($query);
+
 	if(!$ret)
 		return true;
 	else
@@ -142,14 +159,6 @@ function insert_friend_table($usrid,$friend_id)
   return $ret;
 }
 
-function delete_friend_db($usrid,$friendid)
-{
-  $delete = "delete from friend where
-			usrid='".$usrid."' and friendid='".$friendid."'";
-  $ret = vote_db_query($query);
-  return $ret;
-}
-
 function stranger_item_existed($usrid,$stranger_id)
 {
 	//echo "function stranger_item_existed";
@@ -182,6 +191,5 @@ function check_usr_status($usrname)
 	$usrinfo = vote_get_array($query);
 	return $usrinfo['active'];
 }
-
 
 ?>
