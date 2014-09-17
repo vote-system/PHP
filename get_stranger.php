@@ -22,7 +22,7 @@ function ret_stranger_info($usrname)
 {
 	$usrid = usrname_to_usrid($usrname);
 	//$stranger_list = array();
-	$query = "select * from stranger where usrid = '".$usrid."'";
+	$query = "select * from stranger where usrid = '".$usrid."' and status = 1";
 	$stranger_list = vote_get_assoc($query); 
 	//print_r($stranger_list);
     $i = 0;
