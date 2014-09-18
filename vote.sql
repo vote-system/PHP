@@ -60,6 +60,7 @@ create table vote_info(
   anonymous bool default 1,
   the_public bool default 0,
   description varchar(100),
-  image_url varchar(50)
+  image_url varchar(50),
+  participants_number int unsigned
 );
 
