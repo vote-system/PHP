@@ -52,7 +52,8 @@ if($old_selections && $new_selections )
 	{
 		//unset($vote_detail[$selection][$usrname]);
 		//unset($vote_detail[$selection]['screen_name'][$screen_name]);
-		$vote_detail[$selection][$usrname] = NULL;
+		//$vote_detail[$selection][$usrname] = NULL;
+		unset($vote_detail[$selection]);
 		//print_r($vote_detail[$selection][$usrname]);
 	}
 

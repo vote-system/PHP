@@ -62,8 +62,11 @@ if($category){
 }
 
 if($participants){
+
+	$participants_number = count($participants);
 	$query = "update vote_info
-				set participants = '".$participants."'
+				set participants = '".$participants."',
+					participants_number = '".$participants_number."'
 				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
 	$ret = vote_db_query($query);	
 	
