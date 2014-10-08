@@ -35,10 +35,7 @@ $anonymous = $vote_info['anonymous'];
 $the_public = $vote_info['the_public'];
 $description = $vote_info['description'];
 $image_url = $vote_info['image_url'];
-
-//echo $options;
-//echo "\n";
-//print_r($options);
+$city = $vote_info['city'];
 
 define("VOTE_DEBUG",0);
 
@@ -63,6 +60,9 @@ if($vote_existed)
 }
 else
 {
+	$participants_number = count($participants);
+	//echo $participants_number;
+
 	$participants_db = serialize($participants);
 	$options = serialize($options);
 	//echo $options;
@@ -75,7 +75,7 @@ else
              (NULL,'".$organizer."', '".$title."','".$start_time."', '".$end_time."',
 			 '".$timestamp."','".$timestamp."',NULL,'".$max_choice."',
 			 '".$participants_db."','".$options."',NULL,NULL,'".$anonymous."',
-			 '".$the_public."','".$description."','".$image_url."')";
+			 '".$the_public."','".$description."','".$image_url."','".$participants_number."','".$city."')";
 	$ret = vote_db_query($query);
 	if($ret)
 	{

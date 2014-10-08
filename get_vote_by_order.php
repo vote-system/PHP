@@ -3,18 +3,31 @@ require_once('db_fns.php');
 require_once('usrinfo_fns.php');
 
 $usrname = $_GET['usrname'];
+$city = $_GET['city'];
+$begin_number = $_GET['begin_number'];
+$count = $_GET['count'];
 
+$end = $begin_number + $count;
 header('Content-Type: application/json');
 
 //first, return the vote info where user is organizer
 //seconde, return the vote info where user is participants
+//$query = "select vote_id from vote_info order by participants_number desc limit ".$begin_number.",".$end."";
+$query = "select vote_id from vote_info 
+			where the_public = 1 and city = '".$city."' 
+			order by participants_number desc limit ".$begin_number.",".$end."";
 
-$query = "select * from usrinfo where usrname = '".$usrname."'";
-$usrinfo = vote_get_array($query);
-$participant_vote_ids = unserialize($usrinfo["participant_vote_id"]);
 
-foreach($participant_vote_ids as $vote_id)
+$vote_ids = vote_get_assoc($query);
+//var_dump($vote_ids);
+$i = 0;
+
+foreach($vote_ids as $key => $value)
 {
+	if($i >= $count)
+		break;
+
+	$vote_id = $vote_ids[$key]['vote_id'];
 	$query = "select * from vote_info where vote_id = '".$vote_id."'";
 	$vote_info = vote_get_array($query);
 	if(!$vote_info)
@@ -34,19 +47,20 @@ foreach($participant_vote_ids as $vote_id)
 	$vote_preview['the_public'] = (int)$vote_info['the_public'];
 	$vote_preview['description'] = $vote_info['description'];
 	$vote_preview['image_url'] = $vote_info['image_url'];
-	$vote_preview['city'] = $vote_info['city'];
+	$vote_preview['participants_number'] = (int)$vote_info['participants_number'];
 
 	$vote_array[] = $vote_preview;
+
+	$i++;
 }
 
 if(!$vote_array)
 {
-	$votes['votes'] = NULL;
-
+	$votes['votes_by_order'] = NULL;
 }
 else
 {
-	$votes['votes'] = $vote_array;
+	$votes['votes_by_order'] = $vote_array;
 }
 echo json_encode($votes,JSON_UNESCAPED_SLASHES);
 

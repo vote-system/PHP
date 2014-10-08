@@ -19,7 +19,7 @@ $anonymous = $_POST['anonymous'];
 $the_public = $_POST['the_public'];
 $description = $_POST['description'];
 $image_url = $_POST['image_url'];
-
+$city = $_POST['city'];
 
 if($title){
 	$query = "update vote_info
@@ -62,6 +62,8 @@ if($category){
 }
 
 if($participants){
+
+	$participants_number = count($participants);
 	$query = "update vote_info
 				set participants = '".$participants."'
 				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
@@ -153,6 +155,18 @@ if($image_url){
 	}
 }
 
+if($city){
+	$query = "update vote_info
+				set city = '".$city."'
+				where organizer = '".$usrname."' and vote_id = '".$vote_id."'";	
+	$ret = vote_db_query($query);	
+	
+	if($ret){
+		$update_vote['update_city'] = UPDATE_SUCCESS; 
+	}else{
+		$update_vote['update_city'] = UPDATE_FAIL; 
+	}
+}
 
 update_vote_info_timestamp($organizer,$vote_id);
 

@@ -28,9 +28,15 @@ switch($action)
 	$result = handle_del_fri_req($usrname,$friend_name);
 	
 	if(!$result)
+	{	
 		$friend['delete_friend_request'] = 0;
+	}
 	else
+	{
 		$friend['delete_friend_request'] = 1;
+		$friend['delete_friend_name'] = $friend_name;
+
+	}
 	echo json_encode($friend);
 	
 	break;

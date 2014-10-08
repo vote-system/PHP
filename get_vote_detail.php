@@ -29,11 +29,12 @@ $vote_preview['category'] = $vote_info['category'];
 $vote_preview['max_choice'] = (int)$vote_info['max_choice'];
 //$vote_preview['participants'] = unserialize($vote_info['participants']);
 $vote_preview['private'] = (int)$vote_info['private'];
+$vote_preview['city'] = (int)$vote_info['city'];
 
 $participants = unserialize($vote_info['participants']);
 foreach($participants as $participant)
 {
-	  $participant['screenname'] = get_screen_name($participant['usrname']);
+	  $participant['screen_name'] = get_screen_name($participant['usrname']);
 }
 $vote_preview['participants'] = $participants;
 
