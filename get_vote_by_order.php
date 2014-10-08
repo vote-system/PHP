@@ -17,7 +17,6 @@ $query = "select vote_id from vote_info
 			where the_public = 1 and city = '".$city."' 
 			order by participants_number desc limit ".$begin_number.",".$end."";
 
-
 $vote_ids = vote_get_assoc($query);
 //var_dump($vote_ids);
 $i = 0;
@@ -65,3 +64,4 @@ else
 echo json_encode($votes,JSON_UNESCAPED_SLASHES);
 
 ?>
+

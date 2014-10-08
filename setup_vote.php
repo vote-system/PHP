@@ -76,6 +76,7 @@ else
 			 '".$timestamp."','".$timestamp."',NULL,'".$max_choice."',
 			 '".$participants_db."','".$options."',NULL,NULL,'".$anonymous."',
 			 '".$the_public."','".$description."','".$image_url."','".$participants_number."','".$city."')";
+
 	$ret = vote_db_query($query);
 	if($ret)
 	{
