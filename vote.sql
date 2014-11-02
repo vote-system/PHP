@@ -34,7 +34,8 @@ create table stranger (
   id int not null auto_increment primary key,
   usrid int not null,
   stranger_id int not null,
-  status int default 0
+  status int default 0,
+  message varchar(100)
 );
 
 create table unread_message(

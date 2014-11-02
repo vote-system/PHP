@@ -104,6 +104,7 @@ define("IGNORE_FRIEND_RESPONSE",7);
 define("ADD_FRIEND_REQUEST",2);
 define("AGREE_ADD_FRIEND",4);
 define("VOTE_NOTIFICATION",5);
+define("NEW_VOTE_NOTIFICATION",6);
 
 //macro for badge
 define("ADD_BADGE",1);

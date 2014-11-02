@@ -21,23 +21,15 @@ $participants = unserialize($participants);
 //only if $usrname is in participants name list that allow $usrname to vote;
 $bool_vote_allowed = true;
 
-foreach($participants as $participant)
-{
-	if(!strcmp($participant['usrname'],$usrname)){
-		$bool_vote_allowed = true;
-		break;
-	}else{
-		continue;
-	}
-}
 
+/*
 if(!$bool_vote_allowed )
 {
 	$submit_vote['submit_vote'] = SUBMIT_VOTE_ERROR;
 	echo json_encode($submit_vote);
 	return;
 }
-
+*/
 $vote_detail = unserialize($vote_info['vote_detail']);
 
 //first submit vote,old_selections is null, else old_selections have values
@@ -76,6 +68,38 @@ else
 	echo json_encode($submit_vote);
 	return;
 }
+
+//push notification to the participant
+foreach($participants as $participant)
+{
+	/*
+	if(!strcmp($participant['usrname'],$usrname)){
+		$bool_vote_allowed = true;
+		break;
+	}else{
+		continue;
+	}
+	*/
+	update_vote_badge($usrname);
+	$usr_active = check_usr_status($participant['usrname']);
+	//echo "usr_active = " .$usr_active;
+	if($usr_active == USER_ACTIVE)
+	{	
+		$ret = push_notification($organizer,$participant['usrname'],NEW_VOTE_NOTIFICATION);
+		continue;
+	}
+	else if($usr_active == USER_NOT_ACTIVE)
+	{	
+		//echo "USER_NOT_ACTIVE\n";
+		//push the message to a queue
+
+		$participant_id = usrname_to_usrid($participant['usrname']);
+		$organizer_id = usrname_to_usrid($organizer);
+		save_unpush_message($participant_id,$organizer_id,NEW_VOTE_NOTIFICATION);
+	}
+}
+
+delete_organizer_vote_badge($organizer);
 
 $vote_detail = serialize($vote_detail);
 

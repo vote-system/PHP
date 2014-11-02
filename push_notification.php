@@ -38,6 +38,10 @@ function push_notification($from,$to,$action)
 		$push_message = 'VOTE_NOTIFICATION';
 		break;
 		
+		case NEW_VOTE_NOTIFICATION:
+		$push_message = 'NEW_VOTE_NOTIFICATION';
+		break;
+
 		default:
 			//echo "push request content not support!\n";
 			return false;

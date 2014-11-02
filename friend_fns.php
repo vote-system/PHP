@@ -8,7 +8,7 @@ require_once("usrinfo_fns.php");
 //handle_add_fri_req("dingyi","test","");
 
 
-function handle_add_fri_req($from,$to)
+function handle_add_fri_req($from,$to,$message)
 {
 	//update badge number
 	//$badge_arr = query_badge($to);
@@ -34,10 +34,11 @@ function handle_add_fri_req($from,$to)
 	else if($ret == DB_ITEM_NOT_FOUND)
 	{
 		$status = ADD_FRIEND_SEND;
-		insert_stranger_table($usrid,$stranger_id,$status);
+		insert_stranger_table($usrid,$stranger_id,$status,$message);
 
 		$status = IGNORE_FRIEND_RESPONSE;
-		insert_stranger_table($stranger_id,$usrid,$status);
+		$message = NULL;
+		insert_stranger_table($stranger_id,$usrid,$status,$message);
 		
 	}
 
@@ -125,12 +126,14 @@ function handle_del_fri_req($from,$to)
 		return false;
 }
 
-function insert_stranger_table($usrid,$stranger_id,$status)
+function insert_stranger_table($usrid,$stranger_id,$status,$message)
 {
 	//echo "function insert_stranger_table";
+	//echo $message;
+	//echo "\n";
   
   $query = "insert into stranger values
-                           (NULL, '".$usrid."', '".$stranger_id."','".$status."')";
+                           (NULL, '".$usrid."', '".$stranger_id."','".$status."','".$message."')";
   $ret = vote_db_query($query);
   return $ret;
 }

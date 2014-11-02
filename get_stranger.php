@@ -44,6 +44,12 @@ function ret_stranger_info($usrname)
 		$stranger_info['usr_info_timestamp'] = (int)$usrinfo['usr_info_timestamp'];
 		$stranger_info['head_imag_timestamp'] = (int)$usrinfo['head_imag_timestamp'];
 
+		$query = "select * from stranger where usrid = '".$usrid."' and stranger_id = '".$stranger_id."'";
+		$stranger_rec = vote_get_array($query);
+		$message = $stranger_rec['message'];
+		
+		$stranger_info['message'] = $message;
+		
 		$stranger_detail[$i] = $stranger_info;
 		//print_r($stranger_info);
 		//$json = json_encode($stranger_array);

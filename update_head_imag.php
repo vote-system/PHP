@@ -67,6 +67,8 @@ if ($_FILES['userfile']['size']==0) {
   exit; 
 }
 
+//$upload_file_resp['file_size'] = $_FILES['userfile']['size']; 
+  
 if ($_FILES['userfile']['size']>$max_size) {
   //echo "<p>Problem: ".$_FILES['userfile']['name']." is over "
   //      .$max_size." bytes";

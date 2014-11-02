@@ -14,8 +14,9 @@ header('Content-Type: application/json');
 switch($action)
 {
 	case ADD_FRIEND_REQUEST:
-	$result = handle_add_fri_req($usrname,$friend_name);
-	
+	$result = handle_add_fri_req($usrname,$friend_name,$message);
+	//$friend['message'] = $message;
+
 	if(!$result)
 		$friend['add_friend_request'] = 0;
 	else

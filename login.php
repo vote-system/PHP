@@ -137,18 +137,18 @@ function check_and_push_unread_message($usrname)
 		//foreach($unread_messages as $message)
 		//for($i=0;i<$message_number;$i++)
 		{
-			$stranger_id = $unread_messages[0]['stranger_id'];
+			$stranger_id = $unread_messages[0]['peerid'];
 			$from = usrid_to_usrname($stranger_id);
 			//$to = usrid_to_usrname($usrid);
 			$to = $usrname;
 			$action = $unread_messages[0]['action'];
-			$append_message = $unread_messages[0]['append_message'];
+			//$append_message = $unread_messages[0]['append_message'];
 			
 			//echo "usrid=" .$usrid. " \n";
 			//echo "action=" .$action. " \n";
 			//echo "append_message=" .$append_message. " \n";
 			
-			$ret = push_message($from,$to,$action,$append_message);
+			$ret = push_notification($from,$to,$action);
 			
 			//echo "message_number=" . $message_number . "\n";
 			//if($message_number == 2)

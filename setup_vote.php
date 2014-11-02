@@ -5,6 +5,7 @@ require_once("vote_fns.php");
 require_once("push_notification.php");
 require_once("time.php");
 require_once("usrinfo_fns.php");
+require_once("friend_fns.php");
 
 header('Content-Type: application/json');
 
@@ -39,6 +40,9 @@ $city = $vote_info['city'];
 
 define("VOTE_DEBUG",0);
 
+//save_vote_id("zhaobo",45);
+//push_vote_info("dingyi","zhaobo");
+
 if(strcmp($organizer,$usrname))
 {
 	$setup_vote['setup_vote'] = SET_UP_VOTE_FAIL; 
@@ -64,6 +68,7 @@ else
 	//echo $participants_number;
 
 	$participants_db = serialize($participants);
+	//echo $participants . "\n";
 	$options = serialize($options);
 	//echo $options;
 	//echo "\n";
@@ -95,20 +100,59 @@ else
 	$setup_vote['basic_timestamp'] = (int)$vote_info['basic_timestamp']; 
 	$setup_vote['vote_timestamp'] = (int)$vote_info['vote_timestamp']; 
 
-	save_vote_id($usrname,$setup_vote['vote_id']);
 	
-	save_and_push_vote_info($usrname,$setup_vote['vote_id'],$organizer);
+	$vote_id = $setup_vote['vote_id'];
+	//print_r($participants);
+	
+	foreach($participants as $participant)
+	{
+		//echo $participant['usrname'];
+		$usrname = $participant['usrname'];
+		save_vote_id($usrname,$vote_id);
+		push_vote_info($usrname,$organizer);
+		update_vote_badge($usrname);
+	}
+
+	delete_organizer_vote_badge($organizer);
 
 	update_vote_info_timestamp($vote_id);
-
+	
 	echo json_encode($setup_vote);
 }
+
+function push_vote_info($usrname,$organizer)
+{
+	//then push the message to every user
+	
+	$usr_active = check_usr_status($usrname);
+	//echo "usr_active = " . $usr_active;
+	//echo "usr_active = " .$usr_active;
+	if($usr_active == USER_ACTIVE)
+	{	
+		$ret = push_notification($organizer,$usrname,VOTE_NOTIFICATION);
+	}
+	else if($usr_active == USER_NOT_ACTIVE)
+	{	
+		//echo "USER_NOT_ACTIVE\n";
+		//push the message to a queue
+		//echo "participant_id = " . $participant_id . "\n";
+		//echo "organizer_id = " . $organizer_id . "\n";
+
+		$participant_id = usrname_to_usrid($usrname);
+		$organizer_id = usrname_to_usrid($organizer);
+		save_unpush_message($participant_id,$organizer_id,VOTE_NOTIFICATION);
+	}
+}
+
+
+
 function save_vote_id($usrname,$vote_id)
 {	
+	//$setup_vote['participant_usrname'] = $usrname; 
+
 	$query = "select * from usrinfo where usrname='".$usrname."'";
 	$usrinfo = vote_get_array($query);
 
-	
 	$participant_vote_id = unserialize($usrinfo['participant_vote_id']);
 	$participant_vote_id[] = $vote_id;
 	$participant_vote_id = serialize($participant_vote_id);
@@ -132,30 +176,6 @@ function save_vote_id($usrname,$vote_id)
 	
 }
 
-function save_and_push_vote_info($usrname,$vote_id,$organizer)
-{
-	//then push the message to every user
-	foreach($participants as $participant)
-	{
-		save_vote_id($participant['usrname'],$vote_id);
-		$usr_active = check_usr_status($participant['usrname']);
-		//echo "usr_active = " .$usr_active;
-		if($usr_active == USER_ACTIVE)
-		{	
-			$ret = push_notification($organizer,$participant['usrname'],VOTE_NOTIFICATION);
-			continue;
-		}
-		else if($usr_active == USER_NOT_ACTIVE)
-		{	
-			//echo "USER_NOT_ACTIVE\n";
-			//push the message to a queue
 
-			$participant_id = usrname_to_usrid($participant['usrname']);
-			$organizer_id = usrname_to_usrid($organizer);
-			save_unpush_message($participant_id,$organizer_id,VOTE_NOTIFICATION);
-		}
-	}
-
-}
 
 ?>

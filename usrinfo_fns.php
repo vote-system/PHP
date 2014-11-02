@@ -18,6 +18,38 @@ function update_friend_badge($usrname)
 	return $result;
 }
 
+function update_vote_badge($usrname)
+{
+    $usrinfo = query_badge($usrname);
+    $vote_badge = $usrinfo['vote_badge'];
+    //echo $friend_badge;
+	if($vote_badge < 0)
+		return false;
+	$vote_badge +=1;
+
+	//echo $usrname;
+	$query = "update usrinfo set vote_badge = '".$vote_badge."'
+							where usrname = '".$usrname."'";
+	$result = vote_db_query($query);
+	return $result;
+}
+
+function delete_organizer_vote_badge($usrname)
+{
+	$usrinfo = query_badge($usrname);
+    $vote_badge = $usrinfo['vote_badge'];
+    //echo $friend_badge;
+	if($vote_badge < 1)
+		return false;
+	$vote_badge -=1;
+
+	//echo $usrname;
+	$query = "update usrinfo set vote_badge = '".$vote_badge."'
+							where usrname = '".$usrname."'";
+	$result = vote_db_query($query);
+	return $result;
+}
+
 function query_badge($usrname)
 {
   //save the usrid
@@ -77,7 +109,7 @@ function search_token_from_db($usrname)
 	return $token;
 }
 
-function save_unpush_message($selfid,$peerid,$action)
+function save_unpush_message($usrid,$peerid,$action)
 {
 	$unpush_message = array(
 		"peerid" => $peerid,
